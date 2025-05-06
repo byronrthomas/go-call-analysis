@@ -35,7 +35,7 @@ var analyzeCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return analyzer.ExportCallGraph(a, callGraph)
+		return analyzer.ExportCallGraph(callGraph)
 	},
 }
 

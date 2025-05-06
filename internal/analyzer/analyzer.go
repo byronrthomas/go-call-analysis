@@ -33,8 +33,14 @@ func NewAnalyzer(projectPath, outputPath string) (*Analyzer, error) {
 	}, nil
 }
 
+type CallGraphResult struct {
+	CallGraph  *callgraph.Graph
+	FileSet    *token.FileSet
+	OutputPath string
+}
+
 // Analyze performs the analysis on the target project
-func (a *Analyzer) Analyze() (*callgraph.Graph, error) {
+func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 	// TODO: Implement analysis logic
 	// Load the packages (set your target package here)
 	cfg := &packages.Config{
@@ -74,11 +80,12 @@ func (a *Analyzer) Analyze() (*callgraph.Graph, error) {
 	// prog.Build()
 
 	// Perform RTA (Rapid Type Analysis) to build call graph
-	mainPkg := ssaPkgs[0]
 	var functions []*ssa.Function
-	for _, fn := range mainPkg.Members {
-		if f, ok := fn.(*ssa.Function); ok {
-			functions = append(functions, f)
+	for _, pkg := range ssaPkgs {
+		for _, fn := range pkg.Members {
+			if f, ok := fn.(*ssa.Function); ok {
+				functions = append(functions, f)
+			}
 		}
 	}
 	rtaRes := rta.Analyze(functions, true)
@@ -86,34 +93,47 @@ func (a *Analyzer) Analyze() (*callgraph.Graph, error) {
 
 	// Print out some call graph edges
 	callGraph.DeleteSyntheticNodes() // remove built-in or synthetic calls
-	return callGraph, nil
+	return &CallGraphResult{
+		CallGraph:  callGraph,
+		FileSet:    prog.Fset,
+		OutputPath: a.outputPath,
+	}, nil
 }
 
 // ExportCallGraph exports the call graph to CSV files
-func ExportCallGraph(a *Analyzer, callGraph *callgraph.Graph) error {
+func ExportCallGraph(result *CallGraphResult) error {
 	// Prepare nodes and edges data
 	var nodes [][]string
 	var edges [][]string
 
 	// Add header rows
-	nodes = append(nodes, []string{"id", "name", "package", "label"})
+	nodes = append(nodes, []string{"id", "name", "package", "file", "line"})
 	edges = append(edges, []string{"id_from", "id_to", "type"})
 
 	// Process nodes and edges
-	for _, node := range callGraph.Nodes {
+	for _, node := range result.CallGraph.Nodes {
 		if node.Func == nil {
 			continue
 		}
 		// Add node
 		packageName := "unknown-package"
+		fileName := "unknown-file"
+		sourceLine := 0
 		if node.Func.Pkg != nil {
-			packageName = node.Func.Pkg.Pkg.Name()
+			packageName = node.Func.Pkg.Pkg.Path()
+		}
+		if node.Func.Pos() != token.NoPos {
+			pos := node.Func.Pos()
+			position := result.FileSet.Position(pos)
+			fileName = position.Filename
+			sourceLine = position.Line
 		}
 		nodes = append(nodes, []string{
 			node.Func.String(),
 			node.Func.Name(),
 			packageName,
-			"function",
+			fileName,
+			fmt.Sprintf("%d", sourceLine),
 		})
 
 		// Add edges
@@ -130,7 +150,7 @@ func ExportCallGraph(a *Analyzer, callGraph *callgraph.Graph) error {
 	}
 
 	// Output to files or stdout
-	if a.outputPath == "" {
+	if result.OutputPath == "" {
 		// Output nodes to stdout
 		fmt.Println("Nodes:")
 		writer := csv.NewWriter(os.Stdout)
@@ -144,12 +164,12 @@ func ExportCallGraph(a *Analyzer, callGraph *callgraph.Graph) error {
 		writer.Flush()
 	} else {
 		// Create output directory if it doesn't exist
-		if err := os.MkdirAll(a.outputPath, 0755); err != nil {
+		if err := os.MkdirAll(result.OutputPath, 0755); err != nil {
 			return fmt.Errorf("failed to create output directory: %v", err)
 		}
 
 		// Write nodes to file
-		nodesFile, err := os.Create(filepath.Join(a.outputPath, "nodes.csv"))
+		nodesFile, err := os.Create(filepath.Join(result.OutputPath, "nodes.csv"))
 		if err != nil {
 			return fmt.Errorf("failed to create nodes file: %v", err)
 		}
@@ -162,7 +182,7 @@ func ExportCallGraph(a *Analyzer, callGraph *callgraph.Graph) error {
 		writer.Flush()
 
 		// Write edges to file
-		edgesFile, err := os.Create(filepath.Join(a.outputPath, "edges.csv"))
+		edgesFile, err := os.Create(filepath.Join(result.OutputPath, "edges.csv"))
 		if err != nil {
 			return fmt.Errorf("failed to create edges file: %v", err)
 		}
