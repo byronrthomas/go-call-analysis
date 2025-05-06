@@ -27,16 +27,15 @@ var analyzeCmd = &cobra.Command{
 		}
 
 		fmt.Printf("Analyzing project at: %s\n", projectPath)
-		analyzer, err := analyzer.NewAnalyzer(projectPath, outputPath)
+		a, err := analyzer.NewAnalyzer(projectPath, outputPath)
 		if err != nil {
 			return err
 		}
-		callGraph, err := analyzer.Analyze()
+		callGraph, err := a.Analyze()
 		if err != nil {
 			return err
 		}
-		fmt.Println(callGraph)
-		return nil
+		return analyzer.ExportCallGraph(a, callGraph)
 	},
 }
 
