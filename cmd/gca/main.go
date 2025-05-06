@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
 )
 
 var rootCmd = &cobra.Command{
@@ -26,7 +27,15 @@ var analyzeCmd = &cobra.Command{
 		}
 
 		fmt.Printf("Analyzing project at: %s\n", projectPath)
-		// TODO: Implement analysis logic
+		analyzer, err := analyzer.NewAnalyzer(projectPath, outputPath)
+		if err != nil {
+			return err
+		}
+		callGraph, err := analyzer.Analyze()
+		if err != nil {
+			return err
+		}
+		fmt.Println(callGraph)
 		return nil
 	},
 }
