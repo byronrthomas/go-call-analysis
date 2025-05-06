@@ -107,7 +107,7 @@ func ExportCallGraph(result *CallGraphResult) error {
 	var edges [][]string
 
 	// Add header rows
-	nodes = append(nodes, []string{"id", "name", "package", "file", "line"})
+	nodes = append(nodes, []string{"id", "name", "package", "label", "file", "line"})
 	edges = append(edges, []string{"id_from", "id_to", "type"})
 
 	// Process nodes and edges
@@ -132,6 +132,7 @@ func ExportCallGraph(result *CallGraphResult) error {
 			node.Func.String(),
 			node.Func.Name(),
 			packageName,
+			"Function",
 			fileName,
 			fmt.Sprintf("%d", sourceLine),
 		})
