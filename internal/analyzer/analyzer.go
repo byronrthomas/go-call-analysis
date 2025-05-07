@@ -107,10 +107,34 @@ type FunctionNode struct {
 	Column  int
 }
 
+func (n *FunctionNode) ToMap() map[string]any {
+	return map[string]any{
+		"id":      n.ID,
+		"name":    n.Name,
+		"package": n.Package,
+		"file":    n.File,
+		"line":    n.Line,
+		"column":  n.Column,
+		"label":   "Function",
+	}
+}
+
 // CallEdge represents a call relationship between functions
 type CallEdge struct {
 	FromID string
 	ToID   string
+}
+
+func (e *CallEdge) ToMap() map[string]any {
+	return map[string]any{
+		"from": e.FromID,
+		"to":   e.ToID,
+		"type": "CALLS",
+	}
+}
+
+type Mappable interface {
+	ToMap() map[string]any
 }
 
 // ExtractCallGraphData extracts nodes and edges from the call graph result

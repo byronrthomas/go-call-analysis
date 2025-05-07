@@ -21,6 +21,14 @@ type Neo4jConfig struct {
 	Database string
 }
 
+func mapify(batch []Mappable) []map[string]any {
+	result := make([]map[string]any, len(batch))
+	for i, node := range batch {
+		result[i] = node.ToMap()
+	}
+	return result
+}
+
 // ExportCallGraphToNeo4j exports the call graph data to a Neo4j database
 func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4jConfig) error {
 	// Create driver
@@ -56,8 +64,13 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			batch := nodes[i:end]
 			query := "UNWIND $nodes AS node CREATE (n:Function {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column})"
 
+			mappableBatch := make([]Mappable, len(batch))
+			for i, node := range batch {
+				mappableBatch[i] = &node
+			}
+
 			params := map[string]interface{}{
-				"nodes": batch,
+				"nodes": mapify(mappableBatch),
 			}
 
 			_, err := tx.Run(ctx, query, params)
@@ -73,7 +86,7 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 
 		// Create index on Function node IDs
 		log.Println("Creating index on Function node IDs...")
-		_, err := tx.Run(ctx, "CREATE INDEX function_id IF NOT EXISTS FOR (n:Function) ON (n.id)", nil)
+		_, err := tx.Run(ctx, "CREATE INDEX ON :Function(id)", nil)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create index: %v", err)
 		}
@@ -96,8 +109,14 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 				CREATE (from)-[:CALLS]->(to)
 			`
 
+			// Convert batch to []Mappable
+			mappableBatch := make([]Mappable, len(batch))
+			for i, edge := range batch {
+				mappableBatch[i] = &edge
+			}
+
 			params := map[string]interface{}{
-				"edges": batch,
+				"edges": mapify(mappableBatch),
 			}
 
 			_, err := tx.Run(ctx, query, params)
