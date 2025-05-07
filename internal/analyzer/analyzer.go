@@ -15,6 +15,8 @@ import (
 	"golang.org/x/tools/go/ssa/ssautil"
 )
 
+const MAX_CSV_LINES = 200_000 // Maximum number of lines per CSV file
+
 // Analyzer represents the main analysis engine
 type Analyzer struct {
 	projectPath string
@@ -100,6 +102,59 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 	}, nil
 }
 
+// writeCSVToFiles writes data to one or more CSV files, splitting if necessary
+func writeCSVToFiles(data [][]string, basePath string, header []string) error {
+	totalLines := len(data)
+	if totalLines <= MAX_CSV_LINES {
+		// Single file case
+		file, err := os.Create(basePath)
+		if err != nil {
+			return fmt.Errorf("failed to create file %s: %v", basePath, err)
+		}
+		defer file.Close()
+
+		writer := csv.NewWriter(file)
+		if err := writer.Write(header); err != nil {
+			return fmt.Errorf("failed to write header to %s: %v", basePath, err)
+		}
+		if err := writer.WriteAll(data); err != nil {
+			return fmt.Errorf("failed to write data to %s: %v", basePath, err)
+		}
+		writer.Flush()
+		return nil
+	}
+
+	// Multiple files case
+	numFiles := (totalLines + MAX_CSV_LINES - 1) / MAX_CSV_LINES
+	ext := filepath.Ext(basePath)
+	baseName := basePath[:len(basePath)-len(ext)]
+
+	for i := range numFiles {
+		start := i * MAX_CSV_LINES
+		end := min(start+MAX_CSV_LINES, totalLines)
+
+		// Create filename with index
+		filename := fmt.Sprintf("%s-%d%s", baseName, i+1, ext)
+		file, err := os.Create(filename)
+		if err != nil {
+			return fmt.Errorf("failed to create file %s: %v", filename, err)
+		}
+		defer file.Close()
+
+		writer := csv.NewWriter(file)
+		// Write header to each file
+		if err := writer.Write(header); err != nil {
+			return fmt.Errorf("failed to write header to %s: %v", filename, err)
+		}
+		// Write data chunk
+		if err := writer.WriteAll(data[start:end]); err != nil {
+			return fmt.Errorf("failed to write data to %s: %v", filename, err)
+		}
+		writer.Flush()
+	}
+	return nil
+}
+
 // ExportCallGraph exports the call graph to CSV files
 func ExportCallGraph(result *CallGraphResult) error {
 	// Prepare nodes and edges data
@@ -107,8 +162,8 @@ func ExportCallGraph(result *CallGraphResult) error {
 	var edges [][]string
 
 	// Add header rows
-	nodes = append(nodes, []string{"id", "name", "package", "label", "file", "line"})
-	edges = append(edges, []string{"id_from", "id_to", "type"})
+	nodeHeader := []string{"id", "name", "package", "label", "file", "line", "char"}
+	edgeHeader := []string{"id_from", "id_to", "type"}
 
 	// Process nodes and edges
 	for _, node := range result.CallGraph.Nodes {
@@ -119,6 +174,7 @@ func ExportCallGraph(result *CallGraphResult) error {
 		packageName := "unknown-package"
 		fileName := "unknown-file"
 		sourceLine := 0
+		sourceColumn := 0
 		if node.Func.Pkg != nil {
 			packageName = node.Func.Pkg.Pkg.Path()
 		}
@@ -127,6 +183,7 @@ func ExportCallGraph(result *CallGraphResult) error {
 			position := result.FileSet.Position(pos)
 			fileName = position.Filename
 			sourceLine = position.Line
+			sourceColumn = position.Column
 		}
 		nodes = append(nodes, []string{
 			node.Func.String(),
@@ -135,6 +192,7 @@ func ExportCallGraph(result *CallGraphResult) error {
 			"Function",
 			fileName,
 			fmt.Sprintf("%d", sourceLine),
+			fmt.Sprintf("%d", sourceColumn),
 		})
 
 		// Add edges
@@ -169,31 +227,17 @@ func ExportCallGraph(result *CallGraphResult) error {
 			return fmt.Errorf("failed to create output directory: %v", err)
 		}
 
-		// Write nodes to file
-		nodesFile, err := os.Create(filepath.Join(result.OutputPath, "nodes.csv"))
-		if err != nil {
-			return fmt.Errorf("failed to create nodes file: %v", err)
-		}
-		defer nodesFile.Close()
-
-		writer := csv.NewWriter(nodesFile)
-		if err := writer.WriteAll(nodes); err != nil {
+		// Write nodes to file(s)
+		nodesPath := filepath.Join(result.OutputPath, "nodes.csv")
+		if err := writeCSVToFiles(nodes, nodesPath, nodeHeader); err != nil {
 			return fmt.Errorf("failed to write nodes: %v", err)
 		}
-		writer.Flush()
 
-		// Write edges to file
-		edgesFile, err := os.Create(filepath.Join(result.OutputPath, "edges.csv"))
-		if err != nil {
-			return fmt.Errorf("failed to create edges file: %v", err)
-		}
-		defer edgesFile.Close()
-
-		writer = csv.NewWriter(edgesFile)
-		if err := writer.WriteAll(edges); err != nil {
+		// Write edges to file(s)
+		edgesPath := filepath.Join(result.OutputPath, "edges.csv")
+		if err := writeCSVToFiles(edges, edgesPath, edgeHeader); err != nil {
 			return fmt.Errorf("failed to write edges: %v", err)
 		}
-		writer.Flush()
 	}
 
 	return nil
