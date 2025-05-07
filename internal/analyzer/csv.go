@@ -7,6 +7,61 @@ import (
 	"path/filepath"
 )
 
+const MAX_CSV_LINES = 200_000 // Maximum number of lines per CSV file
+
+// writeCSVToFiles writes data to one or more CSV files, splitting if necessary
+func writeCSVToFiles(data [][]string, basePath string, header []string) error {
+	totalLines := len(data)
+	if totalLines <= MAX_CSV_LINES {
+		// Single file case
+		file, err := os.Create(basePath)
+		if err != nil {
+			return fmt.Errorf("failed to create file %s: %v", basePath, err)
+		}
+		defer file.Close()
+
+		writer := csv.NewWriter(file)
+		if err := writer.Write(header); err != nil {
+			return fmt.Errorf("failed to write header to %s: %v", basePath, err)
+		}
+		if err := writer.WriteAll(data); err != nil {
+			return fmt.Errorf("failed to write data to %s: %v", basePath, err)
+		}
+		writer.Flush()
+		return nil
+	}
+
+	// Multiple files case
+	numFiles := (totalLines + MAX_CSV_LINES - 1) / MAX_CSV_LINES
+	ext := filepath.Ext(basePath)
+	baseName := basePath[:len(basePath)-len(ext)]
+
+	for i := range numFiles {
+		start := i * MAX_CSV_LINES
+		end := min(start+MAX_CSV_LINES, totalLines)
+
+		// Create filename with index
+		filename := fmt.Sprintf("%s-%d%s", baseName, i+1, ext)
+		file, err := os.Create(filename)
+		if err != nil {
+			return fmt.Errorf("failed to create file %s: %v", filename, err)
+		}
+		defer file.Close()
+
+		writer := csv.NewWriter(file)
+		// Write header to each file
+		if err := writer.Write(header); err != nil {
+			return fmt.Errorf("failed to write header to %s: %v", filename, err)
+		}
+		// Write data chunk
+		if err := writer.WriteAll(data[start:end]); err != nil {
+			return fmt.Errorf("failed to write data to %s: %v", filename, err)
+		}
+		writer.Flush()
+	}
+	return nil
+}
+
 // ExportCallGraphToCSV exports the call graph data to CSV files
 func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath string) error {
 	// Convert nodes to CSV format

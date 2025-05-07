@@ -1,12 +1,9 @@
 package analyzer
 
 import (
-	"encoding/csv"
 	"fmt"
 	"go/token"
 	"log"
-	"os"
-	"path/filepath"
 
 	"golang.org/x/tools/go/callgraph"
 	"golang.org/x/tools/go/callgraph/rta"
@@ -14,8 +11,6 @@ import (
 	"golang.org/x/tools/go/ssa"
 	"golang.org/x/tools/go/ssa/ssautil"
 )
-
-const MAX_CSV_LINES = 200_000 // Maximum number of lines per CSV file
 
 // Analyzer represents the main analysis engine
 type Analyzer struct {
@@ -100,59 +95,6 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 		FileSet:    prog.Fset,
 		OutputPath: a.outputPath,
 	}, nil
-}
-
-// writeCSVToFiles writes data to one or more CSV files, splitting if necessary
-func writeCSVToFiles(data [][]string, basePath string, header []string) error {
-	totalLines := len(data)
-	if totalLines <= MAX_CSV_LINES {
-		// Single file case
-		file, err := os.Create(basePath)
-		if err != nil {
-			return fmt.Errorf("failed to create file %s: %v", basePath, err)
-		}
-		defer file.Close()
-
-		writer := csv.NewWriter(file)
-		if err := writer.Write(header); err != nil {
-			return fmt.Errorf("failed to write header to %s: %v", basePath, err)
-		}
-		if err := writer.WriteAll(data); err != nil {
-			return fmt.Errorf("failed to write data to %s: %v", basePath, err)
-		}
-		writer.Flush()
-		return nil
-	}
-
-	// Multiple files case
-	numFiles := (totalLines + MAX_CSV_LINES - 1) / MAX_CSV_LINES
-	ext := filepath.Ext(basePath)
-	baseName := basePath[:len(basePath)-len(ext)]
-
-	for i := range numFiles {
-		start := i * MAX_CSV_LINES
-		end := min(start+MAX_CSV_LINES, totalLines)
-
-		// Create filename with index
-		filename := fmt.Sprintf("%s-%d%s", baseName, i+1, ext)
-		file, err := os.Create(filename)
-		if err != nil {
-			return fmt.Errorf("failed to create file %s: %v", filename, err)
-		}
-		defer file.Close()
-
-		writer := csv.NewWriter(file)
-		// Write header to each file
-		if err := writer.Write(header); err != nil {
-			return fmt.Errorf("failed to write header to %s: %v", filename, err)
-		}
-		// Write data chunk
-		if err := writer.WriteAll(data[start:end]); err != nil {
-			return fmt.Errorf("failed to write data to %s: %v", filename, err)
-		}
-		writer.Flush()
-	}
-	return nil
 }
 
 // FunctionNode represents a function in the call graph
