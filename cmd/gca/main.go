@@ -21,6 +21,7 @@ var analyzeCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectPath, _ := cmd.Flags().GetString("path")
 		outputPath, _ := cmd.Flags().GetString("output")
+		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
 
 		if projectPath == "" {
 			return fmt.Errorf("project path is required")
@@ -35,13 +36,31 @@ var analyzeCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return analyzer.ExportCallGraph(callGraph)
+
+		// Extract call graph data
+		nodes, edges := analyzer.ExtractCallGraphData(callGraph)
+
+		// Handle output based on flags
+		if useNeo4j {
+			// Use hardcoded Neo4j connection details
+			config := analyzer.Neo4jConfig{
+				URI:      "bolt://localhost:7687",
+				Username: "",
+				Password: "",
+				Database: "",
+			}
+			return analyzer.ExportCallGraphToNeo4j(nodes, edges, config)
+		} else {
+			// Use CSV output (default behavior)
+			return analyzer.ExportCallGraphToCSV(nodes, edges, outputPath)
+		}
 	},
 }
 
 func init() {
 	analyzeCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
-	analyzeCmd.Flags().StringP("output", "o", "", "Path to write analysis results")
+	analyzeCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
+	analyzeCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
 	rootCmd.AddCommand(analyzeCmd)
 }
 
