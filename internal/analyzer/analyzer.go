@@ -155,22 +155,35 @@ func writeCSVToFiles(data [][]string, basePath string, header []string) error {
 	return nil
 }
 
-// ExportCallGraph exports the call graph to CSV files
-func ExportCallGraph(result *CallGraphResult) error {
-	// Prepare nodes and edges data
-	var nodes [][]string
-	var edges [][]string
+// FunctionNode represents a function in the call graph
+type FunctionNode struct {
+	ID      string
+	Name    string
+	Package string
+	Label   string
+	File    string
+	Line    int
+	Column  int
+}
 
-	// Add header rows
-	nodeHeader := []string{"id", "name", "package", "label", "file", "line", "char"}
-	edgeHeader := []string{"id_from", "id_to", "type"}
+// CallEdge represents a call relationship between functions
+type CallEdge struct {
+	FromID string
+	ToID   string
+	Type   string
+}
 
-	// Process nodes and edges
+// ExtractCallGraphData extracts nodes and edges from the call graph result
+func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) {
+	var nodes []FunctionNode
+	var edges []CallEdge
+
 	for _, node := range result.CallGraph.Nodes {
 		if node.Func == nil {
 			continue
 		}
-		// Add node
+
+		// Extract node data
 		packageName := "unknown-package"
 		fileName := "unknown-file"
 		sourceLine := 0
@@ -185,60 +198,98 @@ func ExportCallGraph(result *CallGraphResult) error {
 			sourceLine = position.Line
 			sourceColumn = position.Column
 		}
-		nodes = append(nodes, []string{
-			node.Func.String(),
-			node.Func.Name(),
-			packageName,
-			"Function",
-			fileName,
-			fmt.Sprintf("%d", sourceLine),
-			fmt.Sprintf("%d", sourceColumn),
+
+		nodes = append(nodes, FunctionNode{
+			ID:      node.Func.String(),
+			Name:    node.Func.Name(),
+			Package: packageName,
+			Label:   "Function",
+			File:    fileName,
+			Line:    sourceLine,
+			Column:  sourceColumn,
 		})
 
-		// Add edges
+		// Extract edge data
 		for _, edge := range node.Out {
 			if edge.Callee.Func == nil {
 				continue
 			}
-			edges = append(edges, []string{
-				edge.Caller.Func.String(),
-				edge.Callee.Func.String(),
-				"CALLS",
+			edges = append(edges, CallEdge{
+				FromID: edge.Caller.Func.String(),
+				ToID:   edge.Callee.Func.String(),
+				Type:   "CALLS",
 			})
 		}
 	}
 
+	return nodes, edges
+}
+
+// ExportCallGraphToCSV exports the call graph data to CSV files
+func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath string) error {
+	// Convert nodes to CSV format
+	var nodeRows [][]string
+	nodeHeader := []string{"id", "name", "package", "label", "file", "line", "char"}
+	for _, node := range nodes {
+		nodeRows = append(nodeRows, []string{
+			node.ID,
+			node.Name,
+			node.Package,
+			node.Label,
+			node.File,
+			fmt.Sprintf("%d", node.Line),
+			fmt.Sprintf("%d", node.Column),
+		})
+	}
+
+	// Convert edges to CSV format
+	var edgeRows [][]string
+	edgeHeader := []string{"id_from", "id_to", "type"}
+	for _, edge := range edges {
+		edgeRows = append(edgeRows, []string{
+			edge.FromID,
+			edge.ToID,
+			edge.Type,
+		})
+	}
+
 	// Output to files or stdout
-	if result.OutputPath == "" {
+	if outputPath == "" {
 		// Output nodes to stdout
 		fmt.Println("Nodes:")
 		writer := csv.NewWriter(os.Stdout)
-		writer.WriteAll(nodes)
+		writer.WriteAll(nodeRows)
 		writer.Flush()
 
 		// Output edges to stdout
 		fmt.Println("\nEdges:")
 		writer = csv.NewWriter(os.Stdout)
-		writer.WriteAll(edges)
+		writer.WriteAll(edgeRows)
 		writer.Flush()
 	} else {
 		// Create output directory if it doesn't exist
-		if err := os.MkdirAll(result.OutputPath, 0755); err != nil {
+		if err := os.MkdirAll(outputPath, 0755); err != nil {
 			return fmt.Errorf("failed to create output directory: %v", err)
 		}
 
 		// Write nodes to file(s)
-		nodesPath := filepath.Join(result.OutputPath, "nodes.csv")
-		if err := writeCSVToFiles(nodes, nodesPath, nodeHeader); err != nil {
+		nodesPath := filepath.Join(outputPath, "nodes.csv")
+		if err := writeCSVToFiles(nodeRows, nodesPath, nodeHeader); err != nil {
 			return fmt.Errorf("failed to write nodes: %v", err)
 		}
 
 		// Write edges to file(s)
-		edgesPath := filepath.Join(result.OutputPath, "edges.csv")
-		if err := writeCSVToFiles(edges, edgesPath, edgeHeader); err != nil {
+		edgesPath := filepath.Join(outputPath, "edges.csv")
+		if err := writeCSVToFiles(edgeRows, edgesPath, edgeHeader); err != nil {
 			return fmt.Errorf("failed to write edges: %v", err)
 		}
 	}
 
 	return nil
+}
+
+// ExportCallGraph exports the call graph to CSV files
+func ExportCallGraph(result *CallGraphResult) error {
+	nodes, edges := ExtractCallGraphData(result)
+	return ExportCallGraphToCSV(nodes, edges, result.OutputPath)
 }
