@@ -1,0 +1,123 @@
+package analyzer
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+)
+
+const (
+	defaultBatchSize = 1000
+)
+
+// Neo4jConfig holds the connection configuration for Neo4j
+type Neo4jConfig struct {
+	URI      string // Full URI including protocol, host, port
+	Username string
+	Password string
+	Database string
+}
+
+// ExportCallGraphToNeo4j exports the call graph data to a Neo4j database
+func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4jConfig) error {
+	// Create driver
+	driver, err := neo4j.NewDriverWithContext(config.URI, neo4j.BasicAuth(config.Username, config.Password, ""))
+	if err != nil {
+		return fmt.Errorf("failed to create Neo4j driver: %v", err)
+	}
+	ctx := context.Background()
+	defer driver.Close(ctx)
+
+	// Create session
+	session := driver.NewSession(ctx, neo4j.SessionConfig{
+		DatabaseName: config.Database,
+	})
+	defer session.Close(ctx)
+
+	// Start timing
+	startTime := time.Now()
+
+	// Execute everything in a single transaction
+	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+		// Create nodes in batches
+		log.Printf("Starting node import of %d nodes...", len(nodes))
+		nodeStartTime := time.Now()
+
+		for i := 0; i < len(nodes); i += defaultBatchSize {
+			batchStartTime := time.Now()
+			end := i + defaultBatchSize
+			if end > len(nodes) {
+				end = len(nodes)
+			}
+
+			batch := nodes[i:end]
+			query := "UNWIND $nodes AS node CREATE (n:Function {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column})"
+
+			params := map[string]interface{}{
+				"nodes": batch,
+			}
+
+			_, err := tx.Run(ctx, query, params)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
+			}
+
+			batchDuration := time.Since(batchStartTime)
+			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(nodes), float64(end)/float64(len(nodes))*100, batchDuration)
+		}
+
+		log.Printf("Node import completed in %v", time.Since(nodeStartTime))
+
+		// Create index on Function node IDs
+		log.Println("Creating index on Function node IDs...")
+		_, err := tx.Run(ctx, "CREATE INDEX function_id IF NOT EXISTS FOR (n:Function) ON (n.id)", nil)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create index: %v", err)
+		}
+
+		// Create edges in batches
+		log.Printf("Starting edge import of %d edges...", len(edges))
+		edgeStartTime := time.Now()
+
+		for i := 0; i < len(edges); i += defaultBatchSize {
+			batchStartTime := time.Now()
+			end := i + defaultBatchSize
+			if end > len(edges) {
+				end = len(edges)
+			}
+
+			batch := edges[i:end]
+			query := `
+				UNWIND $edges AS edge
+				MATCH (from:Function {id: edge.from_id}), (to:Function {id: edge.to_id})
+				CREATE (from)-[:CALLS]->(to)
+			`
+
+			params := map[string]interface{}{
+				"edges": batch,
+			}
+
+			_, err := tx.Run(ctx, query, params)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
+			}
+
+			batchDuration := time.Since(batchStartTime)
+			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(edges), float64(end)/float64(len(edges))*100, batchDuration)
+		}
+
+		log.Printf("Edge import completed in %v", time.Since(edgeStartTime))
+
+		return nil, nil
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to execute Neo4j transaction: %v", err)
+	}
+
+	log.Printf("Total import completed in %v", time.Since(startTime))
+	return nil
+}
