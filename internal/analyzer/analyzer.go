@@ -160,7 +160,6 @@ type FunctionNode struct {
 	ID      string
 	Name    string
 	Package string
-	Label   string
 	File    string
 	Line    int
 	Column  int
@@ -170,7 +169,6 @@ type FunctionNode struct {
 type CallEdge struct {
 	FromID string
 	ToID   string
-	Type   string
 }
 
 // ExtractCallGraphData extracts nodes and edges from the call graph result
@@ -203,7 +201,6 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			ID:      node.Func.String(),
 			Name:    node.Func.Name(),
 			Package: packageName,
-			Label:   "Function",
 			File:    fileName,
 			Line:    sourceLine,
 			Column:  sourceColumn,
@@ -217,7 +214,6 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			edges = append(edges, CallEdge{
 				FromID: edge.Caller.Func.String(),
 				ToID:   edge.Callee.Func.String(),
-				Type:   "CALLS",
 			})
 		}
 	}
@@ -235,7 +231,7 @@ func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath str
 			node.ID,
 			node.Name,
 			node.Package,
-			node.Label,
+			"Function", // Constant label for all function nodes
 			node.File,
 			fmt.Sprintf("%d", node.Line),
 			fmt.Sprintf("%d", node.Column),
@@ -249,7 +245,7 @@ func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath str
 		edgeRows = append(edgeRows, []string{
 			edge.FromID,
 			edge.ToID,
-			edge.Type,
+			"CALLS", // Constant type for all call edges
 		})
 	}
 
