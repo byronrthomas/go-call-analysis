@@ -50,3 +50,16 @@ go-call-analysis/
 ## License
 
 MIT License 
+
+## Running examples
+
+```bash
+export GCA_PROJECT_PATH=/Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain
+export CSV_OUTPUT_PATH=/Users/byron/projects/bugging/sei-protocol/sei-chain-call-graph
+make clear-old-csvs folder=$CSV_OUTPUT_PATH; \
+make build && bin/gca analyze -p $GCA_PROJECT_PATH -o $CSV_OUTPUT_PATH
+```
+
+```bash
+make copy-csvs-to-memgraph folder=$CSV_OUTPUT_PATH
+```
