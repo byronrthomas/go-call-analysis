@@ -127,9 +127,9 @@ type CallEdge struct {
 
 func (e *CallEdge) ToMap() map[string]any {
 	return map[string]any{
-		"from": e.FromID,
-		"to":   e.ToID,
-		"type": "CALLS",
+		"from_id": e.FromID,
+		"to_id":   e.ToID,
+		"type":    "CALLS",
 	}
 }
 

@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	defaultBatchSize = 1000
+	defaultBatchSize = 10000
 )
 
 // Neo4jConfig holds the connection configuration for Neo4j
@@ -48,12 +48,10 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 	// Start timing
 	startTime := time.Now()
 
-	// Execute everything in a single transaction
+	// Import nodes
+	log.Printf("Starting node import of %d nodes...", len(nodes))
+	nodeStartTime := time.Now()
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		// Create nodes in batches
-		log.Printf("Starting node import of %d nodes...", len(nodes))
-		nodeStartTime := time.Now()
-
 		for i := 0; i < len(nodes); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -62,7 +60,7 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			}
 
 			batch := nodes[i:end]
-			query := "UNWIND $nodes AS node CREATE (n:Function {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column})"
+			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column})"
 
 			mappableBatch := make([]Mappable, len(batch))
 			for i, node := range batch {
@@ -81,20 +79,24 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			batchDuration := time.Since(batchStartTime)
 			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(nodes), float64(end)/float64(len(nodes))*100, batchDuration)
 		}
+		return nil, nil
+	})
+	if err != nil {
+		return fmt.Errorf("failed to import nodes: %v", err)
+	}
+	log.Printf("Node import completed in %v", time.Since(nodeStartTime))
 
-		log.Printf("Node import completed in %v", time.Since(nodeStartTime))
+	// Create index
+	log.Println("Creating index on Function node IDs...")
+	_, err = session.Run(ctx, "CREATE INDEX ON :Function(id)", nil)
+	if err != nil {
+		return fmt.Errorf("failed to create index: %v", err)
+	}
 
-		// Create index on Function node IDs
-		log.Println("Creating index on Function node IDs...")
-		_, err := tx.Run(ctx, "CREATE INDEX ON :Function(id)", nil)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create index: %v", err)
-		}
-
-		// Create edges in batches
-		log.Printf("Starting edge import of %d edges...", len(edges))
-		edgeStartTime := time.Now()
-
+	// Import edges
+	log.Printf("Starting edge import of %d edges...", len(edges))
+	edgeStartTime := time.Now()
+	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
 		for i := 0; i < len(edges); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -106,10 +108,9 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			query := `
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:Function {id: edge.to_id})
-				CREATE (from)-[:CALLS]->(to)
+				CREATE (from)-[:edge.type]->(to)
 			`
 
-			// Convert batch to []Mappable
 			mappableBatch := make([]Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
@@ -127,15 +128,12 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			batchDuration := time.Since(batchStartTime)
 			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(edges), float64(end)/float64(len(edges))*100, batchDuration)
 		}
-
-		log.Printf("Edge import completed in %v", time.Since(edgeStartTime))
-
 		return nil, nil
 	})
-
 	if err != nil {
-		return fmt.Errorf("failed to execute Neo4j transaction: %v", err)
+		return fmt.Errorf("failed to import edges: %v", err)
 	}
+	log.Printf("Edge import completed in %v", time.Since(edgeStartTime))
 
 	log.Printf("Total import completed in %v", time.Since(startTime))
 	return nil
