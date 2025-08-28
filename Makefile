@@ -32,7 +32,7 @@ copy-csvs-to-memgraph:
 		echo "Error: folder argument is required. Usage: make copy-csvs-to-memgraph folder=/path/to/folder"; \
 		exit 1; \
 	fi
-	find $(folder) -name "*.csv" -exec docker cp {} memgraph-mage:/tmp/ \;
+	find $(folder) -name "*.csv" -exec podman cp {} memgraph-mage:/tmp/ \;
 
 clear-old-csvs:
 	@if [ -z "$(folder)" ]; then \
