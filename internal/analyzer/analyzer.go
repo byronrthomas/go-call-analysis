@@ -97,14 +97,18 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 	}, nil
 }
 
+type PositionInfo struct {
+	File   string
+	Line   int
+	Column int
+}
+
 // FunctionNode represents a function in the call graph
 type FunctionNode struct {
+	PositionInfo
 	ID      string
 	Name    string
 	Package string
-	File    string
-	Line    int
-	Column  int
 }
 
 func (n *FunctionNode) ToMap() map[string]any {
@@ -121,15 +125,21 @@ func (n *FunctionNode) ToMap() map[string]any {
 
 // CallEdge represents a call relationship between functions
 type CallEdge struct {
-	FromID string
-	ToID   string
+	FromID   string
+	ToID     string
+	EdgeText string
+	CallSite PositionInfo
 }
 
 func (e *CallEdge) ToMap() map[string]any {
 	return map[string]any{
-		"from_id": e.FromID,
-		"to_id":   e.ToID,
-		"type":    "CALLS",
+		"from_id":          e.FromID,
+		"to_id":            e.ToID,
+		"type":             "CALLS",
+		"call_site_file":   e.CallSite.File,
+		"call_site_line":   e.CallSite.Line,
+		"call_site_column": e.CallSite.Column,
+		"call_site_text":   e.EdgeText,
 	}
 }
 
@@ -167,9 +177,11 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			ID:      node.Func.String(),
 			Name:    node.Func.Name(),
 			Package: packageName,
-			File:    fileName,
-			Line:    sourceLine,
-			Column:  sourceColumn,
+			PositionInfo: PositionInfo{
+				File:   fileName,
+				Line:   sourceLine,
+				Column: sourceColumn,
+			},
 		})
 
 		// Extract edge data
@@ -177,9 +189,26 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			if edge.Callee.Func == nil {
 				continue
 			}
+			edgePos := edge.Pos()
+			edgeText := ""
+			if edge.Site != nil {
+				edgeText = edge.Site.String()
+				edgePos = edge.Site.Pos()
+			}
+			// if edge.Site != nil && edge.Site.Value() != nil {
+			// 	edgePos = edge.Site.Value().Call.Pos()
+			// 	edgeText = edge.Site.Value().Call.String()
+			// }
+			pos := result.FileSet.Position(edgePos)
 			edges = append(edges, CallEdge{
-				FromID: edge.Caller.Func.String(),
-				ToID:   edge.Callee.Func.String(),
+				FromID:   edge.Caller.Func.String(),
+				ToID:     edge.Callee.Func.String(),
+				EdgeText: edgeText,
+				CallSite: PositionInfo{
+					File:   pos.Filename,
+					Line:   pos.Line,
+					Column: pos.Column,
+				},
 			})
 		}
 	}

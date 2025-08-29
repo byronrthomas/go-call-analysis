@@ -108,7 +108,7 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			query := `
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:Function {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
+				CREATE (from)-[:edge.type {call_site_file: edge.call_site_file, call_site_line: edge.call_site_line, call_site_column: edge.call_site_column, call_site_text: edge.call_site_text}]->(to)
 			`
 
 			mappableBatch := make([]Mappable, len(batch))
