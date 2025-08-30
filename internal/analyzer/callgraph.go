@@ -27,18 +27,24 @@ type CallGraphResult struct {
 func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	// TODO: Implement analysis logic
 	// Load the packages (set your target package here)
-	prog, ssaPkgs := BuildSSAProgram(config)
+	prog := BuildSSAProgram(config)
+	ssaPkgs := prog.AllPackages()
+
+	fmt.Printf("\nFound %d packages\n", len(ssaPkgs))
+	for _, pkg := range ssaPkgs {
+		fmt.Printf("Package %s\n", pkg.Pkg.Path())
+	}
+	fmt.Printf("\n")
 
 	// Perform RTA (Rapid Type Analysis) to build call graph
 	var functions []*ssa.Function
 	if config.RootFunction != nil {
 		for _, pkg := range ssaPkgs {
-			fmt.Printf("Checking package %s\n", pkg.Pkg.Path())
 			if pkg.Pkg.Path() == config.RootFunction.Package {
-				fmt.Printf("Found package %s\n", pkg.Pkg.Path())
 				for _, fn := range pkg.Members {
 					if f, ok := fn.(*ssa.Function); ok {
 						if f.Name() == config.RootFunction.Function {
+							fmt.Printf("Found root function %s in package %s\n", f.Name(), pkg.Pkg.Path())
 							functions = append(functions, f)
 						}
 					}
@@ -70,7 +76,7 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	}, nil
 }
 
-func BuildSSAProgram(config *AnalysisConfig) (*ssa.Program, []*ssa.Package) {
+func BuildSSAProgram(config *AnalysisConfig) *ssa.Program {
 	cfg := &packages.Config{
 		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedDeps | packages.NeedSyntax | packages.NeedTypesInfo,
 		Dir:   config.ProjectPath,
@@ -87,12 +93,11 @@ func BuildSSAProgram(config *AnalysisConfig) (*ssa.Program, []*ssa.Package) {
 	fmt.Printf("Loaded %d packages\n", len(pkgs))
 
 	// Create SSA packages for well-typed packages and their dependencies.
-	prog, ssaPkgs := ssautil.AllPackages(pkgs, ssa.InstantiateGenerics)
-	_ = ssaPkgs
+	prog, _ := ssautil.AllPackages(pkgs, ssa.InstantiateGenerics)
 
 	// Build SSA code for the whole program.
 	prog.Build()
-	return prog, ssaPkgs
+	return prog
 }
 
 type PositionInfo struct {
