@@ -19,7 +19,7 @@ type FunctionId struct {
 
 type CallGraphResult struct {
 	CallGraph  *callgraph.Graph
-	FileSet    *token.FileSet
+	SSAProgram *ssa.Program
 	OutputPath string
 }
 
@@ -27,27 +27,7 @@ type CallGraphResult struct {
 func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	// TODO: Implement analysis logic
 	// Load the packages (set your target package here)
-	cfg := &packages.Config{
-		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedDeps | packages.NeedSyntax | packages.NeedTypesInfo,
-		Dir:   config.ProjectPath,
-		Fset:  token.NewFileSet(),
-		Tests: false,
-	}
-	pkgs, err := packages.Load(cfg, "./...")
-	if err != nil {
-		log.Fatalf("failed to load packages: %v", err)
-	}
-	if packages.PrintErrors(pkgs) > 0 {
-		log.Fatal("package loading failed due to errors")
-	}
-	fmt.Printf("Loaded %d packages\n", len(pkgs))
-
-	// Create SSA packages for well-typed packages and their dependencies.
-	prog, ssaPkgs := ssautil.AllPackages(pkgs, ssa.PrintPackages|ssa.InstantiateGenerics)
-	_ = ssaPkgs
-
-	// Build SSA code for the whole program.
-	prog.Build()
+	prog, ssaPkgs := BuildSSAProgram(config)
 
 	// Perform RTA (Rapid Type Analysis) to build call graph
 	var functions []*ssa.Function
@@ -85,9 +65,34 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	callGraph.DeleteSyntheticNodes() // remove built-in or synthetic calls
 	return &CallGraphResult{
 		CallGraph:  callGraph,
-		FileSet:    prog.Fset,
+		SSAProgram: prog,
 		OutputPath: config.OutputPath,
 	}, nil
+}
+
+func BuildSSAProgram(config *AnalysisConfig) (*ssa.Program, []*ssa.Package) {
+	cfg := &packages.Config{
+		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedDeps | packages.NeedSyntax | packages.NeedTypesInfo,
+		Dir:   config.ProjectPath,
+		Fset:  token.NewFileSet(),
+		Tests: false,
+	}
+	pkgs, err := packages.Load(cfg, "./...")
+	if err != nil {
+		log.Fatalf("failed to load packages: %v", err)
+	}
+	if packages.PrintErrors(pkgs) > 0 {
+		log.Fatal("package loading failed due to errors")
+	}
+	fmt.Printf("Loaded %d packages\n", len(pkgs))
+
+	// Create SSA packages for well-typed packages and their dependencies.
+	prog, ssaPkgs := ssautil.AllPackages(pkgs, ssa.InstantiateGenerics)
+	_ = ssaPkgs
+
+	// Build SSA code for the whole program.
+	prog.Build()
+	return prog, ssaPkgs
 }
 
 type PositionInfo struct {
@@ -144,6 +149,7 @@ type Mappable interface {
 func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) {
 	var nodes []FunctionNode
 	var edges []CallEdge
+	fileSet := result.SSAProgram.Fset
 
 	for _, node := range result.CallGraph.Nodes {
 		if node.Func == nil {
@@ -160,7 +166,7 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 		}
 		if node.Func.Pos() != token.NoPos {
 			pos := node.Func.Pos()
-			position := result.FileSet.Position(pos)
+			position := fileSet.Position(pos)
 			fileName = position.Filename
 			sourceLine = position.Line
 			sourceColumn = position.Column
@@ -192,7 +198,7 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			// 	edgePos = edge.Site.Value().Call.Pos()
 			// 	edgeText = edge.Site.Value().Call.String()
 			// }
-			pos := result.FileSet.Position(edgePos)
+			pos := fileSet.Position(edgePos)
 			edges = append(edges, CallEdge{
 				FromID:   edge.Caller.Func.String(),
 				ToID:     edge.Callee.Func.String(),
