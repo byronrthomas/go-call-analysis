@@ -179,7 +179,7 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 							}
 
 							if asValue, ok := instr.(ssa.Value); ok {
-								vId := contextualValueId(b, instrInd)
+								_, vId := valueId(fileSet, asValue)
 								valueNodes = append(valueNodes, ValueNode{
 									NodeCommon: graphcommon.NodeCommon{
 										ID:      vId,
@@ -280,11 +280,6 @@ func valueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 func contextualId(block *ssa.BasicBlock, instrIndex int) string {
 	funcId := block.Parent().String()
 	return fmt.Sprintf("%s:%d:%d", funcId, block.Index, instrIndex)
-}
-
-func contextualValueId(block *ssa.BasicBlock, instrIndex int) string {
-	funcId := block.Parent().String()
-	return fmt.Sprintf("v:%s:%d:%d", funcId, block.Index, instrIndex)
 }
 
 func instrTypeAsString(instr ssa.Instruction) string {
