@@ -17,23 +17,23 @@ type FunctionId struct {
 	Function string
 }
 
-// Analyzer represents the main analysis engine
-type Analyzer struct {
-	projectPath  string
-	outputPath   string
-	rootFunction *FunctionId
+// AnalysisConfig represents the configuration for analysis
+type AnalysisConfig struct {
+	ProjectPath  string
+	OutputPath   string
+	RootFunction *FunctionId
 }
 
-// NewAnalyzer creates a new analyzer instance
-func NewAnalyzer(projectPath, outputPath string, rootFunction *FunctionId) (*Analyzer, error) {
+// NewAnalysisConfig creates a new analysis configuration
+func NewAnalysisConfig(projectPath, outputPath string, rootFunction *FunctionId) (*AnalysisConfig, error) {
 	if projectPath == "" {
 		return nil, fmt.Errorf("project path is required")
 	}
 
-	return &Analyzer{
-		projectPath:  projectPath,
-		outputPath:   outputPath,
-		rootFunction: rootFunction,
+	return &AnalysisConfig{
+		ProjectPath:  projectPath,
+		OutputPath:   outputPath,
+		RootFunction: rootFunction,
 	}, nil
 }
 
@@ -44,12 +44,12 @@ type CallGraphResult struct {
 }
 
 // Analyze performs the analysis on the target project
-func (a *Analyzer) Analyze() (*CallGraphResult, error) {
+func Analyze(config *AnalysisConfig) (*CallGraphResult, error) {
 	// TODO: Implement analysis logic
 	// Load the packages (set your target package here)
 	cfg := &packages.Config{
 		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedDeps | packages.NeedSyntax | packages.NeedTypesInfo,
-		Dir:   a.projectPath,
+		Dir:   config.ProjectPath,
 		Fset:  token.NewFileSet(),
 		Tests: false,
 	}
@@ -71,14 +71,14 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 
 	// Perform RTA (Rapid Type Analysis) to build call graph
 	var functions []*ssa.Function
-	if a.rootFunction != nil {
+	if config.RootFunction != nil {
 		for _, pkg := range ssaPkgs {
 			fmt.Printf("Checking package %s\n", pkg.Pkg.Path())
-			if pkg.Pkg.Path() == a.rootFunction.Package {
+			if pkg.Pkg.Path() == config.RootFunction.Package {
 				fmt.Printf("Found package %s\n", pkg.Pkg.Path())
 				for _, fn := range pkg.Members {
 					if f, ok := fn.(*ssa.Function); ok {
-						if f.Name() == a.rootFunction.Function {
+						if f.Name() == config.RootFunction.Function {
 							functions = append(functions, f)
 						}
 					}
@@ -96,7 +96,7 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 	}
 	fmt.Printf("Found %d functions\n", len(functions))
 	if len(functions) == 0 {
-		return nil, fmt.Errorf("no functions found for root function %s in package %s", a.rootFunction.Function, a.rootFunction.Package)
+		return nil, fmt.Errorf("no functions found for root function %s in package %s", config.RootFunction.Function, config.RootFunction.Package)
 	}
 	rtaRes := rta.Analyze(functions, true)
 	callGraph := rtaRes.CallGraph
@@ -106,7 +106,7 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 	return &CallGraphResult{
 		CallGraph:  callGraph,
 		FileSet:    prog.Fset,
-		OutputPath: a.outputPath,
+		OutputPath: config.OutputPath,
 	}, nil
 }
 
