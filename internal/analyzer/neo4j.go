@@ -220,7 +220,7 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.ValueNodes[i:end]
-			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column, value_type: node.value_type})"
+			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column, value_type: node.value_type, type_name: node.type_name, is_error_type: node.is_error_type})"
 
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, node := range batch {

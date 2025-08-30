@@ -3,6 +3,7 @@ package analyzer
 import (
 	"fmt"
 	"go/token"
+	"go/types"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/ssa"
@@ -20,7 +21,9 @@ type SSAGraphData struct {
 
 type ValueNode struct {
 	graphcommon.NodeCommon
-	ValueType string
+	ValueType   string
+	TypeName    string
+	IsErrorType bool
 }
 
 type InstructionNode struct {
@@ -52,6 +55,8 @@ func (n *ValueNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Value"
 	nodeCommonMap["value_type"] = n.ValueType
+	nodeCommonMap["type_name"] = n.TypeName
+	nodeCommonMap["is_error_type"] = n.IsErrorType
 	return nodeCommonMap
 }
 
@@ -203,7 +208,9 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 											Column: instrPosition.Column,
 										},
 									},
-									ValueType: valueTypeAsString(asValue),
+									ValueType:   valueTypeAsString(asValue),
+									TypeName:    asValue.Type().String(),
+									IsErrorType: isErrorType(asValue.Type()),
 								})
 
 								// If instruction produces a value, add a result edge from the instruction to the value
@@ -240,7 +247,9 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 								Column: valuePosition.Column,
 							},
 						},
-						ValueType: valueTypeAsString(v),
+						ValueType:   valueTypeAsString(v),
+						TypeName:    v.Type().String(),
+						IsErrorType: isErrorType(v.Type()),
 					})
 					if v.Referrers() != nil {
 						for _, instr := range *v.Referrers() {
@@ -267,6 +276,10 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 		SSAOrderingEdges: ssaOrderingEdges,
 		ResultEdges:      resultEdges,
 	}
+}
+
+func isErrorType(t types.Type) bool {
+	return types.AssignableTo(t, types.Universe.Lookup("error").Type())
 }
 
 func findInBlock(block *ssa.BasicBlock, instr ssa.Instruction) int {
