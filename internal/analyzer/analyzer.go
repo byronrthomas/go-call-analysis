@@ -24,7 +24,7 @@ type CallGraphResult struct {
 }
 
 // Analyze performs the analysis on the target project
-func Analyze(config *AnalysisConfig) (*CallGraphResult, error) {
+func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	// TODO: Implement analysis logic
 	// Load the packages (set your target package here)
 	cfg := &packages.Config{

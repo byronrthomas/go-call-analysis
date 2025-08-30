@@ -40,7 +40,7 @@ var analyzeCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		callGraph, err := analyzer.Analyze(config)
+		callGraph, err := analyzer.CallGraphAnalysis(config)
 		if err != nil {
 			return err
 		}
