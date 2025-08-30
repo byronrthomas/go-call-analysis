@@ -57,7 +57,7 @@ MIT License
 export GCA_PROJECT_PATH=/Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain
 export CSV_OUTPUT_PATH=/Users/byron/projects/bugging/sei-protocol/sei-chain-call-graph
 make clear-old-csvs folder=$CSV_OUTPUT_PATH; \
-make build && bin/gca analyze -p $GCA_PROJECT_PATH -o $CSV_OUTPUT_PATH
+make build && bin/gca call-graph -p $GCA_PROJECT_PATH -o $CSV_OUTPUT_PATH
 ```
 
 ```bash
@@ -67,4 +67,4 @@ make copy-csvs-to-memgraph folder=$CSV_OUTPUT_PATH
 ### Without outputting to CSV:
 
 
-`make build && bin/gca analyze --neo4j -p /Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain`
+`make build && bin/gca call-graph --neo4j -p /Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain`

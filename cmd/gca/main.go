@@ -15,10 +15,10 @@ var rootCmd = &cobra.Command{
 	Long:  `A command-line tool for analyzing Go projects and generating analysis reports.`,
 }
 
-var analyzeCmd = &cobra.Command{
-	Use:   "analyze",
+var callGraphCmd = &cobra.Command{
+	Use:   "call-graph",
 	Short: "Analyze a Go project",
-	Long:  `Analyze a Go project and generate analysis reports.`,
+	Long:  `Analyze a Go project and generate call graph reports.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectPath, _ := cmd.Flags().GetString("path")
 		outputPath, _ := cmd.Flags().GetString("output")
@@ -66,11 +66,11 @@ var analyzeCmd = &cobra.Command{
 }
 
 func init() {
-	analyzeCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
-	analyzeCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
-	analyzeCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
-	analyzeCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
-	rootCmd.AddCommand(analyzeCmd)
+	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
+	callGraphCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
+	callGraphCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
+	callGraphCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
+	rootCmd.AddCommand(callGraphCmd)
 }
 
 func main() {
