@@ -18,18 +18,12 @@ type SSAGraphData struct {
 }
 
 type ValueNode struct {
-	ID           string
-	Name         string
-	Package      string
-	PositionInfo PositionInfo
-	ValueType    string
+	graphcommon.NodeCommon
+	ValueType string
 }
 
 type InstructionNode struct {
-	ID              string
-	Name            string
-	Package         string
-	PositionInfo    PositionInfo
+	graphcommon.NodeCommon
 	InstructionType string
 }
 
@@ -67,15 +61,17 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 					// TODO: restrict to reachable functions from the call graph
 					entryId := f.String()
 					instructionNodes = append(instructionNodes, InstructionNode{
-						ID:              entryId,
-						Name:            f.Name(),
-						Package:         pkg.Pkg.Path(),
-						InstructionType: "function-entry",
-						PositionInfo: PositionInfo{
+						NodeCommon: graphcommon.NodeCommon{
+							ID:      entryId,
+							Name:    f.Name(),
+							Package: pkg.Pkg.Path(),
+							PositionInfo: graphcommon.PositionInfo{
 							File:   pos.Filename,
 							Line:   pos.Line,
 							Column: pos.Column,
 						},
+						},
+						InstructionType: "function-entry",
 					})
 					for blockInd, b := range f.Blocks {
 						_, firstInstrId := instructionId(fileSet, b.Instrs[0])
@@ -113,13 +109,15 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 								})
 							}
 							instructionNodes = append(instructionNodes, InstructionNode{
+								NodeCommon: graphcommon.NodeCommon{
 								ID:      instrId,
 								Name:    instr.String(),
 								Package: pkg.Pkg.Path(),
-								PositionInfo: PositionInfo{
+									PositionInfo: graphcommon.PositionInfo{
 									File:   instrPosition.Filename,
 									Line:   instrPosition.Line,
 									Column: instrPosition.Column,
+									},
 								},
 								InstructionType: instrTypeAsString(instr),
 							})
@@ -136,15 +134,17 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 							if asValue, ok := instr.(ssa.Value); ok {
 								valuePosition, vId := valueId(fileSet, asValue)
 								valueNodes = append(valueNodes, ValueNode{
-									ID:        vId,
-									Name:      asValue.Name(),
-									Package:   pkg.Pkg.Path(),
-									ValueType: valueTypeAsString(asValue),
-									PositionInfo: PositionInfo{
+									NodeCommon: graphcommon.NodeCommon{
+										ID:      vId,
+										Name:    asValue.Name(),
+										Package: pkg.Pkg.Path(),
+										PositionInfo: graphcommon.PositionInfo{
 										File:   valuePosition.Filename,
 										Line:   valuePosition.Line,
 										Column: valuePosition.Column,
 									},
+									},
+									ValueType: valueTypeAsString(asValue),
 								})
 								for _, refr := range *asValue.Referrers() {
 									_, referId := instructionId(fileSet, refr)
@@ -161,15 +161,17 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 				} else if v, ok := mem.(ssa.Value); ok {
 					valuePosition, vId := valueId(fileSet, v)
 					valueNodes = append(valueNodes, ValueNode{
-						ID:        vId,
-						Name:      v.Name(),
-						Package:   pkg.Pkg.Path(),
-						ValueType: valueTypeAsString(v),
-						PositionInfo: PositionInfo{
+						NodeCommon: graphcommon.NodeCommon{
+							ID:      vId,
+							Name:    v.Name(),
+							Package: pkg.Pkg.Path(),
+							PositionInfo: graphcommon.PositionInfo{
 							File:   valuePosition.Filename,
 							Line:   valuePosition.Line,
 							Column: valuePosition.Column,
 						},
+						},
+						ValueType: valueTypeAsString(v),
 					})
 					for _, instr := range *v.Referrers() {
 						_, instrId := instructionId(fileSet, instr)
