@@ -15,6 +15,7 @@ type SSAGraphData struct {
 	OrderingEdges    []OrderingEdge
 	OperandEdges     []OperandEdge
 	SSAOrderingEdges []SSAOrderingEdge
+	ResultEdges      []ResultEdge
 }
 
 type ValueNode struct {
@@ -40,6 +41,10 @@ type SSAOrderingEdge struct {
 }
 
 type OperandEdge struct {
+	graphcommon.EdgeCommon
+}
+
+type ResultEdge struct {
 	graphcommon.EdgeCommon
 }
 
@@ -81,6 +86,12 @@ func (e *OperandEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *ResultEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Produces_Result"
+	return edgeCommonMap
+}
+
 func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
@@ -88,6 +99,7 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 	var orderingEdges []OrderingEdge
 	var ssaOrderingEdges []SSAOrderingEdge
 	var operandEdges []OperandEdge
+	var resultEdges []ResultEdge
 	fileSet := result.SSAProgram.Fset
 
 	for _, pkg := range result.SSAProgram.AllPackages() {
@@ -193,6 +205,15 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 									},
 									ValueType: valueTypeAsString(asValue),
 								})
+
+								// If instruction produces a value, add a result edge from the instruction to the value
+								resultEdges = append(resultEdges, ResultEdge{
+									EdgeCommon: graphcommon.EdgeCommon{
+										FromID: instrId,
+										ToID:   vId,
+									},
+								})
+
 								// TODO: we cannot get refer edges from values because we can't work out where the instruction lives
 								for _, refr := range *asValue.Referrers() {
 									referId := contextualId(refr.Block(), findInBlock(refr.Block(), refr))
@@ -244,6 +265,7 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 		OrderingEdges:    orderingEdges,
 		OperandEdges:     operandEdges,
 		SSAOrderingEdges: ssaOrderingEdges,
+		ResultEdges:      resultEdges,
 	}
 }
 
