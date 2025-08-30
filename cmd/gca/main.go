@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
@@ -22,13 +23,20 @@ var analyzeCmd = &cobra.Command{
 		projectPath, _ := cmd.Flags().GetString("path")
 		outputPath, _ := cmd.Flags().GetString("output")
 		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-
+		rootFunction, _ := cmd.Flags().GetString("root-function")
+		var rootFunctionId *analyzer.FunctionId
+		if rootFunction != "" {
+			rootFunctionId = &analyzer.FunctionId{
+				Package:  strings.Split(rootFunction, ":")[0],
+				Function: strings.Split(rootFunction, ":")[1],
+			}
+		}
 		if projectPath == "" {
 			return fmt.Errorf("project path is required")
 		}
 
 		fmt.Printf("Analyzing project at: %s\n", projectPath)
-		a, err := analyzer.NewAnalyzer(projectPath, outputPath)
+		a, err := analyzer.NewAnalyzer(projectPath, outputPath, rootFunctionId)
 		if err != nil {
 			return err
 		}
@@ -60,6 +68,7 @@ var analyzeCmd = &cobra.Command{
 func init() {
 	analyzeCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
 	analyzeCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
+	analyzeCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
 	analyzeCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
 	rootCmd.AddCommand(analyzeCmd)
 }

@@ -12,21 +12,28 @@ import (
 	"golang.org/x/tools/go/ssa/ssautil"
 )
 
+type FunctionId struct {
+	Package  string
+	Function string
+}
+
 // Analyzer represents the main analysis engine
 type Analyzer struct {
-	projectPath string
-	outputPath  string
+	projectPath  string
+	outputPath   string
+	rootFunction *FunctionId
 }
 
 // NewAnalyzer creates a new analyzer instance
-func NewAnalyzer(projectPath, outputPath string) (*Analyzer, error) {
+func NewAnalyzer(projectPath, outputPath string, rootFunction *FunctionId) (*Analyzer, error) {
 	if projectPath == "" {
 		return nil, fmt.Errorf("project path is required")
 	}
 
 	return &Analyzer{
-		projectPath: projectPath,
-		outputPath:  outputPath,
+		projectPath:  projectPath,
+		outputPath:   outputPath,
+		rootFunction: rootFunction,
 	}, nil
 }
 
@@ -61,29 +68,35 @@ func (a *Analyzer) Analyze() (*CallGraphResult, error) {
 
 	// Build SSA code for the whole program.
 	prog.Build()
-	// prog := ssa.NewProgram(cfg.Fset, ssa.SanityCheckFunctions)
-	// var ssaPkgs []*ssa.Package
-	// for _, pkg := range pkgs {
-	// 	if pkg.Types != nil && pkg.Syntax != nil && pkg.TypesInfo != nil {
-	// 		ssaPkg := prog.CreatePackage(pkg.Types, pkg.Syntax, pkg.TypesInfo, true)
-	// 		ssaPkgs = append(ssaPkgs, ssaPkg)
-	// 	} else {
-	// 		noTypes := pkg.Types == nil
-	// 		noSyntax := pkg.Syntax == nil
-	// 		noTypesInfo := pkg.TypesInfo == nil
-	// 		fmt.Printf("Skipping package %s: NoTypes: %v, NoSyntax: %v, NoTypesInfo: %v\n", pkg.PkgPath, noTypes, noSyntax, noTypesInfo)
-	// 	}
-	// }
-	// prog.Build()
 
 	// Perform RTA (Rapid Type Analysis) to build call graph
 	var functions []*ssa.Function
-	for _, pkg := range ssaPkgs {
-		for _, fn := range pkg.Members {
-			if f, ok := fn.(*ssa.Function); ok {
-				functions = append(functions, f)
+	if a.rootFunction != nil {
+		for _, pkg := range ssaPkgs {
+			fmt.Printf("Checking package %s\n", pkg.Pkg.Path())
+			if pkg.Pkg.Path() == a.rootFunction.Package {
+				fmt.Printf("Found package %s\n", pkg.Pkg.Path())
+				for _, fn := range pkg.Members {
+					if f, ok := fn.(*ssa.Function); ok {
+						if f.Name() == a.rootFunction.Function {
+							functions = append(functions, f)
+						}
+					}
+				}
 			}
 		}
+	} else {
+		for _, pkg := range ssaPkgs {
+			for _, fn := range pkg.Members {
+				if f, ok := fn.(*ssa.Function); ok {
+					functions = append(functions, f)
+				}
+			}
+		}
+	}
+	fmt.Printf("Found %d functions\n", len(functions))
+	if len(functions) == 0 {
+		return nil, fmt.Errorf("no functions found for root function %s in package %s", a.rootFunction.Function, a.rootFunction.Package)
 	}
 	rtaRes := rta.Analyze(functions, true)
 	callGraph := rtaRes.CallGraph
