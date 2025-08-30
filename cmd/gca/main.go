@@ -80,19 +80,16 @@ var ssaGraphCmd = &cobra.Command{
 	Short: "Analyze a Go project using SSA",
 	Long:  `Analyze a Go project and generate SSA-based call graph reports.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := buildCallGraph(cmd)
+		callGraph, err := buildCallGraph(cmd)
 		if err != nil {
 			return err
 		}
 
-		// For now, output empty nodes and edges as requested
-		// TODO: Implement SSA-specific analysis logic here
-		emptyNodes := []analyzer.FunctionNode{}
-		emptyEdges := []analyzer.CallEdge{}
+		ssaResult := analyzer.ExtractSSAGraphData(callGraph)
 
 		// Handle output based on flags
 		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-		outputPath, _ := cmd.Flags().GetString("output")
+		// outputPath, _ := cmd.Flags().GetString("output")
 
 		if useNeo4j {
 			// Use hardcoded Neo4j connection details
@@ -102,10 +99,9 @@ var ssaGraphCmd = &cobra.Command{
 				Password: "",
 				Database: "",
 			}
-			return analyzer.ExportCallGraphToNeo4j(emptyNodes, emptyEdges, config)
+			return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
 		} else {
-			// Use CSV output (default behavior)
-			return analyzer.ExportCallGraphToCSV(emptyNodes, emptyEdges, outputPath)
+			panic("CSV output not supported for SSA graph")
 		}
 	},
 }

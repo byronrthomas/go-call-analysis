@@ -43,6 +43,44 @@ type OperandEdge struct {
 	graphcommon.EdgeCommon
 }
 
+func (n *ValueNode) ToMap() map[string]any {
+	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
+	nodeCommonMap["label"] = "Value"
+	nodeCommonMap["value_type"] = n.ValueType
+	return nodeCommonMap
+}
+
+func (n *InstructionNode) ToMap() map[string]any {
+	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
+	nodeCommonMap["label"] = "Instruction"
+	nodeCommonMap["instruction_type"] = n.InstructionType
+	return nodeCommonMap
+}
+
+func (e *ReferEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Refers_To"
+	return edgeCommonMap
+}
+
+func (e *OrderingEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "And_Then"
+	return edgeCommonMap
+}
+
+func (e *SSAOrderingEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "SSA_Successor"
+	return edgeCommonMap
+}
+
+func (e *OperandEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Uses_Operand"
+	return edgeCommonMap
+}
+
 func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
@@ -59,34 +97,40 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 				if f, ok := mem.(*ssa.Function); ok {
 					pos := fileSet.Position(f.Pos())
 					// TODO: restrict to reachable functions from the call graph
-					entryId := f.String()
+					funcId := f.String()
 					instructionNodes = append(instructionNodes, InstructionNode{
 						NodeCommon: graphcommon.NodeCommon{
-							ID:      entryId,
+							ID:      funcId,
 							Name:    f.Name(),
 							Package: pkg.Pkg.Path(),
 							PositionInfo: graphcommon.PositionInfo{
-							File:   pos.Filename,
-							Line:   pos.Line,
-							Column: pos.Column,
-						},
+								File:   pos.Filename,
+								Line:   pos.Line,
+								Column: pos.Column,
+							},
 						},
 						InstructionType: "function-entry",
 					})
+					// Put an end-then node from the function entry to the first instruction
+
 					for blockInd, b := range f.Blocks {
-						_, firstInstrId := instructionId(fileSet, b.Instrs[0])
-						_, lastInstrId := instructionId(fileSet, b.Instrs[len(b.Instrs)-1])
-						for _, pred := range b.Preds {
-							_, predId := instructionId(fileSet, pred.Instrs[len(pred.Instrs)-1])
-							orderingEdges = append(orderingEdges, OrderingEdge{
+						var precInstrId string
+						if blockInd == 0 {
+							precInstrId = funcId
+						}
+						firstInstrId := contextualId(b, 0)
+						lastInstrId := contextualId(b, len(b.Instrs)-1)
+						for _, predBlk := range b.Preds {
+							predId := contextualId(predBlk, len(predBlk.Instrs)-1)
+							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: predId,
 									ToID:   firstInstrId,
 								},
 							})
 						}
-						for _, succ := range b.Succs {
-							_, succId := instructionId(fileSet, succ.Instrs[0])
+						for _, succBlk := range b.Succs {
+							succId := contextualId(succBlk, 0)
 							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: lastInstrId,
@@ -96,31 +140,34 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 						}
 
 						for instrInd, instr := range b.Instrs {
-							instrPosition, instrId := instructionId(fileSet, instr)
-							if blockInd == 0 && instrInd == 0 {
-								if b.Preds != nil && len(b.Preds) > 0 {
-									panic("function-entry block has predecessors")
-								}
-								ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
-									EdgeCommon: graphcommon.EdgeCommon{
-										FromID: entryId,
-										ToID:   instrId,
-									},
-								})
-							}
+							instrId := contextualId(b, instrInd)
+
+							instrPosition := fileSet.Position(instr.Pos())
 							instructionNodes = append(instructionNodes, InstructionNode{
 								NodeCommon: graphcommon.NodeCommon{
-								ID:      instrId,
-								Name:    instr.String(),
-								Package: pkg.Pkg.Path(),
+									ID:      instrId,
+									Name:    instr.String(),
+									Package: pkg.Pkg.Path(),
 									PositionInfo: graphcommon.PositionInfo{
-									File:   instrPosition.Filename,
-									Line:   instrPosition.Line,
-									Column: instrPosition.Column,
+										File:   instrPosition.Filename,
+										Line:   instrPosition.Line,
+										Column: instrPosition.Column,
 									},
 								},
 								InstructionType: instrTypeAsString(instr),
 							})
+
+							// Add the and-then edge from the previous instruction to the current instruction
+							if precInstrId != "" {
+								orderingEdges = append(orderingEdges, OrderingEdge{
+									EdgeCommon: graphcommon.EdgeCommon{
+										FromID: precInstrId,
+										ToID:   instrId,
+									},
+								})
+							}
+							precInstrId = instrId
+
 							for _, op := range instr.Operands(make([]*ssa.Value, 0)) {
 								_, opId := valueId(fileSet, *op)
 								operandEdges = append(operandEdges, OperandEdge{
@@ -132,22 +179,23 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 							}
 
 							if asValue, ok := instr.(ssa.Value); ok {
-								valuePosition, vId := valueId(fileSet, asValue)
+								vId := contextualValueId(b, instrInd)
 								valueNodes = append(valueNodes, ValueNode{
 									NodeCommon: graphcommon.NodeCommon{
 										ID:      vId,
 										Name:    asValue.Name(),
 										Package: pkg.Pkg.Path(),
 										PositionInfo: graphcommon.PositionInfo{
-										File:   valuePosition.Filename,
-										Line:   valuePosition.Line,
-										Column: valuePosition.Column,
-									},
+											File:   instrPosition.Filename,
+											Line:   instrPosition.Line,
+											Column: instrPosition.Column,
+										},
 									},
 									ValueType: valueTypeAsString(asValue),
 								})
+								// TODO: we cannot get refer edges from values because we can't work out where the instruction lives
 								for _, refr := range *asValue.Referrers() {
-									_, referId := instructionId(fileSet, refr)
+									referId := contextualId(refr.Block(), findInBlock(refr.Block(), refr))
 									referEdges = append(referEdges, ReferEdge{
 										EdgeCommon: graphcommon.EdgeCommon{
 											FromID: referId,
@@ -166,21 +214,23 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 							Name:    v.Name(),
 							Package: pkg.Pkg.Path(),
 							PositionInfo: graphcommon.PositionInfo{
-							File:   valuePosition.Filename,
-							Line:   valuePosition.Line,
-							Column: valuePosition.Column,
-						},
+								File:   valuePosition.Filename,
+								Line:   valuePosition.Line,
+								Column: valuePosition.Column,
+							},
 						},
 						ValueType: valueTypeAsString(v),
 					})
-					for _, instr := range *v.Referrers() {
-						_, instrId := instructionId(fileSet, instr)
-						operandEdges = append(operandEdges, OperandEdge{
-							EdgeCommon: graphcommon.EdgeCommon{
-								FromID: instrId,
-								ToID:   vId,
-							},
-						})
+					if v.Referrers() != nil {
+						for _, instr := range *v.Referrers() {
+							instrId := contextualId(instr.Block(), findInBlock(instr.Block(), instr))
+							operandEdges = append(operandEdges, OperandEdge{
+								EdgeCommon: graphcommon.EdgeCommon{
+									FromID: instrId,
+									ToID:   vId,
+								},
+							})
+						}
 					}
 				}
 			}
@@ -197,16 +247,44 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 	}
 }
 
-func instructionId(fileSet *token.FileSet, instr ssa.Instruction) (token.Position, string) {
-	instrPosition := fileSet.Position(instr.Pos())
-	instrId := fmt.Sprintf("%s:%d:%d", instrPosition.Filename, instrPosition.Line, instrPosition.Column)
-	return instrPosition, instrId
+func findInBlock(block *ssa.BasicBlock, instr ssa.Instruction) int {
+	for i, instr := range block.Instrs {
+		if instr == instr {
+			return i
+		}
+	}
+	return -1
 }
 
 func valueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
+	instrPos := instr.Pos()
+	if instrPos == token.NoPos {
+		if asConst, ok := instr.(*ssa.Const); ok {
+			if asConst.Value == nil {
+				return token.Position{}, instr.String()
+			}
+			asExactString := asConst.Value.ExactString()
+			asString := asConst.Value.String()
+			if asExactString == asString {
+				return token.Position{}, asExactString
+			}
+			return token.Position{}, asExactString
+		}
+		return token.Position{}, instr.String()
+	}
 	instrPosition := fileSet.Position(instr.Pos())
 	instrId := fmt.Sprintf("value-%s:%d:%d", instrPosition.Filename, instrPosition.Line, instrPosition.Column)
 	return instrPosition, instrId
+}
+
+func contextualId(block *ssa.BasicBlock, instrIndex int) string {
+	funcId := block.Parent().String()
+	return fmt.Sprintf("%s:%d:%d", funcId, block.Index, instrIndex)
+}
+
+func contextualValueId(block *ssa.BasicBlock, instrIndex int) string {
+	funcId := block.Parent().String()
+	return fmt.Sprintf("v:%s:%d:%d", funcId, block.Index, instrIndex)
 }
 
 func instrTypeAsString(instr ssa.Instruction) string {
