@@ -5,6 +5,7 @@ import (
 	"go/token"
 	"log"
 
+	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/callgraph"
 	"golang.org/x/tools/go/callgraph/rta"
 	"golang.org/x/tools/go/packages"
@@ -128,26 +129,19 @@ func (n *FunctionNode) ToMap() map[string]any {
 
 // CallEdge represents a call relationship between functions
 type CallEdge struct {
-	FromID   string
-	ToID     string
+	graphcommon.EdgeCommon
 	EdgeText string
 	CallSite PositionInfo
 }
 
 func (e *CallEdge) ToMap() map[string]any {
-	return map[string]any{
-		"from_id":          e.FromID,
-		"to_id":            e.ToID,
-		"type":             "CALLS",
-		"call_site_file":   e.CallSite.File,
-		"call_site_line":   e.CallSite.Line,
-		"call_site_column": e.CallSite.Column,
-		"call_site_text":   e.EdgeText,
-	}
-}
-
-type Mappable interface {
-	ToMap() map[string]any
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "CALLS"
+	edgeCommonMap["call_site_file"] = e.CallSite.File
+	edgeCommonMap["call_site_line"] = e.CallSite.Line
+	edgeCommonMap["call_site_column"] = e.CallSite.Column
+	edgeCommonMap["call_site_text"] = e.EdgeText
+	return edgeCommonMap
 }
 
 // ExtractCallGraphData extracts nodes and edges from the call graph result
@@ -205,8 +199,10 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 			// }
 			pos := fileSet.Position(edgePos)
 			edges = append(edges, CallEdge{
-				FromID:   edge.Caller.Func.String(),
-				ToID:     edge.Callee.Func.String(),
+				EdgeCommon: graphcommon.EdgeCommon{
+					FromID: edge.Caller.Func.String(),
+					ToID:   edge.Callee.Func.String(),
+				},
 				EdgeText: edgeText,
 				CallSite: PositionInfo{
 					File:   pos.Filename,

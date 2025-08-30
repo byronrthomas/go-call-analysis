@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 )
 
 const (
@@ -21,7 +22,7 @@ type Neo4jConfig struct {
 	Database string
 }
 
-func mapify(batch []Mappable) []map[string]any {
+func mapify(batch []graphcommon.Mappable) []map[string]any {
 	result := make([]map[string]any, len(batch))
 	for i, node := range batch {
 		result[i] = node.ToMap()
@@ -62,7 +63,7 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 			batch := nodes[i:end]
 			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, file: node.file, line: node.line, column: node.column})"
 
-			mappableBatch := make([]Mappable, len(batch))
+			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, node := range batch {
 				mappableBatch[i] = &node
 			}
@@ -111,7 +112,7 @@ func ExportCallGraphToNeo4j(nodes []FunctionNode, edges []CallEdge, config Neo4j
 				CREATE (from)-[:edge.type {call_site_file: edge.call_site_file, call_site_line: edge.call_site_line, call_site_column: edge.call_site_column, call_site_text: edge.call_site_text}]->(to)
 			`
 
-			mappableBatch := make([]Mappable, len(batch))
+			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
 			}
