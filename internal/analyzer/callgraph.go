@@ -101,37 +101,22 @@ func BuildSSAProgram(config *AnalysisConfig) *ssa.Program {
 	return prog
 }
 
-type PositionInfo struct {
-	File   string
-	Line   int
-	Column int
-}
-
 // FunctionNode represents a function in the call graph
 type FunctionNode struct {
-	PositionInfo
-	ID      string
-	Name    string
-	Package string
+	graphcommon.NodeCommon
 }
 
 func (n *FunctionNode) ToMap() map[string]any {
-	return map[string]any{
-		"id":      n.ID,
-		"name":    n.Name,
-		"package": n.Package,
-		"file":    n.File,
-		"line":    n.Line,
-		"column":  n.Column,
-		"label":   "Function",
-	}
+	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
+	nodeCommonMap["label"] = "Function"
+	return nodeCommonMap
 }
 
 // CallEdge represents a call relationship between functions
 type CallEdge struct {
 	graphcommon.EdgeCommon
 	EdgeText string
-	CallSite PositionInfo
+	CallSite graphcommon.PositionInfo
 }
 
 func (e *CallEdge) ToMap() map[string]any {
@@ -172,15 +157,16 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 		}
 
 		nodes = append(nodes, FunctionNode{
-			ID:      node.Func.String(),
-			Name:    node.Func.Name(),
-			Package: packageName,
-			PositionInfo: PositionInfo{
-				File:   fileName,
-				Line:   sourceLine,
-				Column: sourceColumn,
-			},
-		})
+			NodeCommon: graphcommon.NodeCommon{
+				ID:      node.Func.String(),
+				Name:    node.Func.Name(),
+				Package: packageName,
+				PositionInfo: graphcommon.PositionInfo{
+					File:   fileName,
+					Line:   sourceLine,
+					Column: sourceColumn,
+				},
+			}})
 
 		// Extract edge data
 		for _, edge := range node.Out {
@@ -204,7 +190,7 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 					ToID:   edge.Callee.Func.String(),
 				},
 				EdgeText: edgeText,
-				CallSite: PositionInfo{
+				CallSite: graphcommon.PositionInfo{
 					File:   pos.Filename,
 					Line:   pos.Line,
 					Column: pos.Column,

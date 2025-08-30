@@ -4,6 +4,30 @@ type Mappable interface {
 	ToMap() map[string]any
 }
 
+type PositionInfo struct {
+	File   string
+	Line   int
+	Column int
+}
+
+type NodeCommon struct {
+	ID           string
+	Name         string
+	Package      string
+	PositionInfo PositionInfo
+}
+
+func NodeCommonAsMap(nodeCommon NodeCommon) map[string]any {
+	return map[string]any{
+		"id":      nodeCommon.ID,
+		"name":    nodeCommon.Name,
+		"package": nodeCommon.Package,
+		"file":    nodeCommon.PositionInfo.File,
+		"line":    nodeCommon.PositionInfo.Line,
+		"column":  nodeCommon.PositionInfo.Column,
+	}
+}
+
 type EdgeCommon struct {
 	FromID string
 	ToID   string

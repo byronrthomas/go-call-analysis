@@ -73,9 +73,9 @@ func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath str
 			node.Name,
 			node.Package,
 			"Function", // Constant label for all function nodes
-			node.File,
-			fmt.Sprintf("%d", node.Line),
-			fmt.Sprintf("%d", node.Column),
+			node.PositionInfo.File,
+			fmt.Sprintf("%d", node.PositionInfo.Line),
+			fmt.Sprintf("%d", node.PositionInfo.Column),
 		})
 	}
 
