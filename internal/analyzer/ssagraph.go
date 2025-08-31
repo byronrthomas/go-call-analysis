@@ -197,6 +197,9 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 							precInstrId = instrId
 
 							for _, op := range instr.Operands(make([]*ssa.Value, 0)) {
+								if *op == nil {
+									continue
+								}
 								_, opId := valueId(fileSet, *op)
 								operandEdges = append(operandEdges, OperandEdge{
 									EdgeCommon: graphcommon.EdgeCommon{
@@ -290,7 +293,8 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 }
 
 func isErrorType(t types.Type) bool {
-	return types.AssignableTo(t, types.Universe.Lookup("error").Type())
+	errorType := types.Universe.Lookup("error").Type()
+	return types.AssignableTo(t, errorType)
 }
 
 func findInBlock(block *ssa.BasicBlock, instr ssa.Instruction) int {
