@@ -106,7 +106,9 @@ var ssaGraphCmd = &cobra.Command{
 			}
 			return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
 		} else {
-			panic("CSV output not supported for SSA graph")
+			// Use CSV output (default behavior)
+			outputPath, _ := cmd.Flags().GetString("output")
+			return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
 		}
 	},
 }

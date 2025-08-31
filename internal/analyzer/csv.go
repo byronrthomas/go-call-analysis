@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
+
+	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 )
 
 const MAX_CSV_LINES = 200_000 // Maximum number of lines per CSV file
@@ -62,65 +65,229 @@ func writeCSVToFiles(data [][]string, basePath string, header []string) error {
 	return nil
 }
 
-// ExportCallGraphToCSV exports the call graph data to CSV files
-func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath string) error {
-	// Convert nodes to CSV format
-	var nodeRows [][]string
-	nodeHeader := []string{"id", "name", "package", "label", "file", "line", "char"}
-	for _, node := range nodes {
-		nodeRows = append(nodeRows, []string{
-			node.ID,
-			node.Name,
-			node.Package,
-			"Function", // Constant label for all function nodes
-			node.PositionInfo.File,
-			fmt.Sprintf("%d", node.PositionInfo.Line),
-			fmt.Sprintf("%d", node.PositionInfo.Column),
-		})
+// getOrderedKeys returns the keys in the specified order for CSV columns
+func getOrderedKeys(keys []string) []string {
+	// Check if "id" exists - it should be first
+	hasId := false
+	for _, key := range keys {
+		if key == "id" {
+			hasId = true
+			break
+		}
 	}
 
-	// Convert edges to CSV format
-	var edgeRows [][]string
-	edgeHeader := []string{"id_from", "id_to", "type"}
-	for _, edge := range edges {
-		edgeRows = append(edgeRows, []string{
-			edge.FromID,
-			edge.ToID,
-			"CALLS", // Constant type for all call edges
-		})
+	// Check if "from_id" and "to_id" exist
+	hasFromId := false
+	hasToId := false
+	for _, key := range keys {
+		if key == "from_id" {
+			hasFromId = true
+		}
+		if key == "to_id" {
+			hasToId = true
+		}
 	}
 
+	// Create ordered keys
+	var orderedKeys []string
+
+	// Add "id" first if it exists
+	if hasId {
+		orderedKeys = append(orderedKeys, "id")
+	}
+
+	// Add "from_id" and "to_id" if they exist and "id" doesn't
+	if !hasId && hasFromId && hasToId {
+		orderedKeys = append(orderedKeys, "from_id", "to_id")
+	}
+
+	// Add remaining keys in sorted order
+	var remainingKeys []string
+	for _, key := range keys {
+		if key == "id" {
+			continue // Already added
+		}
+		if (key == "from_id" || key == "to_id") && !hasId {
+			continue // Already added
+		}
+		remainingKeys = append(remainingKeys, key)
+	}
+	sort.Strings(remainingKeys)
+	orderedKeys = append(orderedKeys, remainingKeys...)
+
+	return orderedKeys
+}
+
+// ExportToCSV exports data to CSV files using a generic approach
+// dataMap is a map from string (filename) to list of Mappable instances
+func ExportToCSV(dataMap map[string][]graphcommon.Mappable, outputPath string) error {
 	// Output to files or stdout
 	if outputPath == "" {
-		// Output nodes to stdout
-		fmt.Println("Nodes:")
-		writer := csv.NewWriter(os.Stdout)
-		writer.WriteAll(nodeRows)
-		writer.Flush()
+		// Output to stdout
+		for filename, items := range dataMap {
+			if len(items) == 0 {
+				continue
+			}
 
-		// Output edges to stdout
-		fmt.Println("\nEdges:")
-		writer = csv.NewWriter(os.Stdout)
-		writer.WriteAll(edgeRows)
-		writer.Flush()
+			fmt.Printf("\n%s:\n", filename)
+			writer := csv.NewWriter(os.Stdout)
+
+			// Get the first item to determine keys
+			firstItem := items[0].ToMap()
+			keys := make([]string, 0, len(firstItem))
+			for key := range firstItem {
+				keys = append(keys, key)
+			}
+
+			// Get ordered keys
+			orderedKeys := getOrderedKeys(keys)
+
+			// Write header
+			if err := writer.Write(orderedKeys); err != nil {
+				return fmt.Errorf("failed to write header for %s: %v", filename, err)
+			}
+
+			// Write data rows
+			var rows [][]string
+			for _, item := range items {
+				itemMap := item.ToMap()
+				row := make([]string, len(orderedKeys))
+				for i, key := range orderedKeys {
+					if value, exists := itemMap[key]; exists {
+						row[i] = fmt.Sprintf("%v", value)
+					} else {
+						row[i] = ""
+					}
+				}
+				rows = append(rows, row)
+			}
+
+			if err := writer.WriteAll(rows); err != nil {
+				return fmt.Errorf("failed to write data for %s: %v", filename, err)
+			}
+			writer.Flush()
+		}
 	} else {
 		// Create output directory if it doesn't exist
 		if err := os.MkdirAll(outputPath, 0755); err != nil {
 			return fmt.Errorf("failed to create output directory: %v", err)
 		}
 
-		// Write nodes to file(s)
-		nodesPath := filepath.Join(outputPath, "nodes.csv")
-		if err := writeCSVToFiles(nodeRows, nodesPath, nodeHeader); err != nil {
-			return fmt.Errorf("failed to write nodes: %v", err)
-		}
+		// Write each dataset to its own file(s)
+		for filename, items := range dataMap {
+			if len(items) == 0 {
+				continue
+			}
 
-		// Write edges to file(s)
-		edgesPath := filepath.Join(outputPath, "edges.csv")
-		if err := writeCSVToFiles(edgeRows, edgesPath, edgeHeader); err != nil {
-			return fmt.Errorf("failed to write edges: %v", err)
+			// Get the first item to determine keys
+			firstItem := items[0].ToMap()
+			keys := make([]string, 0, len(firstItem))
+			for key := range firstItem {
+				keys = append(keys, key)
+			}
+
+			// Get ordered keys
+			orderedKeys := getOrderedKeys(keys)
+
+			// Convert items to CSV rows
+			var rows [][]string
+			for _, item := range items {
+				itemMap := item.ToMap()
+				row := make([]string, len(orderedKeys))
+				for i, key := range orderedKeys {
+					if value, exists := itemMap[key]; exists {
+						row[i] = fmt.Sprintf("%v", value)
+					} else {
+						row[i] = ""
+					}
+				}
+				rows = append(rows, row)
+			}
+
+			// Write to file(s)
+			filePath := filepath.Join(outputPath, filename+".csv")
+			if err := writeCSVToFiles(rows, filePath, orderedKeys); err != nil {
+				return fmt.Errorf("failed to write %s: %v", filename, err)
+			}
 		}
 	}
 
 	return nil
+}
+
+// ExportCallGraphToCSV exports the call graph data to CSV files (legacy function for backward compatibility)
+func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath string) error {
+	dataMap := make(map[string][]graphcommon.Mappable)
+
+	// Convert nodes to Mappable interface
+	nodeMappables := make([]graphcommon.Mappable, len(nodes))
+	for i := range nodes {
+		nodeMappables[i] = &nodes[i]
+	}
+	dataMap["nodes"] = nodeMappables
+
+	// Convert edges to Mappable interface
+	edgeMappables := make([]graphcommon.Mappable, len(edges))
+	for i := range edges {
+		edgeMappables[i] = &edges[i]
+	}
+	dataMap["edges"] = edgeMappables
+
+	return ExportToCSV(dataMap, outputPath)
+}
+
+// ExportSSAGraphToCSV exports the SSA graph data to CSV files
+func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
+	dataMap := make(map[string][]graphcommon.Mappable)
+
+	// Convert value nodes to Mappable interface
+	valueNodeMappables := make([]graphcommon.Mappable, len(ssaData.ValueNodes))
+	for i := range ssaData.ValueNodes {
+		valueNodeMappables[i] = &ssaData.ValueNodes[i]
+	}
+	dataMap["value_nodes"] = valueNodeMappables
+
+	// Convert instruction nodes to Mappable interface
+	instructionNodeMappables := make([]graphcommon.Mappable, len(ssaData.InstructionNodes))
+	for i := range ssaData.InstructionNodes {
+		instructionNodeMappables[i] = &ssaData.InstructionNodes[i]
+	}
+	dataMap["instruction_nodes"] = instructionNodeMappables
+
+	// Convert refer edges to Mappable interface
+	referEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ReferEdges))
+	for i := range ssaData.ReferEdges {
+		referEdgeMappables[i] = &ssaData.ReferEdges[i]
+	}
+	dataMap["refer_edges"] = referEdgeMappables
+
+	// Convert ordering edges to Mappable interface
+	orderingEdgeMappables := make([]graphcommon.Mappable, len(ssaData.OrderingEdges))
+	for i := range ssaData.OrderingEdges {
+		orderingEdgeMappables[i] = &ssaData.OrderingEdges[i]
+	}
+	dataMap["ordering_edges"] = orderingEdgeMappables
+
+	// Convert SSA ordering edges to Mappable interface
+	ssaOrderingEdgeMappables := make([]graphcommon.Mappable, len(ssaData.SSAOrderingEdges))
+	for i := range ssaData.SSAOrderingEdges {
+		ssaOrderingEdgeMappables[i] = &ssaData.SSAOrderingEdges[i]
+	}
+	dataMap["ssa_ordering_edges"] = ssaOrderingEdgeMappables
+
+	// Convert operand edges to Mappable interface
+	operandEdgeMappables := make([]graphcommon.Mappable, len(ssaData.OperandEdges))
+	for i := range ssaData.OperandEdges {
+		operandEdgeMappables[i] = &ssaData.OperandEdges[i]
+	}
+	dataMap["operand_edges"] = operandEdgeMappables
+
+	// Convert result edges to Mappable interface
+	resultEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ResultEdges))
+	for i := range ssaData.ResultEdges {
+		resultEdgeMappables[i] = &ssaData.ResultEdges[i]
+	}
+	dataMap["result_edges"] = resultEdgeMappables
+
+	return ExportToCSV(dataMap, outputPath)
 }
