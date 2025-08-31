@@ -27,3 +27,6 @@ go.work
 # OS specific files
 .DS_Store
 Thumbs.db 
+
+# Test output
+test-output/
