@@ -1,5 +1,4 @@
 id,column,file,is_error_type,label,line,name,package,type_name,value_type
-github.com/throwin5tone7/go-call-analysis/test-project.init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
 *init$guard,0,,false,Value,0,t0,github.com/throwin5tone7/go-call-analysis/test-project,bool,UnOp
 fmt.init(),0,,false,Value,0,t1,github.com/throwin5tone7/go-call-analysis/test-project,(),Call
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,6,t0,github.com/throwin5tone7/go-call-analysis/test-project,*[1]any,Alloc
@@ -7,3 +6,4 @@ value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,32,
 "make any <- string (""Hello, World!"":string)",0,,false,Value,0,t2,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
 slice t0[:],0,,false,Value,0,t3,github.com/throwin5tone7/go-call-analysis/test-project,[]any,Slice
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:16,16,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,6,t4,github.com/throwin5tone7/go-call-analysis/test-project,"(n int, err error)",Call
+github.com/throwin5tone7/go-call-analysis/test-project.init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
