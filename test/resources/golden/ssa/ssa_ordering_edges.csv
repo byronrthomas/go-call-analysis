@@ -1,0 +1,7 @@
+from_id,to_id,type
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,SSA_Successor
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,SSA_Successor
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,SSA_Successor
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,SSA_Successor
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,SSA_Successor
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,SSA_Successor

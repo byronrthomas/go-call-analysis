@@ -8,6 +8,14 @@ build:
 test:
 	go test -v ./...
 
+# Run SSA graph tests specifically
+test-ssa:
+	go test -v ./test -run TestSSAGraphAnalysis
+
+# Regenerate golden files for SSA graph tests
+regenerate-golden-ssa:
+	bin/gca ssa-graph -p ./test-project -o ./test/resources/golden/ssa -r 'github.com/throwin5tone7/go-call-analysis/test-project:main' --package-prefixes='github.com/throwin5tone7/go-call-analysis'
+
 # Clean build artifacts
 clean:
 	rm -rf bin/

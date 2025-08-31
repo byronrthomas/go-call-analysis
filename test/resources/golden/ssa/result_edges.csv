@@ -1,0 +1,8 @@
+from_id,to_id,type
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,*init$guard,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,fmt.init(),Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,&t0[0:int],Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,"make any <- string (""Hello, World!"":string)",Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,slice t0[:],Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:16,Produces_Result

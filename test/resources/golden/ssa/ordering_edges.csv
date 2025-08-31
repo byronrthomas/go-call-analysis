@@ -1,0 +1,12 @@
+from_id,to_id,type
+github.com/throwin5tone7/go-call-analysis/test-project.init,github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main,github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,github.com/throwin5tone7/go-call-analysis/test-project.main:0:6,And_Then

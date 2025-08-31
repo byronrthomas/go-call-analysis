@@ -1,0 +1,16 @@
+id,column,file,instruction_type,label,line,name,package
+github.com/throwin5tone7/go-call-analysis/test-project.init,0,,function-entry,Instruction,0,init,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,0,,UnOp,Instruction,0,*init$guard,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,0,,If,Instruction,0,if t0 goto 2 else 1,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,0,,Store,Instruction,0,*init$guard = true:bool,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,0,,Call,Instruction,0,fmt.init(),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,0,,unknown,Instruction,0,jump 2,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,0,,Return,Instruction,0,return,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main,6,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,5,main,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Alloc,Instruction,6,new [1]any (varargs),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,0,,IndexAddr,Instruction,0,&t0[0:int],github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,0,,MakeInterface,Instruction,0,"make any <- string (""Hello, World!"":string)",github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,0,,Store,Instruction,0,*t1 = t2,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,0,,Slice,Instruction,0,slice t0[:],github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,16,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Call,Instruction,6,fmt.Println(t3...),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:6,0,,Return,Instruction,0,return,github.com/throwin5tone7/go-call-analysis/test-project
