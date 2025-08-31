@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
+	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/ssa"
@@ -97,7 +98,7 @@ func (e *ResultEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
-func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
+func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
 	var referEdges []ReferEdge
@@ -107,9 +108,19 @@ func ExtractSSAGraphData(result *CallGraphResult) SSAGraphData {
 	var resultEdges []ResultEdge
 	fileSet := result.SSAProgram.Fset
 
+	// Helper function to check if a package path matches any of the prefixes
+	matchesPrefix := func(pkgPath string) bool {
+		for _, prefix := range packagePrefixes {
+			if prefix == "" || strings.HasPrefix(pkgPath, prefix) {
+				return true
+			}
+		}
+		return false
+	}
+
 	for _, pkg := range result.SSAProgram.AllPackages() {
-		// TODO: hard-coded for now, ideally this should be a list of package prefixes we will include
-		if pkg.Pkg.Path() == "github.com/sei-protocol/sei-chain/oracle/price-feeder/oracle/client" {
+		// Check if the package path matches any of the provided prefixes
+		if matchesPrefix(pkg.Pkg.Path()) {
 			for _, mem := range pkg.Members {
 				if f, ok := mem.(*ssa.Function); ok {
 					pos := fileSet.Position(f.Pos())

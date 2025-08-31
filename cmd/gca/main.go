@@ -85,7 +85,12 @@ var ssaGraphCmd = &cobra.Command{
 			return err
 		}
 
-		ssaResult := analyzer.ExtractSSAGraphData(callGraph)
+		packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
+		// If no package prefixes are provided, default to an empty string which matches everything
+		if len(packagePrefixes) == 0 {
+			packagePrefixes = []string{""}
+		}
+		ssaResult := analyzer.ExtractSSAGraphData(callGraph, packagePrefixes)
 
 		// Handle output based on flags
 		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
@@ -117,6 +122,7 @@ func init() {
 	ssaGraphCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
 	ssaGraphCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
 	ssaGraphCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
+	ssaGraphCmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
 
 	rootCmd.AddCommand(callGraphCmd)
 	rootCmd.AddCommand(ssaGraphCmd)
