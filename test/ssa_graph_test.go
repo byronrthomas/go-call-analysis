@@ -304,8 +304,16 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 						// If the instruction is also a value, show its name
 						if val, ok := instr.(ssa.Value); ok {
 							if val.Name() != "" {
-								result.WriteString(fmt.Sprintf("      Value Name: %s\n", val.Name()))
+								outputValue(&result, "      As value: ", "  Type: ", val)
 							}
+						}
+
+						// Show operands
+						for i, op := range instr.Operands(make([]*ssa.Value, 0)) {
+							if *op == nil {
+								continue
+							}
+							outputValue(&result, fmt.Sprintf("      Operand %d: ", i), "  Type: ", *op)
 						}
 					}
 					result.WriteString("\n")
@@ -315,17 +323,23 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 
 			// Process sorted values
 			for _, v := range values {
-				result.WriteString(fmt.Sprintf("Value: %s\n", v.Name()))
-				if v.Type() != nil {
-					result.WriteString(fmt.Sprintf("  Type: %s\n", v.Type().String()))
-				}
-				result.WriteString("\n")
+				outputValue(&result, "Value: ", "\n  Type: ", v)
 			}
 			result.WriteString("\n")
 		}
 	}
 
 	return result.String()
+}
+
+func outputValue(result *strings.Builder, valuePrefix string, typePrefix string, v ssa.Value) {
+	fmt.Fprint(result, valuePrefix)
+	fmt.Fprint(result, v.Name())
+	if v.Type() != nil {
+		fmt.Fprint(result, typePrefix)
+		fmt.Fprint(result, v.Type().String())
+	}
+	fmt.Fprint(result, "\n")
 }
 
 // compareTextFiles compares two text files, handling potential differences in line endings

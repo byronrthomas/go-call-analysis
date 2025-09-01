@@ -3,13 +3,18 @@ Package: github.com/throwin5tone7/go-call-analysis/test-project
 Function: init
   Block 0:
     0: *init$guard
-      Value Name: t0
+      As value: t0  Type: bool
+      Operand 0: init$guard  Type: *bool
     1: if t0 goto 2 else 1
+      Operand 0: t0  Type: bool
 
   Block 1:
     0: *init$guard = true:bool
+      Operand 0: init$guard  Type: *bool
+      Operand 1: true:bool  Type: bool
     1: fmt.init()
-      Value Name: t1
+      As value: t1  Type: ()
+      Operand 0: init  Type: func()
     2: jump 2
 
   Block 2:
@@ -19,20 +24,27 @@ Function: init
 Function: main
   Block 0:
     0: new [1]any (varargs)
-      Value Name: t0
+      As value: t0  Type: *[1]any
     1: &t0[0:int]
-      Value Name: t1
+      As value: t1  Type: *any
+      Operand 0: t0  Type: *[1]any
+      Operand 1: 0:int  Type: int
     2: make any <- string ("Hello, World!":string)
-      Value Name: t2
+      As value: t2  Type: any
+      Operand 0: "Hello, World!":string  Type: string
     3: *t1 = t2
+      Operand 0: t1  Type: *any
+      Operand 1: t2  Type: any
     4: slice t0[:]
-      Value Name: t3
+      As value: t3  Type: []any
+      Operand 0: t0  Type: *[1]any
     5: fmt.Println(t3...)
-      Value Name: t4
+      As value: t4  Type: (n int, err error)
+      Operand 0: Println  Type: func(a ...any) (n int, err error)
+      Operand 1: t3  Type: []any
     6: return
 
 
 Value: init$guard
   Type: *bool
-
 
