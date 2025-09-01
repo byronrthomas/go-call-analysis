@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
+	"github.com/throwin5tone7/go-call-analysis/cmd/lib"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,57 +14,12 @@ var rootCmd = &cobra.Command{
 	Long:  `A command-line tool for analyzing Go projects and generating analysis reports.`,
 }
 
-// buildCallGraph is a shared function that builds the call graph for both commands
-func buildCallGraph(rootFunction string, projectPath string, outputPath string) (*analyzer.CallGraphResult, error) {
-	var rootFunctionId *analyzer.FunctionId
-	if rootFunction != "" {
-		rootFunctionId = &analyzer.FunctionId{
-			Package:  strings.Split(rootFunction, ":")[0],
-			Function: strings.Split(rootFunction, ":")[1],
-		}
-	}
-
-	if projectPath == "" {
-		return nil, fmt.Errorf("project path is required")
-	}
-
-	fmt.Printf("Analyzing project at: %s\n", projectPath)
-	config, err := analyzer.NewAnalysisConfig(projectPath, outputPath, rootFunctionId)
-	if err != nil {
-		return nil, err
-	}
-
-	return analyzer.CallGraphAnalysis(config)
-}
-
-func RunCallGraph(rootFunction string, projectPath string, outputPath string, useNeo4j bool) error {
-	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
-	if err != nil {
-		return err
-	}
-
-	nodes, edges := analyzer.ExtractCallGraphData(callGraph)
-	if useNeo4j {
-
-		config := analyzer.Neo4jConfig{
-			URI:      "bolt://localhost:7687",
-			Username: "",
-			Password: "",
-			Database: "",
-		}
-		return analyzer.ExportCallGraphToNeo4j(nodes, edges, config)
-	} else {
-
-		return analyzer.ExportCallGraphToCSV(nodes, edges, outputPath)
-	}
-}
-
 var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	projectPath, _ := cmd.Flags().GetString("path")
 	outputPath, _ := cmd.Flags().GetString("output")
 	rootFunction, _ := cmd.Flags().GetString("root-function")
 	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-	return RunCallGraph(rootFunction, projectPath, outputPath, useNeo4j)
+	return lib.RunCallGraph(rootFunction, projectPath, outputPath, useNeo4j)
 }
 
 var callGraphCmd = &cobra.Command{
@@ -75,33 +29,6 @@ var callGraphCmd = &cobra.Command{
 	RunE:  callGraphCmdRunner,
 }
 
-func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, useNeo4j bool) error {
-	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
-	if err != nil {
-		return err
-	}
-
-	if len(packagePrefixes) == 0 {
-		packagePrefixes = []string{""}
-	}
-	ssaProgram := analyzer.SimplifySSA(callGraph, packagePrefixes)
-	ssaResult := analyzer.ExtractSSAGraphData(ssaProgram, packagePrefixes)
-
-	if useNeo4j {
-
-		config := analyzer.Neo4jConfig{
-			URI:      "bolt://localhost:7687",
-			Username: "",
-			Password: "",
-			Database: "",
-		}
-		return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
-	} else {
-
-		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
-	}
-}
-
 var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
 	projectPath, _ := cmd.Flags().GetString("path")
@@ -109,7 +36,7 @@ var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	rootFunction, _ := cmd.Flags().GetString("root-function")
 	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
 
-	return RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, useNeo4j)
+	return lib.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, useNeo4j)
 }
 var ssaGraphCmd = &cobra.Command{
 	Use:   "ssa-graph",

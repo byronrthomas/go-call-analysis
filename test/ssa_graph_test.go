@@ -11,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	main "github.com/throwin5tone7/go-call-analysis/cmd/lib"
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
 	"golang.org/x/tools/go/ssa"
 )
@@ -33,31 +34,7 @@ func TestSSAGraphAnalysis(t *testing.T) {
 		t.Fatalf("Failed to create output directory: %v", err)
 	}
 
-	// Parse root function
-	rootFunctionId := &analyzer.FunctionId{
-		Package:  strings.Split(rootFunction, ":")[0],
-		Function: strings.Split(rootFunction, ":")[1],
-	}
-
-	// Create analysis config
-	config, err := analyzer.NewAnalysisConfig(projectPath, outputPath, rootFunctionId)
-	if err != nil {
-		t.Fatalf("Failed to create analysis config: %v", err)
-	}
-
-	// Run call graph analysis
-	callGraph, err := analyzer.CallGraphAnalysis(config)
-	if err != nil {
-		t.Fatalf("Failed to run call graph analysis: %v", err)
-	}
-
-	// Extract SSA graph data
-	ssaResult := analyzer.ExtractSSAGraphData(callGraph, packagePrefixes)
-
-	// Export to CSV
-	if err := analyzer.ExportSSAGraphToCSV(ssaResult, outputPath); err != nil {
-		t.Fatalf("Failed to export SSA graph to CSV: %v", err)
-	}
+	main.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, false)
 
 	// Define expected CSV files
 	expectedFiles := []string{
