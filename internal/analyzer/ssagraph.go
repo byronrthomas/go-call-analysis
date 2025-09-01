@@ -87,10 +87,6 @@ func (e *ResultEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
-func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *ssa.Program {
-	return input.SSAProgram
-}
-
 func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
