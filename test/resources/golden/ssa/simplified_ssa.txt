@@ -1,5 +1,36 @@
 Package: github.com/throwin5tone7/go-call-analysis/test-project
 --------------------------------------------------
+Function: check
+  Block 0 -   Predecessors []   Successors [1, 2]:
+    0: invoke getter.Get()
+      As value: t0  Type: int
+        <- Referenced by: return t0, nil:error
+        <- Referenced by: t0 < 0:int
+      Operand 0: getter  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+    1: t0 < 0:int
+      As value: t1  Type: bool
+        <- Referenced by: if t1 goto 1 else 2
+      Operand 0: t0  Type: int
+      Operand 1: 0:int  Type: int
+    2: if t1 goto 1 else 2
+      Operand 0: t1  Type: bool
+
+  Block 1 -   Predecessors [0]   Successors []:
+    0: errors.New("negative result":string)
+      As value: t2  Type: error
+        <- Referenced by: return 0:int, t2
+      Operand 0: New  Type: func(text string) error
+      Operand 1: "negative result":string  Type: string
+    1: return 0:int, t2
+      Operand 0: 0:int  Type: int
+      Operand 1: t2  Type: error
+
+  Block 2 -   Predecessors [0]   Successors []:
+    0: return t0, nil:error
+      Operand 0: t0  Type: int
+      Operand 1: nil:error  Type: error
+
+
 Function: init
   Block 0 -   Predecessors []   Successors [1, 2]:
     0: *init$guard
@@ -13,42 +44,264 @@ Function: init
     0: *init$guard = true:bool
       Operand 0: init$guard  Type: *bool
       Operand 1: true:bool  Type: bool
-    1: fmt.init()
+    1: errors.init()
       As value: t1  Type: ()
       Operand 0: init  Type: func()
-    2: jump 2
+    2: fmt.init()
+      As value: t2  Type: ()
+      Operand 0: init  Type: func()
+    3: jump 2
 
   Block 2 -   Predecessors [0, 1]   Successors []:
     0: return
 
 
 Function: main
-  Block 0 -   Predecessors []   Successors []:
-    0: new [1]any (varargs)
-      As value: t0  Type: *[1]any
-        <- Referenced by: &t0[0:int]
-        <- Referenced by: slice t0[:]
-    1: &t0[0:int]
-      As value: t1  Type: *any
-        <- Referenced by: *t1 = t2
-      Operand 0: t0  Type: *[1]any
+  Block 0 -   Predecessors []   Successors [1, 3]:
+    0: new Struct1 (complit)
+      As value: t0  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct1
+        <- Referenced by: &t0.field [#0]
+        <- Referenced by: make Getter <- *Struct1 (t0)
+    1: &t0.field [#0]
+      As value: t1  Type: *int
+        <- Referenced by: *t1 = 1:int
+      Operand 0: t0  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct1
+    2: *t1 = 1:int
+      Operand 0: t1  Type: *int
+      Operand 1: 1:int  Type: int
+    3: new Struct2 (complit)
+      As value: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+        <- Referenced by: &t2.fieldX [#0]
+        <- Referenced by: &t2.fieldY [#1]
+        <- Referenced by: make Getter <- *Struct2 (t2)
+    4: &t2.fieldX [#0]
+      As value: t3  Type: *int
+        <- Referenced by: *t3 = 2:int
+      Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    5: &t2.fieldY [#1]
+      As value: t4  Type: *int
+        <- Referenced by: *t4 = 3:int
+      Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    6: *t3 = 2:int
+      Operand 0: t3  Type: *int
+      Operand 1: 2:int  Type: int
+    7: *t4 = 3:int
+      Operand 0: t4  Type: *int
+      Operand 1: 3:int  Type: int
+    8: make Getter <- *Struct1 (t0)
+      As value: t5  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+        <- Referenced by: check(t5)
+      Operand 0: t0  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct1
+    9: check(t5)
+      As value: t6  Type: (int, error)
+        <- Referenced by: extract t6 #0
+        <- Referenced by: extract t6 #1
+      Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
+      Operand 1: t5  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+    10: extract t6 #0
+      As value: t7  Type: int
+        <- Referenced by: make any <- int (t7)
+      Operand 0: t6  Type: (int, error)
+    11: extract t6 #1
+      As value: t8  Type: error
+        <- Referenced by: change interface any <- error (t8)
+        <- Referenced by: t8 != nil:error
+      Operand 0: t6  Type: (int, error)
+    12: t8 != nil:error
+      As value: t9  Type: bool
+        <- Referenced by: if t9 goto 1 else 3
+      Operand 0: t8  Type: error
+      Operand 1: nil:error  Type: error
+    13: if t9 goto 1 else 3
+      Operand 0: t9  Type: bool
+
+  Block 1 -   Predecessors [0]   Successors [2]:
+    0: new [2]any (varargs)
+      As value: t10  Type: *[2]any
+        <- Referenced by: &t10[0:int]
+        <- Referenced by: &t10[1:int]
+        <- Referenced by: slice t10[:]
+    1: &t10[0:int]
+      As value: t11  Type: *any
+        <- Referenced by: *t11 = t12
+      Operand 0: t10  Type: *[2]any
       Operand 1: 0:int  Type: int
-    2: make any <- string ("Hello, World!":string)
-      As value: t2  Type: any
-        <- Referenced by: *t1 = t2
-      Operand 0: "Hello, World!":string  Type: string
-    3: *t1 = t2
-      Operand 0: t1  Type: *any
-      Operand 1: t2  Type: any
-    4: slice t0[:]
-      As value: t3  Type: []any
-        <- Referenced by: fmt.Println(t3...)
-      Operand 0: t0  Type: *[1]any
-    5: fmt.Println(t3...)
-      As value: t4  Type: (n int, err error)
+    2: make any <- string ("Error:":string)
+      As value: t12  Type: any
+        <- Referenced by: *t11 = t12
+      Operand 0: "Error:":string  Type: string
+    3: *t11 = t12
+      Operand 0: t11  Type: *any
+      Operand 1: t12  Type: any
+    4: &t10[1:int]
+      As value: t13  Type: *any
+        <- Referenced by: *t13 = t14
+      Operand 0: t10  Type: *[2]any
+      Operand 1: 1:int  Type: int
+    5: change interface any <- error (t8)
+      As value: t14  Type: any
+        <- Referenced by: *t13 = t14
+      Operand 0: t8  Type: error
+    6: *t13 = t14
+      Operand 0: t13  Type: *any
+      Operand 1: t14  Type: any
+    7: slice t10[:]
+      As value: t15  Type: []any
+        <- Referenced by: fmt.Println(t15...)
+      Operand 0: t10  Type: *[2]any
+    8: fmt.Println(t15...)
+      As value: t16  Type: (n int, err error)
       Operand 0: Println  Type: func(a ...any) (n int, err error)
-      Operand 1: t3  Type: []any
-    6: return
+      Operand 1: t15  Type: []any
+    9: jump 2
+
+  Block 2 -   Predecessors [1, 3]   Successors [4, 5]:
+    0: make Getter <- *Struct2 (t2)
+      As value: t17  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+        <- Referenced by: check(t17)
+      Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    1: check(t17)
+      As value: t18  Type: (int, error)
+        <- Referenced by: extract t18 #0
+        <- Referenced by: extract t18 #1
+      Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
+      Operand 1: t17  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+    2: extract t18 #0
+      As value: t19  Type: int
+        <- Referenced by: make any <- int (t19)
+      Operand 0: t18  Type: (int, error)
+    3: extract t18 #1
+      As value: t20  Type: error
+        <- Referenced by: change interface any <- error (t20)
+        <- Referenced by: t20 != nil:error
+      Operand 0: t18  Type: (int, error)
+    4: t20 != nil:error
+      As value: t21  Type: bool
+        <- Referenced by: if t21 goto 4 else 5
+      Operand 0: t20  Type: error
+      Operand 1: nil:error  Type: error
+    5: if t21 goto 4 else 5
+      Operand 0: t21  Type: bool
+
+  Block 3 -   Predecessors [0]   Successors [2]:
+    0: new [2]any (varargs)
+      As value: t22  Type: *[2]any
+        <- Referenced by: &t22[0:int]
+        <- Referenced by: &t22[1:int]
+        <- Referenced by: slice t22[:]
+    1: &t22[0:int]
+      As value: t23  Type: *any
+        <- Referenced by: *t23 = t24
+      Operand 0: t22  Type: *[2]any
+      Operand 1: 0:int  Type: int
+    2: make any <- string ("Result:":string)
+      As value: t24  Type: any
+        <- Referenced by: *t23 = t24
+      Operand 0: "Result:":string  Type: string
+    3: *t23 = t24
+      Operand 0: t23  Type: *any
+      Operand 1: t24  Type: any
+    4: &t22[1:int]
+      As value: t25  Type: *any
+        <- Referenced by: *t25 = t26
+      Operand 0: t22  Type: *[2]any
+      Operand 1: 1:int  Type: int
+    5: make any <- int (t7)
+      As value: t26  Type: any
+        <- Referenced by: *t25 = t26
+      Operand 0: t7  Type: int
+    6: *t25 = t26
+      Operand 0: t25  Type: *any
+      Operand 1: t26  Type: any
+    7: slice t22[:]
+      As value: t27  Type: []any
+        <- Referenced by: fmt.Println(t27...)
+      Operand 0: t22  Type: *[2]any
+    8: fmt.Println(t27...)
+      As value: t28  Type: (n int, err error)
+      Operand 0: Println  Type: func(a ...any) (n int, err error)
+      Operand 1: t27  Type: []any
+    9: jump 2
+
+  Block 4 -   Predecessors [2]   Successors [5]:
+    0: new [2]any (varargs)
+      As value: t29  Type: *[2]any
+        <- Referenced by: &t29[0:int]
+        <- Referenced by: &t29[1:int]
+        <- Referenced by: slice t29[:]
+    1: &t29[0:int]
+      As value: t30  Type: *any
+        <- Referenced by: *t30 = t31
+      Operand 0: t29  Type: *[2]any
+      Operand 1: 0:int  Type: int
+    2: make any <- string ("Error:":string)
+      As value: t31  Type: any
+        <- Referenced by: *t30 = t31
+      Operand 0: "Error:":string  Type: string
+    3: *t30 = t31
+      Operand 0: t30  Type: *any
+      Operand 1: t31  Type: any
+    4: &t29[1:int]
+      As value: t32  Type: *any
+        <- Referenced by: *t32 = t33
+      Operand 0: t29  Type: *[2]any
+      Operand 1: 1:int  Type: int
+    5: change interface any <- error (t20)
+      As value: t33  Type: any
+        <- Referenced by: *t32 = t33
+      Operand 0: t20  Type: error
+    6: *t32 = t33
+      Operand 0: t32  Type: *any
+      Operand 1: t33  Type: any
+    7: slice t29[:]
+      As value: t34  Type: []any
+        <- Referenced by: fmt.Println(t34...)
+      Operand 0: t29  Type: *[2]any
+    8: fmt.Println(t34...)
+      As value: t35  Type: (n int, err error)
+      Operand 0: Println  Type: func(a ...any) (n int, err error)
+      Operand 1: t34  Type: []any
+    9: jump 5
+
+  Block 5 -   Predecessors [2, 4]   Successors []:
+    0: new [2]any (varargs)
+      As value: t36  Type: *[2]any
+        <- Referenced by: &t36[0:int]
+        <- Referenced by: &t36[1:int]
+        <- Referenced by: slice t36[:]
+    1: &t36[0:int]
+      As value: t37  Type: *any
+        <- Referenced by: *t37 = t38
+      Operand 0: t36  Type: *[2]any
+      Operand 1: 0:int  Type: int
+    2: make any <- string ("Result:":string)
+      As value: t38  Type: any
+        <- Referenced by: *t37 = t38
+      Operand 0: "Result:":string  Type: string
+    3: *t37 = t38
+      Operand 0: t37  Type: *any
+      Operand 1: t38  Type: any
+    4: &t36[1:int]
+      As value: t39  Type: *any
+        <- Referenced by: *t39 = t40
+      Operand 0: t36  Type: *[2]any
+      Operand 1: 1:int  Type: int
+    5: make any <- int (t19)
+      As value: t40  Type: any
+        <- Referenced by: *t39 = t40
+      Operand 0: t19  Type: int
+    6: *t39 = t40
+      Operand 0: t39  Type: *any
+      Operand 1: t40  Type: any
+    7: slice t36[:]
+      As value: t41  Type: []any
+        <- Referenced by: fmt.Println(t41...)
+      Operand 0: t36  Type: *[2]any
+    8: fmt.Println(t41...)
+      As value: t42  Type: (n int, err error)
+      Operand 0: Println  Type: func(a ...any) (n int, err error)
+      Operand 1: t41  Type: []any
+    9: return
 
 
 Value: init$guard
