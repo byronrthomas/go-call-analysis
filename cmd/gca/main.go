@@ -38,19 +38,13 @@ func buildCallGraph(rootFunction string, projectPath string, outputPath string) 
 	return analyzer.CallGraphAnalysis(config)
 }
 
-var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
-	projectPath, _ := cmd.Flags().GetString("path")
-	outputPath, _ := cmd.Flags().GetString("output")
-	rootFunction, _ := cmd.Flags().GetString("root-function")
+func RunCallGraph(rootFunction string, projectPath string, outputPath string, useNeo4j bool) error {
 	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
 	if err != nil {
 		return err
 	}
 
 	nodes, edges := analyzer.ExtractCallGraphData(callGraph)
-
-	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-
 	if useNeo4j {
 
 		config := analyzer.Neo4jConfig{
@@ -66,6 +60,14 @@ var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	}
 }
 
+var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
+	projectPath, _ := cmd.Flags().GetString("path")
+	outputPath, _ := cmd.Flags().GetString("output")
+	rootFunction, _ := cmd.Flags().GetString("root-function")
+	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
+	return RunCallGraph(rootFunction, projectPath, outputPath, useNeo4j)
+}
+
 var callGraphCmd = &cobra.Command{
 	Use:   "call-graph",
 	Short: "Analyze a Go project",
@@ -73,13 +75,7 @@ var callGraphCmd = &cobra.Command{
 	RunE:  callGraphCmdRunner,
 }
 
-var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
-	packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
-	projectPath, _ := cmd.Flags().GetString("path")
-	outputPath, _ := cmd.Flags().GetString("output")
-	rootFunction, _ := cmd.Flags().GetString("root-function")
-	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-
+func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, useNeo4j bool) error {
 	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
 	if err != nil {
 		return err
@@ -104,6 +100,16 @@ var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 
 		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
 	}
+}
+
+var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
+	packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
+	projectPath, _ := cmd.Flags().GetString("path")
+	outputPath, _ := cmd.Flags().GetString("output")
+	rootFunction, _ := cmd.Flags().GetString("root-function")
+	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
+
+	return RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, useNeo4j)
 }
 var ssaGraphCmd = &cobra.Command{
 	Use:   "ssa-graph",
