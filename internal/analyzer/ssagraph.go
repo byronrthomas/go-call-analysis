@@ -146,10 +146,10 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						if blockInd == 0 {
 							precInstrId = funcId
 						}
-						firstInstrId := contextualId(b, 0)
-						lastInstrId := contextualId(b, len(b.Instrs)-1)
+						firstInstrId := ContextualId(b, 0)
+						lastInstrId := ContextualId(b, len(b.Instrs)-1)
 						for _, predBlk := range b.Preds {
-							predId := contextualId(predBlk, len(predBlk.Instrs)-1)
+							predId := ContextualId(predBlk, len(predBlk.Instrs)-1)
 							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: predId,
@@ -158,7 +158,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 							})
 						}
 						for _, succBlk := range b.Succs {
-							succId := contextualId(succBlk, 0)
+							succId := ContextualId(succBlk, 0)
 							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: lastInstrId,
@@ -168,7 +168,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						}
 
 						for instrInd, instr := range b.Instrs {
-							instrId := contextualId(b, instrInd)
+							instrId := ContextualId(b, instrInd)
 
 							instrPosition := fileSet.Position(instr.Pos())
 							instructionNodes = append(instructionNodes, InstructionNode{
@@ -200,7 +200,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 								if *op == nil {
 									continue
 								}
-								_, opId := valueId(fileSet, *op)
+								_, opId := ValueId(fileSet, *op)
 								operandEdges = append(operandEdges, OperandEdge{
 									EdgeCommon: graphcommon.EdgeCommon{
 										FromID: instrId,
@@ -210,7 +210,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 							}
 
 							if asValue, ok := instr.(ssa.Value); ok {
-								_, vId := valueId(fileSet, asValue)
+								_, vId := ValueId(fileSet, asValue)
 								valueNodes = append(valueNodes, ValueNode{
 									NodeCommon: graphcommon.NodeCommon{
 										ID:      vId,
@@ -237,7 +237,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 
 								// TODO: we cannot get refer edges from values because we can't work out where the instruction lives
 								for _, refr := range *asValue.Referrers() {
-									referId := contextualId(refr.Block(), findInBlock(refr.Block(), refr))
+									referId := ContextualId(refr.Block(), findInBlock(refr.Block(), refr))
 									referEdges = append(referEdges, ReferEdge{
 										EdgeCommon: graphcommon.EdgeCommon{
 											FromID: referId,
@@ -249,7 +249,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						}
 					}
 				} else if v, ok := mem.(ssa.Value); ok {
-					valuePosition, vId := valueId(fileSet, v)
+					valuePosition, vId := ValueId(fileSet, v)
 					valueNodes = append(valueNodes, ValueNode{
 						NodeCommon: graphcommon.NodeCommon{
 							ID:      vId,
@@ -267,7 +267,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 					})
 					if v.Referrers() != nil {
 						for _, instr := range *v.Referrers() {
-							instrId := contextualId(instr.Block(), findInBlock(instr.Block(), instr))
+							instrId := ContextualId(instr.Block(), findInBlock(instr.Block(), instr))
 							operandEdges = append(operandEdges, OperandEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: instrId,
@@ -306,7 +306,7 @@ func findInBlock(block *ssa.BasicBlock, instr ssa.Instruction) int {
 	return -1
 }
 
-func valueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
+func ValueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 	instrPos := instr.Pos()
 	if instrPos == token.NoPos {
 		if asConst, ok := instr.(*ssa.Const); ok {
@@ -327,7 +327,7 @@ func valueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 	return instrPosition, instrId
 }
 
-func contextualId(block *ssa.BasicBlock, instrIndex int) string {
+func ContextualId(block *ssa.BasicBlock, instrIndex int) string {
 	funcId := block.Parent().String()
 	return fmt.Sprintf("%s:%d:%d", funcId, block.Index, instrIndex)
 }
