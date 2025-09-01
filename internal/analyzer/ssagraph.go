@@ -89,14 +89,14 @@ func (e *ResultEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
-func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAGraphData {
+func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
 	var orderingEdges []OrderingEdge
 	var controlFlowEdges []ControlFlowEdge
 	var operandEdges []OperandEdge
 	var resultEdges []ResultEdge
-	fileSet := result.SSAProgram.Fset
+	fileSet := ssaProgram.Fset
 
 	// Helper function to check if a package path matches any of the prefixes
 	matchesPrefix := func(pkgPath string) bool {
@@ -108,7 +108,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 		return false
 	}
 
-	for _, pkg := range result.SSAProgram.AllPackages() {
+	for _, pkg := range ssaProgram.AllPackages() {
 		// Check if the package path matches any of the provided prefixes
 		if matchesPrefix(pkg.Pkg.Path()) {
 			for _, mem := range pkg.Members {

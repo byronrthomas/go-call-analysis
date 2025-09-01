@@ -16,11 +16,7 @@ var rootCmd = &cobra.Command{
 }
 
 // buildCallGraph is a shared function that builds the call graph for both commands
-func buildCallGraph(cmd *cobra.Command) (*analyzer.CallGraphResult, error) {
-	projectPath, _ := cmd.Flags().GetString("path")
-	outputPath, _ := cmd.Flags().GetString("output")
-	rootFunction, _ := cmd.Flags().GetString("root-function")
-
+func buildCallGraph(rootFunction string, projectPath string, outputPath string) (*analyzer.CallGraphResult, error) {
 	var rootFunctionId *analyzer.FunctionId
 	if rootFunction != "" {
 		rootFunctionId = &analyzer.FunctionId{
@@ -42,75 +38,78 @@ func buildCallGraph(cmd *cobra.Command) (*analyzer.CallGraphResult, error) {
 	return analyzer.CallGraphAnalysis(config)
 }
 
+var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
+	projectPath, _ := cmd.Flags().GetString("path")
+	outputPath, _ := cmd.Flags().GetString("output")
+	rootFunction, _ := cmd.Flags().GetString("root-function")
+	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
+	if err != nil {
+		return err
+	}
+
+	nodes, edges := analyzer.ExtractCallGraphData(callGraph)
+
+	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
+
+	if useNeo4j {
+
+		config := analyzer.Neo4jConfig{
+			URI:      "bolt://localhost:7687",
+			Username: "",
+			Password: "",
+			Database: "",
+		}
+		return analyzer.ExportCallGraphToNeo4j(nodes, edges, config)
+	} else {
+
+		return analyzer.ExportCallGraphToCSV(nodes, edges, outputPath)
+	}
+}
+
 var callGraphCmd = &cobra.Command{
 	Use:   "call-graph",
 	Short: "Analyze a Go project",
 	Long:  `Analyze a Go project and generate call graph reports.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		callGraph, err := buildCallGraph(cmd)
-		if err != nil {
-			return err
-		}
-
-		// Extract call graph data
-		nodes, edges := analyzer.ExtractCallGraphData(callGraph)
-
-		// Handle output based on flags
-		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-		outputPath, _ := cmd.Flags().GetString("output")
-
-		if useNeo4j {
-			// Use hardcoded Neo4j connection details
-			config := analyzer.Neo4jConfig{
-				URI:      "bolt://localhost:7687",
-				Username: "",
-				Password: "",
-				Database: "",
-			}
-			return analyzer.ExportCallGraphToNeo4j(nodes, edges, config)
-		} else {
-			// Use CSV output (default behavior)
-			return analyzer.ExportCallGraphToCSV(nodes, edges, outputPath)
-		}
-	},
+	RunE:  callGraphCmdRunner,
 }
 
+var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
+	packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
+	projectPath, _ := cmd.Flags().GetString("path")
+	outputPath, _ := cmd.Flags().GetString("output")
+	rootFunction, _ := cmd.Flags().GetString("root-function")
+	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
+
+	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
+	if err != nil {
+		return err
+	}
+
+	if len(packagePrefixes) == 0 {
+		packagePrefixes = []string{""}
+	}
+	ssaProgram := analyzer.SimplifySSA(callGraph, packagePrefixes)
+	ssaResult := analyzer.ExtractSSAGraphData(ssaProgram, packagePrefixes)
+
+	if useNeo4j {
+
+		config := analyzer.Neo4jConfig{
+			URI:      "bolt://localhost:7687",
+			Username: "",
+			Password: "",
+			Database: "",
+		}
+		return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
+	} else {
+
+		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
+	}
+}
 var ssaGraphCmd = &cobra.Command{
 	Use:   "ssa-graph",
 	Short: "Analyze a Go project using SSA",
 	Long:  `Analyze a Go project and generate SSA-based call graph reports.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		callGraph, err := buildCallGraph(cmd)
-		if err != nil {
-			return err
-		}
-
-		packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
-		// If no package prefixes are provided, default to an empty string which matches everything
-		if len(packagePrefixes) == 0 {
-			packagePrefixes = []string{""}
-		}
-		ssaResult := analyzer.ExtractSSAGraphData(callGraph, packagePrefixes)
-
-		// Handle output based on flags
-		useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-		// outputPath, _ := cmd.Flags().GetString("output")
-
-		if useNeo4j {
-			// Use hardcoded Neo4j connection details
-			config := analyzer.Neo4jConfig{
-				URI:      "bolt://localhost:7687",
-				Username: "",
-				Password: "",
-				Database: "",
-			}
-			return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
-		} else {
-			// Use CSV output (default behavior)
-			outputPath, _ := cmd.Flags().GetString("output")
-			return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
-		}
-	},
+	RunE:  ssaGraphCmdRunner,
 }
 
 func init() {
