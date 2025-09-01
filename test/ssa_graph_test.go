@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	main "github.com/throwin5tone7/go-call-analysis/cmd/lib"
-	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
 	"golang.org/x/tools/go/ssa"
 )
 
@@ -34,7 +33,10 @@ func TestSSAGraphAnalysis(t *testing.T) {
 		t.Fatalf("Failed to create output directory: %v", err)
 	}
 
-	main.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, false)
+	err := main.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, false)
+	if err != nil {
+		t.Fatalf("Failed to run SSA graph analysis: %v", err)
+	}
 
 	// Define expected CSV files
 	expectedFiles := []string{
@@ -80,28 +82,9 @@ func TestSimplifySSA(t *testing.T) {
 		t.Fatalf("Failed to create output directory: %v", err)
 	}
 
-	// Parse root function
-	rootFunctionId := &analyzer.FunctionId{
-		Package:  strings.Split(rootFunction, ":")[0],
-		Function: strings.Split(rootFunction, ":")[1],
-	}
-
-	// Create analysis config
-	config, err := analyzer.NewAnalysisConfig(projectPath, outputPath, rootFunctionId)
+	packagePrefixes, simplifiedSSA, err := main.RunSSASimplification(rootFunction, projectPath, outputPath, packagePrefixes)
 	if err != nil {
-		t.Fatalf("Failed to create analysis config: %v", err)
-	}
-
-	// Run call graph analysis
-	callGraph, err := analyzer.CallGraphAnalysis(config)
-	if err != nil {
-		t.Fatalf("Failed to run call graph analysis: %v", err)
-	}
-
-	// Call SimplifySSA function
-	simplifiedSSA := analyzer.SimplifySSA(callGraph, packagePrefixes)
-	if simplifiedSSA == nil {
-		t.Fatalf("SimplifySSA returned nil")
+		t.Fatalf("Failed to run SSA simplification: %v", err)
 	}
 
 	// Generate textual representation of SSA

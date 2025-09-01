@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
+	"golang.org/x/tools/go/ssa"
 )
 
 // buildCallGraph is a shared function that builds the call graph for both commands
@@ -53,15 +54,10 @@ func RunCallGraph(rootFunction string, projectPath string, outputPath string, us
 }
 
 func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, useNeo4j bool) error {
-	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
+	packagePrefixes, ssaProgram, err := RunSSASimplification(rootFunction, projectPath, outputPath, packagePrefixes)
 	if err != nil {
 		return err
 	}
-
-	if len(packagePrefixes) == 0 {
-		packagePrefixes = []string{""}
-	}
-	ssaProgram := analyzer.SimplifySSA(callGraph, packagePrefixes)
 	ssaResult := analyzer.ExtractSSAGraphData(ssaProgram, packagePrefixes)
 
 	if useNeo4j {
@@ -77,4 +73,17 @@ func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string
 
 		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
 	}
+}
+
+func RunSSASimplification(rootFunction string, projectPath string, outputPath string, packagePrefixes []string) ([]string, *ssa.Program, error) {
+	callGraph, err := buildCallGraph(rootFunction, projectPath, outputPath)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if len(packagePrefixes) == 0 {
+		packagePrefixes = []string{""}
+	}
+	ssaProgram := analyzer.SimplifySSA(callGraph, packagePrefixes)
+	return packagePrefixes, ssaProgram, nil
 }
