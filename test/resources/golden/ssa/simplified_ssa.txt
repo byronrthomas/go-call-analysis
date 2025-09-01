@@ -1,14 +1,14 @@
 Package: github.com/throwin5tone7/go-call-analysis/test-project
 --------------------------------------------------
 Function: init
-  Block 0:
+  Block 0 -   Predecessors []   Successors [1, 2]:
     0: *init$guard
       As value: t0  Type: bool
       Operand 0: init$guard  Type: *bool
     1: if t0 goto 2 else 1
       Operand 0: t0  Type: bool
 
-  Block 1:
+  Block 1 -   Predecessors [0]   Successors [2]:
     0: *init$guard = true:bool
       Operand 0: init$guard  Type: *bool
       Operand 1: true:bool  Type: bool
@@ -17,12 +17,12 @@ Function: init
       Operand 0: init  Type: func()
     2: jump 2
 
-  Block 2:
+  Block 2 -   Predecessors [0, 1]   Successors []:
     0: return
 
 
 Function: main
-  Block 0:
+  Block 0 -   Predecessors []   Successors []:
     0: new [1]any (varargs)
       As value: t0  Type: *[1]any
     1: &t0[0:int]
