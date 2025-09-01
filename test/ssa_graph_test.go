@@ -295,7 +295,7 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 
 				// Process each basic block
 				for blockIndex, block := range f.Blocks {
-					result.WriteString(fmt.Sprintf("  Block %d:\n", blockIndex))
+					printBlockInfo(&result, blockIndex, block)
 
 					// Process each instruction in the block
 					for instrIndex, instr := range block.Instrs {
@@ -316,6 +316,7 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 							outputValue(&result, fmt.Sprintf("      Operand %d: ", i), "  Type: ", *op)
 						}
 					}
+
 					result.WriteString("\n")
 				}
 				result.WriteString("\n")
@@ -330,6 +331,40 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 	}
 
 	return result.String()
+}
+
+func printBlockInfo(result *strings.Builder, blockIndex int, block *ssa.BasicBlock) {
+	fmt.Fprintf(result, "  Block %d -", blockIndex)
+	// Show predecessors, sorted by index, on one line
+	preds := make([]int, len(block.Preds))
+	for i, pred := range block.Preds {
+		preds[i] = pred.Index
+	}
+	sort.Ints(preds)
+	fmt.Fprintf(result, "   Predecessors [")
+	for i, pred := range preds {
+		if i != len(preds)-1 {
+			fmt.Fprintf(result, "%d, ", pred)
+		} else {
+			fmt.Fprintf(result, "%d", pred)
+		}
+	}
+	fmt.Fprintf(result, "]")
+	// Show successors, sorted by index, on one line
+	succs := make([]int, len(block.Succs))
+	for i, succ := range block.Succs {
+		succs[i] = succ.Index
+	}
+	sort.Ints(succs)
+	fmt.Fprintf(result, "   Successors [")
+	for i, succ := range succs {
+		if i != len(succs)-1 {
+			fmt.Fprintf(result, "%d, ", succ)
+		} else {
+			fmt.Fprintf(result, "%d", succ)
+		}
+	}
+	fmt.Fprintf(result, "]:\n")
 }
 
 func outputValue(result *strings.Builder, valuePrefix string, typePrefix string, v ssa.Value) {
