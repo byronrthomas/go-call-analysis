@@ -257,15 +257,6 @@ func isErrorType(t types.Type) bool {
 	return types.AssignableTo(t, errorType)
 }
 
-func findInBlock(block *ssa.BasicBlock, findInstr ssa.Instruction) int {
-	for i, instr := range block.Instrs {
-		if instr == findInstr {
-			return i
-		}
-	}
-	return -1
-}
-
 func ValueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 	instrPos := instr.Pos()
 	if instrPos == token.NoPos {
