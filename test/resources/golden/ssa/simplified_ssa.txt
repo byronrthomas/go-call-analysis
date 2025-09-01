@@ -1,0 +1,38 @@
+Package: github.com/throwin5tone7/go-call-analysis/test-project
+--------------------------------------------------
+Function: init
+  Block 0:
+    0: *init$guard
+      Value Name: t0
+    1: if t0 goto 2 else 1
+
+  Block 1:
+    0: *init$guard = true:bool
+    1: fmt.init()
+      Value Name: t1
+    2: jump 2
+
+  Block 2:
+    0: return
+
+
+Function: main
+  Block 0:
+    0: new [1]any (varargs)
+      Value Name: t0
+    1: &t0[0:int]
+      Value Name: t1
+    2: make any <- string ("Hello, World!":string)
+      Value Name: t2
+    3: *t1 = t2
+    4: slice t0[:]
+      Value Name: t3
+    5: fmt.Println(t3...)
+      Value Name: t4
+    6: return
+
+
+Value: init$guard
+  Type: *bool
+
+
