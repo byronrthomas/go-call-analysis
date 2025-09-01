@@ -215,21 +215,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 
 							if asValue, ok := instr.(ssa.Value); ok {
 								_, vId := ValueId(fileSet, asValue)
-								valueNodes = append(valueNodes, ValueNode{
-									NodeCommon: graphcommon.NodeCommon{
-										ID:      vId,
-										Name:    asValue.Name(),
-										Package: pkg.Pkg.Path(),
-										PositionInfo: graphcommon.PositionInfo{
-											File:   instrPosition.Filename,
-											Line:   instrPosition.Line,
-											Column: instrPosition.Column,
-										},
-									},
-									ValueType:   valueTypeAsString(asValue),
-									TypeName:    asValue.Type().String(),
-									IsErrorType: isErrorType(asValue.Type()),
-								})
+								valueNodes, referEdges = processValue(valueNodes, vId, asValue, pkg, instrPosition, referEdges)
 
 								// If instruction produces a value, add a result edge from the instruction to the value
 								resultEdges = append(resultEdges, ResultEdge{
@@ -238,48 +224,12 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 										ToID:   vId,
 									},
 								})
-
-								// TODO: we cannot get refer edges from values because we can't work out where the instruction lives
-								for _, refr := range *asValue.Referrers() {
-									referId := ContextualId(refr.Block(), findInBlock(refr.Block(), refr))
-									referEdges = append(referEdges, ReferEdge{
-										EdgeCommon: graphcommon.EdgeCommon{
-											FromID: referId,
-											ToID:   vId,
-										},
-									})
-								}
 							}
 						}
 					}
 				} else if v, ok := mem.(ssa.Value); ok {
 					valuePosition, vId := ValueId(fileSet, v)
-					valueNodes = append(valueNodes, ValueNode{
-						NodeCommon: graphcommon.NodeCommon{
-							ID:      vId,
-							Name:    v.Name(),
-							Package: pkg.Pkg.Path(),
-							PositionInfo: graphcommon.PositionInfo{
-								File:   valuePosition.Filename,
-								Line:   valuePosition.Line,
-								Column: valuePosition.Column,
-							},
-						},
-						ValueType:   valueTypeAsString(v),
-						TypeName:    v.Type().String(),
-						IsErrorType: isErrorType(v.Type()),
-					})
-					if v.Referrers() != nil {
-						for _, instr := range *v.Referrers() {
-							instrId := ContextualId(instr.Block(), findInBlock(instr.Block(), instr))
-							operandEdges = append(operandEdges, OperandEdge{
-								EdgeCommon: graphcommon.EdgeCommon{
-									FromID: instrId,
-									ToID:   vId,
-								},
-							})
-						}
-					}
+					valueNodes, referEdges = processValue(valueNodes, vId, v, pkg, valuePosition, referEdges)
 				}
 			}
 		}
@@ -296,14 +246,44 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 	}
 }
 
+func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, referEdges []ReferEdge) ([]ValueNode, []ReferEdge) {
+	valueNodes = append(valueNodes, ValueNode{
+		NodeCommon: graphcommon.NodeCommon{
+			ID:      vId,
+			Name:    v.Name(),
+			Package: pkg.Pkg.Path(),
+			PositionInfo: graphcommon.PositionInfo{
+				File:   valuePosition.Filename,
+				Line:   valuePosition.Line,
+				Column: valuePosition.Column,
+			},
+		},
+		ValueType:   valueTypeAsString(v),
+		TypeName:    v.Type().String(),
+		IsErrorType: isErrorType(v.Type()),
+	})
+	if v.Referrers() != nil {
+		for _, instr := range *v.Referrers() {
+			instrId := ContextualId(instr.Block(), findInBlock(instr.Block(), instr))
+			referEdges = append(referEdges, ReferEdge{
+				EdgeCommon: graphcommon.EdgeCommon{
+					FromID: instrId,
+					ToID:   vId,
+				},
+			})
+		}
+	}
+	return valueNodes, referEdges
+}
+
 func isErrorType(t types.Type) bool {
 	errorType := types.Universe.Lookup("error").Type()
 	return types.AssignableTo(t, errorType)
 }
 
-func findInBlock(block *ssa.BasicBlock, instr ssa.Instruction) int {
+func findInBlock(block *ssa.BasicBlock, findInstr ssa.Instruction) int {
 	for i, instr := range block.Instrs {
-		if instr == instr {
+		if instr == findInstr {
 			return i
 		}
 	}

@@ -1,7 +1,7 @@
 from_id,to_id,type
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,*init$guard,Refers_To
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,Refers_To
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,Refers_To
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,&t0[0:int],Refers_To
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,"make any <- string (""Hello, World!"":string)",Refers_To
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,slice t0[:],Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,*init$guard,Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:6:32,Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,&t0[0:int],Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,"make any <- string (""Hello, World!"":string)",Refers_To
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,slice t0[:],Refers_To

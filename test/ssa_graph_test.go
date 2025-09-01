@@ -18,7 +18,7 @@ import (
 func TestSSAGraphAnalysis(t *testing.T) {
 	// Test configuration
 	projectPath := "../test-project"
-	outputPath := "../test-output"
+	outputPath := "../test-output/ssa-graph"
 	goldenPath := "resources/golden/ssa"
 	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
 	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
@@ -89,7 +89,7 @@ func TestSSAGraphAnalysis(t *testing.T) {
 func TestSimplifySSA(t *testing.T) {
 	// Test configuration
 	projectPath := "../test-project"
-	outputPath := "../test-output"
+	outputPath := "../test-output/ssa-simplified"
 	goldenPath := "resources/golden/ssa"
 	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
 	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
