@@ -1,8 +1,6 @@
 from_id,to_id,type
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:45:12,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:19,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,0,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:2,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:9,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/opt/homebrew/Cellar/go/1.25.0/libexec/src/errors/errors.go:64:6,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,"""negative result""",Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,0,Uses_Operand
@@ -30,8 +28,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,make Getter <- *
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:11,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:12,extract t6 #1,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:12,nil:error,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:13,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:12:9,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:28,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,"""Error:""",Uses_Operand
@@ -51,8 +47,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,make Getter <- *
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:4,extract t18 #1,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:4,nil:error,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:5,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:18:9,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,"""Result:""",Uses_Operand
@@ -92,3 +86,4 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:6,make any <- int 
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:31,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,value-/opt/homebrew/Cellar/go/1.25.0/libexec/src/fmt/print.go:313:6,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,slice t36[:],Uses_Operand
+

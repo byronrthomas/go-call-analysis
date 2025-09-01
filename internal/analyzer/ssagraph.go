@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
-	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/ssa"
@@ -99,14 +98,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 	fileSet := ssaProgram.Fset
 
 	// Helper function to check if a package path matches any of the prefixes
-	matchesPrefix := func(pkgPath string) bool {
-		for _, prefix := range packagePrefixes {
-			if prefix == "" || strings.HasPrefix(pkgPath, prefix) {
-				return true
-			}
-		}
-		return false
-	}
+	matchesPrefix := PackageMatcher(packagePrefixes)
 
 	for _, pkg := range ssaProgram.AllPackages() {
 		// Check if the package path matches any of the provided prefixes
@@ -216,6 +208,9 @@ func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) 
 	lastInstrId := ContextualId(b, len(b.Instrs)-1)
 	lastInstr := b.Instrs[len(b.Instrs)-1]
 	_, lastInstrIsIf := lastInstr.(*ssa.If)
+	if !lastInstrIsIf {
+		_, lastInstrIsIf = lastInstr.(*AnnotatedIf)
+	}
 	for succInd, succBlk := range b.Succs {
 		succId := ContextualId(succBlk, 0)
 		edgeCondition := ""
@@ -309,6 +304,8 @@ func instrTypeAsString(instr ssa.Instruction) string {
 		return "Go"
 	case *ssa.If:
 		return "If"
+	case *AnnotatedIf:
+		return "AnnotatedIf"
 	case *ssa.Index:
 		return "Index"
 	case *ssa.IndexAddr:

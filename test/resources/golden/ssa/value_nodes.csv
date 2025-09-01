@@ -1,6 +1,5 @@
 id,column,file,is_error_type,label,line,name,package,type_name,value_type
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,46,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:9,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,47,t1,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:48:23,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,48,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
 github.com/throwin5tone7/go-call-analysis/test-project.init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
 *init$guard,0,,false,Value,0,t0,github.com/throwin5tone7/go-call-analysis/test-project,bool,UnOp
@@ -15,7 +14,6 @@ make Getter <- *Struct1 (t0),0,,false,Value,0,t5,github.com/throwin5tone7/go-cal
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,11,t6,github.com/throwin5tone7/go-call-analysis/test-project,"(int, error)",Call
 extract t6 #0,0,,false,Value,0,t7,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
 extract t6 #1,0,,true,Value,0,t8,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:12:9,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,12,t9,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:28,28,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,13,t10,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 &t10[0:int],0,,false,Value,0,t11,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 "make any <- string (""Error:"":string)",0,,false,Value,0,t12,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
@@ -27,7 +25,6 @@ make Getter <- *Struct2 (t2),0,,false,Value,0,t17,github.com/throwin5tone7/go-ca
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:21,21,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,t18,github.com/throwin5tone7/go-call-analysis/test-project,"(int, error)",Call
 extract t18 #0,0,,false,Value,0,t19,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
 extract t18 #1,0,,true,Value,0,t20,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:18:9,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,18,t21,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,15,t22,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 &t22[0:int],0,,false,Value,0,t23,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 "make any <- string (""Result:"":string)",0,,false,Value,0,t24,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
