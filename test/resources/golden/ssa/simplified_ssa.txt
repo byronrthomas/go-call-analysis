@@ -4,6 +4,7 @@ Function: init
   Block 0 -   Predecessors []   Successors [1, 2]:
     0: *init$guard
       As value: t0  Type: bool
+        <- Referenced by: if t0 goto 2 else 1
       Operand 0: init$guard  Type: *bool
     1: if t0 goto 2 else 1
       Operand 0: t0  Type: bool
@@ -25,18 +26,23 @@ Function: main
   Block 0 -   Predecessors []   Successors []:
     0: new [1]any (varargs)
       As value: t0  Type: *[1]any
+        <- Referenced by: &t0[0:int]
+        <- Referenced by: slice t0[:]
     1: &t0[0:int]
       As value: t1  Type: *any
+        <- Referenced by: *t1 = t2
       Operand 0: t0  Type: *[1]any
       Operand 1: 0:int  Type: int
     2: make any <- string ("Hello, World!":string)
       As value: t2  Type: any
+        <- Referenced by: *t1 = t2
       Operand 0: "Hello, World!":string  Type: string
     3: *t1 = t2
       Operand 0: t1  Type: *any
       Operand 1: t2  Type: any
     4: slice t0[:]
       As value: t3  Type: []any
+        <- Referenced by: fmt.Println(t3...)
       Operand 0: t0  Type: *[1]any
     5: fmt.Println(t3...)
       As value: t4  Type: (n int, err error)

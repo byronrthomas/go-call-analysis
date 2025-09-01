@@ -305,6 +305,11 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 						if val, ok := instr.(ssa.Value); ok {
 							if val.Name() != "" {
 								outputValue(&result, "      As value: ", "  Type: ", val)
+								for _, referrer := range extractReferrerStrings(val.Referrers()) {
+									result.WriteString("        <- Referenced by: ")
+									result.WriteString(referrer)
+									result.WriteString("\n")
+								}
 							}
 						}
 
@@ -325,12 +330,29 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 			// Process sorted values
 			for _, v := range values {
 				outputValue(&result, "Value: ", "\n  Type: ", v)
+				for _, referrer := range extractReferrerStrings(v.Referrers()) {
+					result.WriteString("  <- Referenced by: ")
+					result.WriteString(referrer)
+					result.WriteString("\n")
+				}
 			}
 			result.WriteString("\n")
 		}
 	}
 
 	return result.String()
+}
+
+func extractReferrerStrings(referrers *[]ssa.Instruction) []string {
+	if referrers == nil {
+		return []string{}
+	}
+	referrerStrings := make([]string, len(*referrers))
+	for i, referrer := range *referrers {
+		referrerStrings[i] = referrer.String()
+	}
+	sort.Strings(referrerStrings)
+	return referrerStrings
 }
 
 func printBlockInfo(result *strings.Builder, blockIndex int, block *ssa.BasicBlock) {
