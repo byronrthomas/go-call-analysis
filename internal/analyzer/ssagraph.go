@@ -37,6 +37,7 @@ type OrderingEdge struct {
 
 type ControlFlowEdge struct {
 	graphcommon.EdgeCommon
+	Condition string
 }
 
 type OperandEdge struct {
@@ -72,6 +73,7 @@ func (e *OrderingEdge) ToMap() map[string]any {
 func (e *ControlFlowEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Control_Flow"
+	edgeCommonMap["condition"] = e.Condition
 	return edgeCommonMap
 }
 
@@ -134,26 +136,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						if blockInd == 0 {
 							precInstrId = funcId
 						}
-						firstInstrId := ContextualId(b, 0)
-						lastInstrId := ContextualId(b, len(b.Instrs)-1)
-						for _, predBlk := range b.Preds {
-							predId := ContextualId(predBlk, len(predBlk.Instrs)-1)
-							controlFlowEdges = append(controlFlowEdges, ControlFlowEdge{
-								EdgeCommon: graphcommon.EdgeCommon{
-									FromID: predId,
-									ToID:   firstInstrId,
-								},
-							})
-						}
-						for _, succBlk := range b.Succs {
-							succId := ContextualId(succBlk, 0)
-							controlFlowEdges = append(controlFlowEdges, ControlFlowEdge{
-								EdgeCommon: graphcommon.EdgeCommon{
-									FromID: lastInstrId,
-									ToID:   succId,
-								},
-							})
-						}
+						controlFlowEdges = addControlFlowEdges(b, controlFlowEdges)
 
 						for instrInd, instr := range b.Instrs {
 							instrId := ContextualId(b, instrInd)
@@ -227,6 +210,29 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 		ControlFlowEdges: controlFlowEdges,
 		ResultEdges:      resultEdges,
 	}
+}
+
+func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) []ControlFlowEdge {
+	lastInstrId := ContextualId(b, len(b.Instrs)-1)
+	lastInstr := b.Instrs[len(b.Instrs)-1]
+	_, lastInstrIsIf := lastInstr.(*ssa.If)
+	for succInd, succBlk := range b.Succs {
+		succId := ContextualId(succBlk, 0)
+		edgeCondition := ""
+		if lastInstrIsIf && succInd == 0 {
+			edgeCondition = "true"
+		} else if lastInstrIsIf && succInd == 1 {
+			edgeCondition = "false"
+		}
+		controlFlowEdges = append(controlFlowEdges, ControlFlowEdge{
+			EdgeCommon: graphcommon.EdgeCommon{
+				FromID: lastInstrId,
+				ToID:   succId,
+			},
+			Condition: edgeCondition,
+		})
+	}
+	return controlFlowEdges
 }
 
 func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position) []ValueNode {

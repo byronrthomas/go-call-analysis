@@ -394,7 +394,7 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			query := `
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
+				CREATE (from)-[:edge.type {condition: edge.condition}]->(to)
 			`
 
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
