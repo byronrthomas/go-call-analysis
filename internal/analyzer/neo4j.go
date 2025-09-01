@@ -253,51 +253,9 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		return fmt.Errorf("failed to create index: %v", err)
 	}
 
-	// Import refer edges
-	log.Printf("Starting edge import of %d refer edges...", len(graphData.ReferEdges))
-	edgeStartTime := time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.ReferEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.ReferEdges) {
-				end = len(graphData.ReferEdges)
-			}
-
-			batch := graphData.ReferEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Value {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
-			`
-
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err := tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ReferEdges), float64(end)/float64(len(graphData.ReferEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import refer edges: %v", err)
-	}
-	log.Printf("Refer edge import completed in %v", time.Since(edgeStartTime))
-
 	// Import ordering edges
 	log.Printf("Starting edge import of %d ordering edges...", len(graphData.OrderingEdges))
-	edgeStartTime = time.Now()
+	edgeStartTime := time.Now()
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
 		for i := 0; i < len(graphData.OrderingEdges); i += defaultBatchSize {
 			batchStartTime := time.Now()
@@ -421,18 +379,18 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	}
 	log.Printf("Result edge import completed in %v", time.Since(edgeStartTime))
 
-	// Import SSA ordering edges
-	log.Printf("Starting edge import of %d SSA ordering edges...", len(graphData.SSAOrderingEdges))
+	// Import control flow edges
+	log.Printf("Starting edge import of %d control flow edges...", len(graphData.ControlFlowEdges))
 	edgeStartTime = time.Now()
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.SSAOrderingEdges); i += defaultBatchSize {
+		for i := 0; i < len(graphData.ControlFlowEdges); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
-			if end > len(graphData.SSAOrderingEdges) {
-				end = len(graphData.SSAOrderingEdges)
+			if end > len(graphData.ControlFlowEdges) {
+				end = len(graphData.ControlFlowEdges)
 			}
 
-			batch := graphData.SSAOrderingEdges[i:end]
+			batch := graphData.ControlFlowEdges[i:end]
 			query := `
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
@@ -454,14 +412,14 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.SSAOrderingEdges), float64(end)/float64(len(graphData.SSAOrderingEdges))*100, batchDuration)
+			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ControlFlowEdges), float64(end)/float64(len(graphData.ControlFlowEdges))*100, batchDuration)
 		}
 		return nil, nil
 	})
 	if err != nil {
-		return fmt.Errorf("failed to import SSA ordering edges: %v", err)
+		return fmt.Errorf("failed to import control flow edges: %v", err)
 	}
-	log.Printf("SSA ordering edge import completed in %v", time.Since(edgeStartTime))
+	log.Printf("Control flow edge import completed in %v", time.Since(edgeStartTime))
 
 	log.Printf("Total import completed in %v", time.Since(startTime))
 	return nil

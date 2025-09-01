@@ -254,13 +254,6 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["instruction_nodes"] = instructionNodeMappables
 
-	// Convert refer edges to Mappable interface
-	referEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ReferEdges))
-	for i := range ssaData.ReferEdges {
-		referEdgeMappables[i] = &ssaData.ReferEdges[i]
-	}
-	dataMap["refer_edges"] = referEdgeMappables
-
 	// Convert ordering edges to Mappable interface
 	orderingEdgeMappables := make([]graphcommon.Mappable, len(ssaData.OrderingEdges))
 	for i := range ssaData.OrderingEdges {
@@ -268,12 +261,12 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["ordering_edges"] = orderingEdgeMappables
 
-	// Convert SSA ordering edges to Mappable interface
-	ssaOrderingEdgeMappables := make([]graphcommon.Mappable, len(ssaData.SSAOrderingEdges))
-	for i := range ssaData.SSAOrderingEdges {
-		ssaOrderingEdgeMappables[i] = &ssaData.SSAOrderingEdges[i]
+	// Convert control flow edges to Mappable interface
+	controlFlowEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ControlFlowEdges))
+	for i := range ssaData.ControlFlowEdges {
+		controlFlowEdgeMappables[i] = &ssaData.ControlFlowEdges[i]
 	}
-	dataMap["ssa_ordering_edges"] = ssaOrderingEdgeMappables
+	dataMap["control_flow_edges"] = controlFlowEdgeMappables
 
 	// Convert operand edges to Mappable interface
 	operandEdgeMappables := make([]graphcommon.Mappable, len(ssaData.OperandEdges))

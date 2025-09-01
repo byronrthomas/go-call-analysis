@@ -13,10 +13,9 @@ import (
 type SSAGraphData struct {
 	ValueNodes       []ValueNode
 	InstructionNodes []InstructionNode
-	ReferEdges       []ReferEdge
 	OrderingEdges    []OrderingEdge
 	OperandEdges     []OperandEdge
-	SSAOrderingEdges []SSAOrderingEdge
+	ControlFlowEdges []ControlFlowEdge
 	ResultEdges      []ResultEdge
 }
 
@@ -32,15 +31,11 @@ type InstructionNode struct {
 	InstructionType string
 }
 
-type ReferEdge struct {
-	graphcommon.EdgeCommon
-}
-
 type OrderingEdge struct {
 	graphcommon.EdgeCommon
 }
 
-type SSAOrderingEdge struct {
+type ControlFlowEdge struct {
 	graphcommon.EdgeCommon
 }
 
@@ -68,21 +63,15 @@ func (n *InstructionNode) ToMap() map[string]any {
 	return nodeCommonMap
 }
 
-func (e *ReferEdge) ToMap() map[string]any {
-	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
-	edgeCommonMap["type"] = "Refers_To"
-	return edgeCommonMap
-}
-
 func (e *OrderingEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "And_Then"
 	return edgeCommonMap
 }
 
-func (e *SSAOrderingEdge) ToMap() map[string]any {
+func (e *ControlFlowEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
-	edgeCommonMap["type"] = "SSA_Successor"
+	edgeCommonMap["type"] = "Control_Flow"
 	return edgeCommonMap
 }
 
@@ -105,9 +94,8 @@ func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *ssa.Program 
 func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
-	var referEdges []ReferEdge
 	var orderingEdges []OrderingEdge
-	var ssaOrderingEdges []SSAOrderingEdge
+	var controlFlowEdges []ControlFlowEdge
 	var operandEdges []OperandEdge
 	var resultEdges []ResultEdge
 	fileSet := result.SSAProgram.Fset
@@ -154,7 +142,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						lastInstrId := ContextualId(b, len(b.Instrs)-1)
 						for _, predBlk := range b.Preds {
 							predId := ContextualId(predBlk, len(predBlk.Instrs)-1)
-							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
+							controlFlowEdges = append(controlFlowEdges, ControlFlowEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: predId,
 									ToID:   firstInstrId,
@@ -163,7 +151,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 						}
 						for _, succBlk := range b.Succs {
 							succId := ContextualId(succBlk, 0)
-							ssaOrderingEdges = append(ssaOrderingEdges, SSAOrderingEdge{
+							controlFlowEdges = append(controlFlowEdges, ControlFlowEdge{
 								EdgeCommon: graphcommon.EdgeCommon{
 									FromID: lastInstrId,
 									ToID:   succId,
@@ -215,7 +203,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 
 							if asValue, ok := instr.(ssa.Value); ok {
 								_, vId := ValueId(fileSet, asValue)
-								valueNodes, referEdges = processValue(valueNodes, vId, asValue, pkg, instrPosition, referEdges)
+								valueNodes = processValue(valueNodes, vId, asValue, pkg, instrPosition)
 
 								// If instruction produces a value, add a result edge from the instruction to the value
 								resultEdges = append(resultEdges, ResultEdge{
@@ -229,7 +217,7 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 					}
 				} else if v, ok := mem.(ssa.Value); ok {
 					valuePosition, vId := ValueId(fileSet, v)
-					valueNodes, referEdges = processValue(valueNodes, vId, v, pkg, valuePosition, referEdges)
+					valueNodes = processValue(valueNodes, vId, v, pkg, valuePosition)
 				}
 			}
 		}
@@ -238,15 +226,14 @@ func ExtractSSAGraphData(result *CallGraphResult, packagePrefixes []string) SSAG
 	return SSAGraphData{
 		ValueNodes:       valueNodes,
 		InstructionNodes: instructionNodes,
-		ReferEdges:       referEdges,
 		OrderingEdges:    orderingEdges,
 		OperandEdges:     operandEdges,
-		SSAOrderingEdges: ssaOrderingEdges,
+		ControlFlowEdges: controlFlowEdges,
 		ResultEdges:      resultEdges,
 	}
 }
 
-func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, referEdges []ReferEdge) ([]ValueNode, []ReferEdge) {
+func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position) []ValueNode {
 	valueNodes = append(valueNodes, ValueNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:      vId,
@@ -262,18 +249,7 @@ func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Pack
 		TypeName:    v.Type().String(),
 		IsErrorType: isErrorType(v.Type()),
 	})
-	if v.Referrers() != nil {
-		for _, instr := range *v.Referrers() {
-			instrId := ContextualId(instr.Block(), findInBlock(instr.Block(), instr))
-			referEdges = append(referEdges, ReferEdge{
-				EdgeCommon: graphcommon.EdgeCommon{
-					FromID: instrId,
-					ToID:   vId,
-				},
-			})
-		}
-	}
-	return valueNodes, referEdges
+	return valueNodes
 }
 
 func isErrorType(t types.Type) bool {

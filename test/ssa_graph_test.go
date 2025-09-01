@@ -63,9 +63,8 @@ func TestSSAGraphAnalysis(t *testing.T) {
 	expectedFiles := []string{
 		"value_nodes.csv",
 		"instruction_nodes.csv",
-		"refer_edges.csv",
 		"ordering_edges.csv",
-		"ssa_ordering_edges.csv",
+		"control_flow_edges.csv",
 		"operand_edges.csv",
 		"result_edges.csv",
 	}
