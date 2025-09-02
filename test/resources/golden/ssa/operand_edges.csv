@@ -1,12 +1,4 @@
 from_id,to_id,type
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:12,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/opt/homebrew/Cellar/go/1.25.0/libexec/src/errors/errors.go:64:6,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,"""negative result""",Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,0,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,nil:error,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,github.com/throwin5tone7/go-call-analysis/test-project.init$guard,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,*init$guard,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,github.com/throwin5tone7/go-call-analysis/test-project.init$guard,Uses_Operand
@@ -89,3 +81,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,slice t36[:],Use
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:6,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,make Getter <- *Struct2 (t2),Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:12,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/opt/homebrew/Cellar/go/1.25.0/libexec/src/errors/errors.go:64:6,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,"""negative result""",Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,0,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,nil:error,Uses_Operand

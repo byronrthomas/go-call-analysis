@@ -172,7 +172,18 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 								})
 							}
 
-							if asValue, ok := instr.(ssa.Value); ok {
+							if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
+								for _, returnValue := range asAnnotatedCall.ReturnValues {
+									_, returnValueId := ValueId(fileSet, returnValue)
+									valueNodes = processValue(valueNodes, returnValueId, returnValue, pkg, instrPosition)
+									resultEdges = append(resultEdges, ResultEdge{
+										EdgeCommon: graphcommon.EdgeCommon{
+											FromID: instrId,
+											ToID:   returnValueId,
+										},
+									})
+								}
+							} else if asValue, ok := instr.(ssa.Value); ok {
 								_, vId := ValueId(fileSet, asValue)
 								valueNodes = processValue(valueNodes, vId, asValue, pkg, instrPosition)
 
@@ -267,6 +278,11 @@ func ValueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 				return token.Position{}, asExactString
 			}
 			return token.Position{}, asExactString
+		} else if asFRP, ok := instr.(*FuncReturnPlaceholder); ok {
+			instrPos = asFRP.FromCall.Pos()
+			instrPosition := fileSet.Position(instrPos)
+			instrId := fmt.Sprintf("return-placeholder-%d-%s:%d:%d", asFRP.Index, instrPosition.Filename, instrPosition.Line, instrPosition.Column)
+			return instrPosition, instrId
 		}
 		return token.Position{}, instr.String()
 	}
@@ -288,6 +304,8 @@ func instrTypeAsString(instr ssa.Instruction) string {
 		return "BinOp"
 	case *ssa.Call:
 		return "Call"
+	case *AnnotatedCall:
+		return "AnnotatedCall"
 	case *ssa.ChangeInterface:
 		return "ChangeInterface"
 	case *ssa.ChangeType:
@@ -362,6 +380,8 @@ func valueTypeAsString(value ssa.Value) string {
 		return "Alloc"
 	case *ssa.BinOp:
 		return "BinOp"
+	case *AnnotatedCall:
+		return "AnnotatedCall"
 	case *ssa.Call:
 		return "Call"
 	case *ssa.ChangeInterface:
@@ -410,6 +430,8 @@ func valueTypeAsString(value ssa.Value) string {
 		return "TypeAssert"
 	case *ssa.UnOp:
 		return "UnOp"
+	case *FuncReturnPlaceholder:
+		return "FuncReturnPlaceholder"
 	}
 	return "unknown"
 }

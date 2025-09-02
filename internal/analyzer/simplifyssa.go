@@ -3,6 +3,8 @@ package analyzer
 import (
 	"fmt"
 	"go/token"
+	"go/types"
+	"log"
 	"regexp"
 	"slices"
 	"strings"
@@ -123,6 +125,20 @@ func (a *AnnotatedIf) String() string {
 	return fmt.Sprintf("if (%s %s) goto %d else %d", a.OtherValue.Name(), a.ConditionDescription, tblock, fblock)
 }
 
+type InstructionAndValue interface {
+	ssa.Instruction
+	ssa.Value
+}
+
+type AnnotatedCall struct {
+	InstructionAndValue
+	ReturnValues []ssa.Value
+}
+
+var _ ssa.Instruction = (*AnnotatedCall)(nil)
+
+var _ ssa.Value = (*AnnotatedCall)(nil)
+
 func liftIfCondition(block *ssa.BasicBlock) {
 	instr := block.Instrs[len(block.Instrs)-1]
 	_, ok := instr.(*ssa.If)
@@ -143,17 +159,90 @@ func liftIfCondition(block *ssa.BasicBlock) {
 		ConditionDescription: conditionDescription,
 		OtherValue:           *otherValue,
 	}
+	foundInstrToRemove := false
 	for i, instr := range block.Instrs {
 		if instr == *instrToRemove {
 			block.Instrs = slices.Delete(block.Instrs, i, i+1)
+			foundInstrToRemove = true
 			break
 		}
 	}
+	if !foundInstrToRemove {
+		log.Fatalf("Failed to find instruction to remove: %v", instrToRemove)
+		return
+	}
 	block.Instrs[len(block.Instrs)-1] = &annotatedIf
+}
+
+type FuncReturnPlaceholder struct {
+	FromCall *ssa.Call
+	Index    int
+	myType   types.Type
+}
+
+var _ ssa.Value = (*FuncReturnPlaceholder)(nil)
+
+func (f *FuncReturnPlaceholder) String() string {
+	return fmt.Sprintf("func_return_placeholder_%d_%s", f.Index, f.FromCall.Name())
+}
+
+func (f *FuncReturnPlaceholder) Name() string {
+	return f.String()
+}
+
+func (f *FuncReturnPlaceholder) Type() types.Type {
+	return f.myType
+}
+
+func (f *FuncReturnPlaceholder) Parent() *ssa.Function {
+	return f.FromCall.Parent()
+}
+
+func (f *FuncReturnPlaceholder) Pos() token.Pos {
+	return token.NoPos
+}
+
+func (f *FuncReturnPlaceholder) Referrers() *[]ssa.Instruction {
+	return nil
+}
+
+// annotateCall just processes the type of the call result and
+// generates n values that represent the return values of the call
+// if the call doesn't return a tuple, n = 1, if it does, n is the length of the tuple
+func annotateCall(call *ssa.Call) *AnnotatedCall {
+	callType := call.Type()
+	n := 1
+	// NOTE: a void return type is a tuple with 0 elements
+	// which means we handle it correctly here - no values being produced
+	// if we want to be able to detect it easily, should add to the graph a
+	// special value node for void returns and link it up, or add an attrib
+	// on the call itself
+	if asTuple, ok := callType.(*types.Tuple); ok {
+		n = asTuple.Len()
+		returnValues := make([]ssa.Value, n)
+		for i := 0; i < n; i++ {
+			retVal := FuncReturnPlaceholder{
+				FromCall: call,
+				Index:    i,
+				myType:   asTuple.At(i).Type(),
+			}
+			returnValues[i] = &retVal
+		}
+		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues}
+		return &annotatedCall
+	}
+
+	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}}
 }
 
 func tryFunctionSimplification(f *ssa.Function) {
 	for _, block := range f.Blocks {
 		liftIfCondition(block)
+		for instrInd, instr := range block.Instrs {
+			if asCall, ok := instr.(*ssa.Call); ok {
+				block.Instrs[instrInd] = annotateCall(asCall)
+				// TODO: also need to lift referrers of the original call result
+			}
+		}
 	}
 }
