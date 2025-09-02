@@ -8,10 +8,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,value-/Users/byr
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:4,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:28,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:39,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8,make Getter <- *Struct1 (t0),Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,extract t6 #0,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:11,extract t6 #1,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,extract t6 #0,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,extract t6 #1,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:28,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,&t10[0:int],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,"make any <- string (""Error:"":string)",Produces_Result
@@ -21,10 +19,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:1:7,slice t10[:],Pro
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,make Getter <- *Struct2 (t2),Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,extract t18 #0,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,extract t18 #1,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,extract t18 #0,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,extract t18 #1,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,&t22[0:int],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,"make any <- string (""Result:"":string)",Produces_Result

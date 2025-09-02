@@ -17,9 +17,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:7,3,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:6,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,make Getter <- *Struct1 (t0),Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:11,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:12,extract t6 #1,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,extract t6 #1,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:28,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,"""Error:""",Uses_Operand
@@ -36,9 +34,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,slice t10[:],Use
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:6,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,make Getter <- *Struct2 (t2),Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:4,extract t6 #1,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,extract t6 #1,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,"""Result:""",Uses_Operand

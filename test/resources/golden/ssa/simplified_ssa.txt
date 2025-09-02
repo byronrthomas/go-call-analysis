@@ -3,7 +3,7 @@ Package: github.com/throwin5tone7/go-call-analysis/test-project
 Function: check
   Block 0 -   Predecessors []   Successors [1, 2]:
     0: invoke getter.Get()
-      As value: t0  Type: int
+      Return 0: t0  Type: int
         <- Referenced by: return t0, nil:error
         <- Referenced by: t0 < 0:int
       Operand 0: getter  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
@@ -12,7 +12,7 @@ Function: check
 
   Block 1 -   Predecessors [0]   Successors []:
     0: errors.New("negative result":string)
-      As value: t2  Type: error
+      Return 0: t2  Type: error
         <- Referenced by: return 0:int, t2
       Operand 0: New  Type: func(text string) error
       Operand 1: "negative result":string  Type: string
@@ -40,10 +40,8 @@ Function: init
       Operand 0: init$guard  Type: *bool
       Operand 1: true:bool  Type: bool
     1: errors.init()
-      As value: t1  Type: ()
       Operand 0: init  Type: func()
     2: fmt.init()
-      As value: t2  Type: ()
       Operand 0: init  Type: func()
     3: jump 2
 
@@ -89,23 +87,16 @@ Function: main
         <- Referenced by: check(t5)
       Operand 0: t0  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct1
     9: check(t5)
-      As value: t6  Type: (int, error)
-        <- Referenced by: extract t6 #0
-        <- Referenced by: extract t6 #1
+      Return 0: t7  Type: int
+        <- Referenced by: make any <- int (t7)
+      Return 1: t8  Type: error
+        <- Referenced by: change interface any <- error (t8)
+        <- Referenced by: change interface any <- error (t8)
+        <- Referenced by: t8 != nil:error
+        <- Referenced by: t8 != nil:error
       Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
       Operand 1: t5  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
-    10: extract t6 #0
-      As value: t7  Type: int
-        <- Referenced by: make any <- int (t7)
-      Operand 0: t6  Type: (int, error)
-    11: extract t6 #1
-      As value: t8  Type: error
-        <- Referenced by: change interface any <- error (t8)
-        <- Referenced by: change interface any <- error (t8)
-        <- Referenced by: t8 != nil:error
-        <- Referenced by: t8 != nil:error
-      Operand 0: t6  Type: (int, error)
-    12: if (t8 != nil) goto 1 else 3
+    10: if (t8 != nil) goto 1 else 3
       Operand 0: t8  Type: error
 
   Block 1 -   Predecessors [0]   Successors [2]:
@@ -143,7 +134,8 @@ Function: main
         <- Referenced by: fmt.Println(t15...)
       Operand 0: t10  Type: *[2]any
     8: fmt.Println(t15...)
-      As value: t16  Type: (n int, err error)
+      Return 0: func_return_placeholder_0_t16  Type: int
+      Return 1: func_return_placeholder_1_t16  Type: error
       Operand 0: Println  Type: func(a ...any) (n int, err error)
       Operand 1: t15  Type: []any
     9: jump 2
@@ -154,19 +146,12 @@ Function: main
         <- Referenced by: check(t17)
       Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
     1: check(t17)
-      As value: t18  Type: (int, error)
-        <- Referenced by: extract t18 #0
-        <- Referenced by: extract t18 #1
+      Return 0: t19  Type: int
+        <- Referenced by: make any <- int (t19)
+      Return 1: t20  Type: error
       Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
       Operand 1: t17  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
-    2: extract t18 #0
-      As value: t19  Type: int
-        <- Referenced by: make any <- int (t19)
-      Operand 0: t18  Type: (int, error)
-    3: extract t18 #1
-      As value: t20  Type: error
-      Operand 0: t18  Type: (int, error)
-    4: if (t8 != nil) goto 4 else 5
+    2: if (t8 != nil) goto 4 else 5
       Operand 0: t8  Type: error
 
   Block 3 -   Predecessors [0]   Successors [2]:
@@ -204,7 +189,8 @@ Function: main
         <- Referenced by: fmt.Println(t27...)
       Operand 0: t22  Type: *[2]any
     8: fmt.Println(t27...)
-      As value: t28  Type: (n int, err error)
+      Return 0: func_return_placeholder_0_t28  Type: int
+      Return 1: func_return_placeholder_1_t28  Type: error
       Operand 0: Println  Type: func(a ...any) (n int, err error)
       Operand 1: t27  Type: []any
     9: jump 2
@@ -244,7 +230,8 @@ Function: main
         <- Referenced by: fmt.Println(t34...)
       Operand 0: t29  Type: *[2]any
     8: fmt.Println(t34...)
-      As value: t35  Type: (n int, err error)
+      Return 0: func_return_placeholder_0_t35  Type: int
+      Return 1: func_return_placeholder_1_t35  Type: error
       Operand 0: Println  Type: func(a ...any) (n int, err error)
       Operand 1: t34  Type: []any
     9: jump 5
@@ -284,7 +271,8 @@ Function: main
         <- Referenced by: fmt.Println(t41...)
       Operand 0: t36  Type: *[2]any
     8: fmt.Println(t41...)
-      As value: t42  Type: (n int, err error)
+      Return 0: func_return_placeholder_0_t42  Type: int
+      Return 1: func_return_placeholder_1_t42  Type: error
       Operand 0: Println  Type: func(a ...any) (n int, err error)
       Operand 1: t41  Type: []any
     9: make Getter <- *Struct2 (t2)
@@ -292,7 +280,8 @@ Function: main
         <- Referenced by: check(t43)
       Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
     10: check(t43)
-      As value: t44  Type: (int, error)
+      Return 0: func_return_placeholder_0_t44  Type: int
+      Return 1: func_return_placeholder_1_t44  Type: error
       Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
       Operand 1: t43  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
     11: return

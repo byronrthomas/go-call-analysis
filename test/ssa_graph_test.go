@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	main "github.com/throwin5tone7/go-call-analysis/cmd/lib"
+	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
 	"golang.org/x/tools/go/ssa"
 )
 
@@ -260,8 +261,16 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 					for instrIndex, instr := range block.Instrs {
 						result.WriteString(fmt.Sprintf("    %d: %s\n", instrIndex, instr.String()))
 
-						// If the instruction is also a value, show its name
-						if val, ok := instr.(ssa.Value); ok {
+						if asAnnotatedCall, ok := instr.(*analyzer.AnnotatedCall); ok {
+							for retInd, returnValue := range asAnnotatedCall.ReturnValues {
+								outputValue(&result, fmt.Sprintf("      Return %d: ", retInd), "  Type: ", returnValue)
+								for _, referrer := range extractReferrerStrings(returnValue.Referrers()) {
+									result.WriteString("        <- Referenced by: ")
+									result.WriteString(referrer)
+									result.WriteString("\n")
+								}
+							}
+						} else if val, ok := instr.(ssa.Value); ok {
 							if val.Name() != "" {
 								outputValue(&result, "      As value: ", "  Type: ", val)
 								for _, referrer := range extractReferrerStrings(val.Referrers()) {

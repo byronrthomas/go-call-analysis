@@ -159,6 +159,11 @@ func liftIfCondition(block *ssa.BasicBlock) {
 		ConditionDescription: conditionDescription,
 		OtherValue:           *otherValue,
 	}
+	removeInstruction(block, instrToRemove)
+	block.Instrs[len(block.Instrs)-1] = &annotatedIf
+}
+
+func removeInstruction(block *ssa.BasicBlock, instrToRemove *ssa.Instruction) {
 	foundInstrToRemove := false
 	for i, instr := range block.Instrs {
 		if instr == *instrToRemove {
@@ -169,9 +174,7 @@ func liftIfCondition(block *ssa.BasicBlock) {
 	}
 	if !foundInstrToRemove {
 		log.Fatalf("Failed to find instruction to remove: %v", instrToRemove)
-		return
 	}
-	block.Instrs[len(block.Instrs)-1] = &annotatedIf
 }
 
 type FuncReturnPlaceholder struct {
@@ -206,6 +209,42 @@ func (f *FuncReturnPlaceholder) Referrers() *[]ssa.Instruction {
 	return nil
 }
 
+func liftCallReferrers(annotatedCall *AnnotatedCall, block *ssa.BasicBlock, ogReferrers *[]ssa.Instruction, ogValue ssa.Value) {
+	if len(*ogReferrers) == 0 {
+		return
+	}
+	if len(annotatedCall.ReturnValues) == 0 {
+		log.Fatalf("Annotated call has no return values but %d referrers", len(*ogReferrers))
+	}
+	// There are two expected modes for this:
+	// 1. There is only a single return value - all referrers should not be extract instructions,
+	// and the return value should just be the original call result value (which everything else will
+	// then correctly be linked to)
+	// 2. There are multiple return values - all referrers should be extract instructions and we can
+	// replace the return values with the extract instructions to just give the results of those instructions
+	if len(annotatedCall.ReturnValues) == 1 {
+		for _, referrer := range *ogReferrers {
+			if asExtract, ok := referrer.(*ssa.Extract); ok {
+				log.Fatalf("Extract instruction found in referrers of annotated call: %v", asExtract)
+			}
+		}
+		annotatedCall.ReturnValues[0] = ogValue
+	} else {
+		instrsToRemove := make([]ssa.Instruction, 0)
+		for _, referrer := range *ogReferrers {
+			if asExtract, ok := referrer.(*ssa.Extract); ok {
+				instrsToRemove = append(instrsToRemove, asExtract)
+				annotatedCall.ReturnValues[asExtract.Index] = asExtract
+			} else {
+				log.Fatalf("Non-extract instruction found in referrers of annotated call: %v", referrer)
+			}
+		}
+		for _, instrToRemove := range instrsToRemove {
+			removeInstruction(block, &instrToRemove)
+		}
+	}
+}
+
 // annotateCall just processes the type of the call result and
 // generates n values that represent the return values of the call
 // if the call doesn't return a tuple, n = 1, if it does, n is the length of the tuple
@@ -219,6 +258,9 @@ func annotateCall(call *ssa.Call) *AnnotatedCall {
 	// on the call itself
 	if asTuple, ok := callType.(*types.Tuple); ok {
 		n = asTuple.Len()
+		if n == 1 {
+			log.Fatalf("Single return value call type for tuple?: %v", callType)
+		}
 		returnValues := make([]ssa.Value, n)
 		for i := 0; i < n; i++ {
 			retVal := FuncReturnPlaceholder{
@@ -240,8 +282,10 @@ func tryFunctionSimplification(f *ssa.Function) {
 		liftIfCondition(block)
 		for instrInd, instr := range block.Instrs {
 			if asCall, ok := instr.(*ssa.Call); ok {
-				block.Instrs[instrInd] = annotateCall(asCall)
-				// TODO: also need to lift referrers of the original call result
+				annotatedCall := annotateCall(asCall)
+				block.Instrs[instrInd] = annotatedCall
+				// Also need to lift referrers of the original call result
+				liftCallReferrers(annotatedCall, block, asCall.Referrers(), asCall)
 			}
 		}
 	}

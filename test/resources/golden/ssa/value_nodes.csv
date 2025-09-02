@@ -9,10 +9,8 @@ value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:21,21
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:28,28,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,10,t3,github.com/throwin5tone7/go-call-analysis/test-project,*int,FieldAddr
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:39,39,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,10,t4,github.com/throwin5tone7/go-call-analysis/test-project,*int,FieldAddr
 make Getter <- *Struct1 (t0),0,,false,Value,0,t5,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,11,func_return_placeholder_0_t6,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:11:22,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,11,func_return_placeholder_1_t6,github.com/throwin5tone7/go-call-analysis/test-project,error,FuncReturnPlaceholder
-extract t6 #0,0,,false,Value,0,t7,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
-extract t6 #1,0,,true,Value,0,t8,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
+extract t6 #0,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,11,t7,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
+extract t6 #1,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,11,t8,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:28,28,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,13,t10,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 &t10[0:int],0,,false,Value,0,t11,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 "make any <- string (""Error:"":string)",0,,false,Value,0,t12,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
@@ -22,10 +20,8 @@ slice t10[:],0,,false,Value,0,t15,github.com/throwin5tone7/go-call-analysis/test
 return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,14,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,13,func_return_placeholder_0_t16,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
 return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,14,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,13,func_return_placeholder_1_t16,github.com/throwin5tone7/go-call-analysis/test-project,error,FuncReturnPlaceholder
 make Getter <- *Struct2 (t2),0,,false,Value,0,t17,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,func_return_placeholder_0_t18,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,17,func_return_placeholder_1_t18,github.com/throwin5tone7/go-call-analysis/test-project,error,FuncReturnPlaceholder
-extract t18 #0,0,,false,Value,0,t19,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
-extract t18 #1,0,,true,Value,0,t20,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
+extract t18 #0,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,t19,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
+extract t18 #1,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,17,t20,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,15,t22,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 &t22[0:int],0,,false,Value,0,t23,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 "make any <- string (""Result:"":string)",0,,false,Value,0,t24,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
