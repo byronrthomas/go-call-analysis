@@ -223,16 +223,6 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 	}
 }
 
-func findInBlock(b *ssa.BasicBlock, instrToFind ssa.Instruction) int {
-	for i, instr := range b.Instrs {
-		if instr == instrToFind {
-			return i
-		}
-	}
-	log.Fatalf("Instruction not found in block: %v", instrToFind)
-	return -1
-}
-
 func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) []ControlFlowEdge {
 	lastInstrId := ContextualId(b, len(b.Instrs)-1)
 	lastInstr := b.Instrs[len(b.Instrs)-1]
