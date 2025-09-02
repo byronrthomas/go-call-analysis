@@ -1,6 +1,6 @@
 id,column,file,is_error_type,label,line,name,package,type_name,value_type
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,46,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:48:23,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,48,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,47,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,49,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
 github.com/throwin5tone7/go-call-analysis/test-project.init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
 *init$guard,0,,false,Value,0,t0,github.com/throwin5tone7/go-call-analysis/test-project,bool,UnOp
 errors.init(),0,,false,Value,0,t1,github.com/throwin5tone7/go-call-analysis/test-project,(),Call
@@ -22,7 +22,7 @@ change interface any <- error (t8),0,,false,Value,0,t14,github.com/throwin5tone7
 slice t10[:],0,,false,Value,0,t15,github.com/throwin5tone7/go-call-analysis/test-project,[]any,Slice
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,14,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,13,t16,github.com/throwin5tone7/go-call-analysis/test-project,"(n int, err error)",Call
 make Getter <- *Struct2 (t2),0,,false,Value,0,t17,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:21,21,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,t18,github.com/throwin5tone7/go-call-analysis/test-project,"(int, error)",Call
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,t18,github.com/throwin5tone7/go-call-analysis/test-project,"(int, error)",Call
 extract t18 #0,0,,false,Value,0,t19,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
 extract t18 #1,0,,true,Value,0,t20,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,15,t22,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
@@ -36,7 +36,7 @@ value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:28,28
 &t29[0:int],0,,false,Value,0,t30,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 "make any <- string (""Error:"":string)",0,,false,Value,0,t31,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
 &t29[1:int],0,,false,Value,0,t32,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
-change interface any <- error (t20),0,,false,Value,0,t33,github.com/throwin5tone7/go-call-analysis/test-project,any,ChangeInterface
+change interface any <- error (t8),0,,false,Value,0,t33,github.com/throwin5tone7/go-call-analysis/test-project,any,ChangeInterface
 slice t29[:],0,,false,Value,0,t34,github.com/throwin5tone7/go-call-analysis/test-project,[]any,Slice
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14,14,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,19,t35,github.com/throwin5tone7/go-call-analysis/test-project,"(n int, err error)",Call
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:31,31,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,21,t36,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
@@ -46,3 +46,5 @@ value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:31,31
 make any <- int (t19),0,,false,Value,0,t40,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
 slice t36[:],0,,false,Value,0,t41,github.com/throwin5tone7/go-call-analysis/test-project,[]any,Slice
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13,13,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,21,t42,github.com/throwin5tone7/go-call-analysis/test-project,"(n int, err error)",Call
+make Getter <- *Struct2 (t2),0,,false,Value,0,t43,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,7,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,22,t44,github.com/throwin5tone7/go-call-analysis/test-project,"(int, error)",Call

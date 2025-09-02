@@ -1,6 +1,6 @@
 from_id,to_id,type
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:46:19,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:48:23,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,*init$guard,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,errors.init(),Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,fmt.init(),Produces_Result
@@ -21,7 +21,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:1:5,change interface
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:7,slice t10[:],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,make Getter <- *Struct2 (t2),Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:21,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:19,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,extract t18 #0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,extract t18 #1,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:32,Produces_Result
@@ -35,7 +35,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:4:0,value-/Users/byr
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:1,&t29[0:int],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:2,"make any <- string (""Error:"":string)",Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:4,&t29[1:int],Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:5,change interface any <- error (t20),Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:5,change interface any <- error (t8),Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:7,slice t29[:],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:8,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:31,Produces_Result
@@ -45,3 +45,5 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:4,&t36[1:int],Prod
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:5,make any <- int (t19),Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7,slice t36[:],Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:9,make Getter <- *Struct2 (t2),Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,Produces_Result

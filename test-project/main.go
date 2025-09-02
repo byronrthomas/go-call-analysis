@@ -14,11 +14,12 @@ func main() {
 	} else {
 		fmt.Println("Result:", result)
 	}
-	result, err = check(struct2)
+	result, _ = check(struct2) // Unused error result
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
 	fmt.Println("Result:", result)
+	check(struct2) // Unused error result
 }
 
 type Getter interface {

@@ -69,6 +69,7 @@ Function: main
         <- Referenced by: &t2.fieldX [#0]
         <- Referenced by: &t2.fieldY [#1]
         <- Referenced by: make Getter <- *Struct2 (t2)
+        <- Referenced by: make Getter <- *Struct2 (t2)
     4: &t2.fieldX [#0]
       As value: t3  Type: *int
         <- Referenced by: *t3 = 2:int
@@ -100,6 +101,8 @@ Function: main
     11: extract t6 #1
       As value: t8  Type: error
         <- Referenced by: change interface any <- error (t8)
+        <- Referenced by: change interface any <- error (t8)
+        <- Referenced by: t8 != nil:error
         <- Referenced by: t8 != nil:error
       Operand 0: t6  Type: (int, error)
     12: if (t8 != nil) goto 1 else 3
@@ -162,11 +165,9 @@ Function: main
       Operand 0: t18  Type: (int, error)
     3: extract t18 #1
       As value: t20  Type: error
-        <- Referenced by: change interface any <- error (t20)
-        <- Referenced by: t20 != nil:error
       Operand 0: t18  Type: (int, error)
-    4: if (t20 != nil) goto 4 else 5
-      Operand 0: t20  Type: error
+    4: if (t8 != nil) goto 4 else 5
+      Operand 0: t8  Type: error
 
   Block 3 -   Predecessors [0]   Successors [2]:
     0: new [2]any (varargs)
@@ -231,10 +232,10 @@ Function: main
         <- Referenced by: *t32 = t33
       Operand 0: t29  Type: *[2]any
       Operand 1: 1:int  Type: int
-    5: change interface any <- error (t20)
+    5: change interface any <- error (t8)
       As value: t33  Type: any
         <- Referenced by: *t32 = t33
-      Operand 0: t20  Type: error
+      Operand 0: t8  Type: error
     6: *t32 = t33
       Operand 0: t32  Type: *any
       Operand 1: t33  Type: any
@@ -286,7 +287,15 @@ Function: main
       As value: t42  Type: (n int, err error)
       Operand 0: Println  Type: func(a ...any) (n int, err error)
       Operand 1: t41  Type: []any
-    9: return
+    9: make Getter <- *Struct2 (t2)
+      As value: t43  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+        <- Referenced by: check(t43)
+      Operand 0: t2  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    10: check(t43)
+      As value: t44  Type: (int, error)
+      Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
+      Operand 1: t43  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
+    11: return
 
 
 Value: init$guard
