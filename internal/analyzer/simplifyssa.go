@@ -9,6 +9,7 @@ import (
 	"slices"
 	"strings"
 
+	"golang.org/x/tools/go/callgraph"
 	"golang.org/x/tools/go/ssa"
 )
 
@@ -30,7 +31,7 @@ func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *ssa.Program 
 		if matchesPrefix(pkg.Pkg.Path()) {
 			for _, fn := range pkg.Members {
 				if f, ok := fn.(*ssa.Function); ok {
-					tryFunctionSimplification(f)
+					tryFunctionSimplification(f, input.CallGraph)
 				}
 			}
 		}
@@ -132,7 +133,8 @@ type InstructionAndValue interface {
 
 type AnnotatedCall struct {
 	InstructionAndValue
-	ReturnValues []ssa.Value
+	ResolvedTargets []*ssa.Function
+	ReturnValues    []ssa.Value
 }
 
 var _ ssa.Instruction = (*AnnotatedCall)(nil)
@@ -245,10 +247,35 @@ func liftCallReferrers(annotatedCall *AnnotatedCall, block *ssa.BasicBlock, ogRe
 	}
 }
 
+func findAllTargets(call *ssa.Call, callGraph *callgraph.Graph) []*ssa.Function {
+	callSiteNode := callGraph.Nodes[call.Parent()]
+	if callSiteNode == nil {
+		if call.Parent().Synthetic == "" {
+			log.Fatalf("Non-synthetic site node has no function: %v", call.Parent())
+		}
+		allTargets := make([]*ssa.Function, 1)
+		if call.Call.StaticCallee() == nil {
+			log.Fatalf("Call has no static callee: %v", call)
+		}
+		allTargets[0] = call.Call.StaticCallee()
+		return allTargets
+	}
+	allTargets := make([]*ssa.Function, 0)
+	for _, edge := range callSiteNode.Out {
+		if edge.Site != nil && edge.Site.Value() == call {
+			allTargets = append(allTargets, edge.Callee.Func)
+		}
+	}
+	if len(allTargets) == 0 {
+		log.Fatalf("No targets found for call: %v", call)
+	}
+	return allTargets
+}
+
 // annotateCall just processes the type of the call result and
 // generates n values that represent the return values of the call
 // if the call doesn't return a tuple, n = 1, if it does, n is the length of the tuple
-func annotateCall(call *ssa.Call) *AnnotatedCall {
+func annotateCall(call *ssa.Call, callGraph *callgraph.Graph) *AnnotatedCall {
 	callType := call.Type()
 	n := 1
 	// NOTE: a void return type is a tuple with 0 elements
@@ -256,6 +283,7 @@ func annotateCall(call *ssa.Call) *AnnotatedCall {
 	// if we want to be able to detect it easily, should add to the graph a
 	// special value node for void returns and link it up, or add an attrib
 	// on the call itself
+	allTargets := findAllTargets(call, callGraph)
 	if asTuple, ok := callType.(*types.Tuple); ok {
 		n = asTuple.Len()
 		if n == 1 {
@@ -270,19 +298,19 @@ func annotateCall(call *ssa.Call) *AnnotatedCall {
 			}
 			returnValues[i] = &retVal
 		}
-		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues}
+		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues, ResolvedTargets: allTargets}
 		return &annotatedCall
 	}
 
-	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}}
+	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}, ResolvedTargets: allTargets}
 }
 
-func tryFunctionSimplification(f *ssa.Function) {
+func tryFunctionSimplification(f *ssa.Function, callGraph *callgraph.Graph) {
 	for _, block := range f.Blocks {
 		liftIfCondition(block)
 		for instrInd, instr := range block.Instrs {
 			if asCall, ok := instr.(*ssa.Call); ok {
-				annotatedCall := annotateCall(asCall)
+				annotatedCall := annotateCall(asCall, callGraph)
 				block.Instrs[instrInd] = annotatedCall
 				// Also need to lift referrers of the original call result
 				liftCallReferrers(annotatedCall, block, asCall.Referrers(), asCall)

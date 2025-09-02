@@ -11,12 +11,13 @@ import (
 )
 
 type SSAGraphData struct {
-	ValueNodes       []ValueNode
-	InstructionNodes []InstructionNode
-	OrderingEdges    []OrderingEdge
-	OperandEdges     []OperandEdge
-	ControlFlowEdges []ControlFlowEdge
-	ResultEdges      []ResultEdge
+	ValueNodes        []ValueNode
+	InstructionNodes  []InstructionNode
+	OrderingEdges     []OrderingEdge
+	OperandEdges      []OperandEdge
+	ControlFlowEdges  []ControlFlowEdge
+	ResultEdges       []ResultEdge
+	ResolvedCallEdges []ResolvedCallEdge
 }
 
 type ValueNode struct {
@@ -42,6 +43,11 @@ type ControlFlowEdge struct {
 
 type OperandEdge struct {
 	graphcommon.EdgeCommon
+}
+
+type ResolvedCallEdge struct {
+	graphcommon.EdgeCommon
+	EdgeCardinality int
 }
 
 type ResultEdge struct {
@@ -89,6 +95,13 @@ func (e *ResultEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *ResolvedCallEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Resolved_Call"
+	edgeCommonMap["edge_cardinality"] = e.EdgeCardinality
+	return edgeCommonMap
+}
+
 func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAGraphData {
 	var valueNodes []ValueNode
 	var instructionNodes []InstructionNode
@@ -96,6 +109,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 	var controlFlowEdges []ControlFlowEdge
 	var operandEdges []OperandEdge
 	var resultEdges []ResultEdge
+	var resolvedCallEdges []ResolvedCallEdge
 	fileSet := ssaProgram.Fset
 
 	// Helper function to check if a package path matches any of the prefixes
@@ -191,6 +205,14 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 										},
 									})
 								}
+								for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
+									resolvedCallEdges = append(resolvedCallEdges, ResolvedCallEdge{
+										EdgeCommon: graphcommon.EdgeCommon{
+											FromID: instrId,
+											ToID:   resolvedTarget.String(),
+										},
+										EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
+								}
 							} else if asValue, ok := instr.(ssa.Value); ok {
 								_, vId := ValueId(fileSet, asValue, currentBlockId)
 								valueNodes = processValue(valueNodes, vId, asValue, pkg, instrPosition)
@@ -214,12 +236,13 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 	}
 
 	return SSAGraphData{
-		ValueNodes:       valueNodes,
-		InstructionNodes: instructionNodes,
-		OrderingEdges:    orderingEdges,
-		OperandEdges:     operandEdges,
-		ControlFlowEdges: controlFlowEdges,
-		ResultEdges:      resultEdges,
+		ValueNodes:        valueNodes,
+		InstructionNodes:  instructionNodes,
+		OrderingEdges:     orderingEdges,
+		OperandEdges:      operandEdges,
+		ControlFlowEdges:  controlFlowEdges,
+		ResultEdges:       resultEdges,
+		ResolvedCallEdges: resolvedCallEdges,
 	}
 }
 

@@ -69,7 +69,7 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	callGraph := rtaRes.CallGraph
 
 	// Print out some call graph edges
-	callGraph.DeleteSyntheticNodes() // remove built-in or synthetic calls
+	//callGraph.DeleteSyntheticNodes() // remove built-in or synthetic calls
 	return &CallGraphResult{
 		CallGraph:  callGraph,
 		SSAProgram: prog,

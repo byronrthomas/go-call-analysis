@@ -1,7 +1,4 @@
 from_id,to_id,type
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:21,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:27,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:3,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:21,Produces_Result
@@ -48,3 +45,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,return-placehold
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9,value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,Produces_Result

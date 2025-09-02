@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"sort"
 	"strings"
 	"testing"
@@ -54,6 +55,17 @@ func TestSSAGraphAnalysis(t *testing.T) {
 		outputFile := filepath.Join(outputPath, filename)
 		if _, err := os.Stat(outputFile); os.IsNotExist(err) {
 			t.Errorf("Expected file %s was not generated", filename)
+		}
+	}
+
+	// Check no other files were generated
+	files, err := os.ReadDir(outputPath)
+	if err != nil {
+		t.Fatalf("Failed to read output directory: %v", err)
+	}
+	for _, file := range files {
+		if !slices.Contains(expectedFiles, file.Name()) {
+			t.Errorf("Unexpected file %s was generated", file.Name())
 		}
 	}
 

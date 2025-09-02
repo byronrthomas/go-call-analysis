@@ -1,0 +1,13 @@
+from_id,to_id,edge_cardinality,type
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,github.com/throwin5tone7/go-call-analysis/test-project.check,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,fmt.Println,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,github.com/throwin5tone7/go-call-analysis/test-project.check,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:8,fmt.Println,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:8,fmt.Println,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,fmt.Println,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,github.com/throwin5tone7/go-call-analysis/test-project.check,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,2,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,2,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,errors.New,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,errors.init,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,fmt.init,1,Resolved_Call

@@ -282,5 +282,12 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["result_edges"] = resultEdgeMappables
 
+	// Convert resolved call edges to Mappable interface
+	resolvedCallEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ResolvedCallEdges))
+	for i := range ssaData.ResolvedCallEdges {
+		resolvedCallEdgeMappables[i] = &ssaData.ResolvedCallEdges[i]
+	}
+	dataMap["resolved_call_edges"] = resolvedCallEdgeMappables
+
 	return ExportToCSV(dataMap, outputPath)
 }

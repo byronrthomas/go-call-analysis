@@ -1,8 +1,4 @@
 id,column,file,is_error_type,label,line,name,package,type_name,value_type
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,47,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
-value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,49,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
-github.com/throwin5tone7/go-call-analysis/test-project:init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
-value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,0,,false,Value,0,t0,github.com/throwin5tone7/go-call-analysis/test-project,bool,UnOp
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:21,21,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,9,t0,github.com/throwin5tone7/go-call-analysis/test-project,*github.com/throwin5tone7/go-call-analysis/test-project.Struct1,Alloc
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:27,27,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,9,t1,github.com/throwin5tone7/go-call-analysis/test-project,*int,FieldAddr
 value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:10:21,21,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,10,t2,github.com/throwin5tone7/go-call-analysis/test-project,*github.com/throwin5tone7/go-call-analysis/test-project.Struct2,Alloc
@@ -49,3 +45,7 @@ return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/m
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43,0,,false,Value,0,t43,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
 return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,7,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,22,func_return_placeholder_0_t44,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
 return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7,7,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,22,func_return_placeholder_1_t44,github.com/throwin5tone7/go-call-analysis/test-project,error,FuncReturnPlaceholder
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,47,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
+value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,49,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
+github.com/throwin5tone7/go-call-analysis/test-project:init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,unknown
+value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,0,,false,Value,0,t0,github.com/throwin5tone7/go-call-analysis/test-project,bool,UnOp

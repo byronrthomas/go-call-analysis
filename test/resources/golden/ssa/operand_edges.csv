@@ -1,10 +1,4 @@
 from_id,to_id,type
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,github.com/throwin5tone7/go-call-analysis/test-project:init$guard,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,github.com/throwin5tone7/go-call-analysis/test-project:init$guard,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,true,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,synthetic-errors-errors.init,Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,synthetic-fmt-fmt.init,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:21,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:9:27,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:2,1,Uses_Operand
@@ -85,3 +79,9 @@ github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:49:23,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,value-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:47:19,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,nil:error,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,github.com/throwin5tone7/go-call-analysis/test-project:init$guard,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,github.com/throwin5tone7/go-call-analysis/test-project:init$guard,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,true,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,synthetic-errors-errors.init,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,synthetic-fmt-fmt.init,Uses_Operand
