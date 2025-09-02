@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
+	"log"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/ssa"
@@ -129,6 +130,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 							precInstrId = funcId
 						}
 						controlFlowEdges = addControlFlowEdges(b, controlFlowEdges)
+						currentBlockId := blockId(b)
 
 						for instrInd, instr := range b.Instrs {
 							instrId := ContextualId(b, instrInd)
@@ -163,7 +165,13 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 								if *op == nil {
 									continue
 								}
-								_, opId := ValueId(fileSet, *op)
+								opAsInstr, ok := (*op).(ssa.Instruction)
+								producingBlockId := ""
+								if ok {
+									producingBlockId = blockId(opAsInstr.Block())
+								}
+
+								_, opId := ValueId(fileSet, *op, producingBlockId)
 								operandEdges = append(operandEdges, OperandEdge{
 									EdgeCommon: graphcommon.EdgeCommon{
 										FromID: instrId,
@@ -174,7 +182,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 
 							if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
 								for _, returnValue := range asAnnotatedCall.ReturnValues {
-									_, returnValueId := ValueId(fileSet, returnValue)
+									_, returnValueId := ValueId(fileSet, returnValue, currentBlockId)
 									valueNodes = processValue(valueNodes, returnValueId, returnValue, pkg, instrPosition)
 									resultEdges = append(resultEdges, ResultEdge{
 										EdgeCommon: graphcommon.EdgeCommon{
@@ -184,7 +192,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 									})
 								}
 							} else if asValue, ok := instr.(ssa.Value); ok {
-								_, vId := ValueId(fileSet, asValue)
+								_, vId := ValueId(fileSet, asValue, currentBlockId)
 								valueNodes = processValue(valueNodes, vId, asValue, pkg, instrPosition)
 
 								// If instruction produces a value, add a result edge from the instruction to the value
@@ -198,7 +206,7 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 						}
 					}
 				} else if v, ok := mem.(ssa.Value); ok {
-					valuePosition, vId := ValueId(fileSet, v)
+					valuePosition, vId := ValueId(fileSet, v, "")
 					valueNodes = processValue(valueNodes, vId, v, pkg, valuePosition)
 				}
 			}
@@ -213,6 +221,16 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 		ControlFlowEdges: controlFlowEdges,
 		ResultEdges:      resultEdges,
 	}
+}
+
+func findInBlock(b *ssa.BasicBlock, instrToFind ssa.Instruction) int {
+	for i, instr := range b.Instrs {
+		if instr == instrToFind {
+			return i
+		}
+	}
+	log.Fatalf("Instruction not found in block: %v", instrToFind)
+	return -1
 }
 
 func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) []ControlFlowEdge {
@@ -265,12 +283,12 @@ func isErrorType(t types.Type) bool {
 	return types.AssignableTo(t, errorType)
 }
 
-func ValueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
-	instrPos := instr.Pos()
-	if instrPos == token.NoPos {
-		if asConst, ok := instr.(*ssa.Const); ok {
+func ValueId(fileSet *token.FileSet, valueObj ssa.Value, producingBlockId string) (token.Position, string) {
+	valuePos := valueObj.Pos()
+	if valuePos == token.NoPos {
+		if asConst, ok := valueObj.(*ssa.Const); ok {
 			if asConst.Value == nil {
-				return token.Position{}, instr.String()
+				return token.Position{}, valueObj.String()
 			}
 			asExactString := asConst.Value.ExactString()
 			asString := asConst.Value.String()
@@ -278,22 +296,43 @@ func ValueId(fileSet *token.FileSet, instr ssa.Value) (token.Position, string) {
 				return token.Position{}, asExactString
 			}
 			return token.Position{}, asExactString
-		} else if asFRP, ok := instr.(*FuncReturnPlaceholder); ok {
-			instrPos = asFRP.FromCall.Pos()
-			instrPosition := fileSet.Position(instrPos)
-			instrId := fmt.Sprintf("return-placeholder-%d-%s:%d:%d", asFRP.Index, instrPosition.Filename, instrPosition.Line, instrPosition.Column)
-			return instrPosition, instrId
+		} else if asFRP, ok := valueObj.(*FuncReturnPlaceholder); ok {
+			valuePos = asFRP.FromCall.Pos()
+			valuePosition := fileSet.Position(valuePos)
+			valueId := fmt.Sprintf("return-placeholder-%d-%s:%d:%d", asFRP.Index, valuePosition.Filename, valuePosition.Line, valuePosition.Column)
+			return valuePosition, valueId
+		} else if asGlobal, ok := valueObj.(*ssa.Global); ok {
+			valueId := fmt.Sprintf("%s:%s", asGlobal.Pkg.Pkg.Path(), asGlobal.Name())
+			return token.Position{}, valueId
+		} else if asFunction, ok := valueObj.(*ssa.Function); ok {
+			if asFunction.Synthetic != "" {
+				valueId := fmt.Sprintf("synthetic-%s-%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
+				return token.Position{}, valueId
+			}
+			log.Printf("WARN: Function being treated as a value has no synthetic ID: %v", asFunction)
+			valueId := fmt.Sprintf("%s:%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
+			return token.Position{}, valueId
 		}
-		return token.Position{}, instr.String()
+		// This line should only be hit when we're in a synthetic position that doesn't exist in the source code
+		if producingBlockId != "" {
+			valueId := fmt.Sprintf("value-%s:%s", producingBlockId, valueObj.Name())
+			return token.Position{}, valueId
+		} else {
+			log.Fatalf("Value has no position and no containing block ID: %v", valueObj)
+		}
+		return token.Position{}, valueObj.String()
 	}
-	instrPosition := fileSet.Position(instr.Pos())
-	instrId := fmt.Sprintf("value-%s:%d:%d", instrPosition.Filename, instrPosition.Line, instrPosition.Column)
-	return instrPosition, instrId
+	valuePosition := fileSet.Position(valueObj.Pos())
+	valueId := fmt.Sprintf("value-%s:%d:%d", valuePosition.Filename, valuePosition.Line, valuePosition.Column)
+	return valuePosition, valueId
 }
 
 func ContextualId(block *ssa.BasicBlock, instrIndex int) string {
-	funcId := block.Parent().String()
-	return fmt.Sprintf("%s:%d:%d", funcId, block.Index, instrIndex)
+	return fmt.Sprintf("%s:%d", blockId(block), instrIndex)
+}
+
+func blockId(block *ssa.BasicBlock) string {
+	return fmt.Sprintf("%s:%d", block.Parent().String(), block.Index)
 }
 
 func instrTypeAsString(instr ssa.Instruction) string {
