@@ -230,8 +230,24 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 				} else if v, ok := mem.(ssa.Value); ok {
 					valuePosition, vId := ValueId(fileSet, v, "")
 					valueNodes = processValue(valueNodes, vId, v, pkg, valuePosition)
+				} else if t, ok := mem.(*ssa.Type); ok {
+					log.Printf("INFO: inspecting type %s", t.Name())
+					if asNamed, ok := t.Type().(*types.Named); ok {
+						log.Printf("INFO: type %s is a named type", asNamed.Obj().Name())
+						for meth := range asNamed.Methods() {
+							log.Printf("INFO: method %s", meth.Name())
+							ssaFunc := ssaProgram.FuncValue(meth)
+							if ssaFunc != nil {
+								log.Printf("INFO: ssa function %s", ssaFunc.Name())
+							} else {
+								log.Printf("INFO: ssa function %s is nil", meth.Name())
+							}
+						}
+					} else {
+						log.Printf("INFO: type %s is not a named type", t.Name())
+					}
 				} else {
-					log.Printf("WARN: Unexpected member type: %T", mem)
+					log.Printf("WARN: Unexpected member of type: %T", mem)
 				}
 			}
 		}
