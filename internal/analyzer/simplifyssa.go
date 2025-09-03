@@ -24,19 +24,29 @@ func PackageMatcher(packagePrefixes []string) func(pkgPath string) bool {
 	}
 
 }
+
+type SSASimplificationVisitor struct {
+	BaseSSAVisitor
+	CallGraph *callgraph.Graph
+}
+
+func (v *SSASimplificationVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
+	tryFunctionSimplification(f, v.CallGraph)
+}
+
+func (v *SSASimplificationVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
+	tryFunctionSimplification(ssaFunc, v.CallGraph)
+}
+
 func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *ssa.Program {
 	program := input.SSAProgram
-	matchesPrefix := PackageMatcher(packagePrefixes)
-	for _, pkg := range program.AllPackages() {
-		if matchesPrefix(pkg.Pkg.Path()) {
-			for _, fn := range pkg.Members {
-				if f, ok := fn.(*ssa.Function); ok {
-					tryFunctionSimplification(f, input.CallGraph)
-				}
-			}
-		}
+	visitor := &SSASimplificationVisitor{
+		BaseSSAVisitor: BaseSSAVisitor{},
+		CallGraph:      input.CallGraph,
 	}
-	return input.SSAProgram
+	traverser := NewSSATraverser(packagePrefixes)
+	traverser.Traverse(program, visitor)
+	return program
 }
 
 func formatOperator(op token.Token) string {
