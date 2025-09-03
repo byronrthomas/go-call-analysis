@@ -112,6 +112,7 @@ type GraphVisitor struct {
 	resultEdges       []ResultEdge
 	resolvedCallEdges []ResolvedCallEdge
 	valueNodes        []ValueNode
+	functionEntries   map[string]bool
 }
 
 func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -119,19 +120,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 	pos := v.fileSet.Position(f.Pos())
 	// TODO: restrict to reachable functions from the call graph
 	funcId := f.String()
-	v.instructionNodes = append(v.instructionNodes, InstructionNode{
-		NodeCommon: graphcommon.NodeCommon{
-			ID:      funcId,
-			Name:    f.Name(),
-			Package: pkg.Pkg.Path(),
-			PositionInfo: graphcommon.PositionInfo{
-				File:   pos.Filename,
-				Line:   pos.Line,
-				Column: pos.Column,
-			},
-		},
-		InstructionType: "function-entry",
-	})
+	if _, ok := v.functionEntries[funcId]; !ok {
+		addFunctionEntryNode(v, funcId, f, pkg, pos)
+	}
+	v.functionEntries[funcId] = true
 	// Put an end-then node from the function entry to the first instruction
 
 	for blockInd, b := range f.Blocks {
@@ -202,6 +194,11 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					})
 				}
 				for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
+					targetId := resolvedTarget.String()
+					if _, ok := v.functionEntries[targetId]; !ok {
+						addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()))
+						v.functionEntries[targetId] = true
+					}
 					v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: instrId,
@@ -225,6 +222,22 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 	}
 }
 
+func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position) {
+	v.instructionNodes = append(v.instructionNodes, InstructionNode{
+		NodeCommon: graphcommon.NodeCommon{
+			ID:      funcId,
+			Name:    f.Name(),
+			Package: pkg.Pkg.Path(),
+			PositionInfo: graphcommon.PositionInfo{
+				File:   pos.Filename,
+				Line:   pos.Line,
+				Column: pos.Column,
+			},
+		},
+		InstructionType: "function-entry",
+	})
+}
+
 func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
 	v.VisitFunction(ssaFunc, _pkg)
 }
@@ -238,8 +251,9 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 	fileSet := ssaProgram.Fset
 
 	visitor := &GraphVisitor{
-		BaseSSAVisitor: BaseSSAVisitor{},
-		fileSet:        fileSet,
+		BaseSSAVisitor:  BaseSSAVisitor{},
+		fileSet:         fileSet,
+		functionEntries: make(map[string]bool),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(ssaProgram, visitor)
