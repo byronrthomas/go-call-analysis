@@ -87,3 +87,27 @@ func RunSSASimplification(rootFunction string, projectPath string, outputPath st
 	ssaProgram := analyzer.SimplifySSA(callGraph, packagePrefixes)
 	return packagePrefixes, ssaProgram, nil
 }
+
+// RunDumpPackages builds an SSA program and dumps package information
+func RunDumpPackages(projectPath string) error {
+	if projectPath == "" {
+		return fmt.Errorf("project path is required")
+	}
+
+	fmt.Printf("Building SSA program for project at: %s\n", projectPath)
+
+	// Create a minimal config for BuildSSAProgram
+	config := &analyzer.AnalysisConfig{
+		ProjectPath:  projectPath,
+		OutputPath:   "",  // Not needed for this command
+		RootFunction: nil, // Not needed for this command
+	}
+
+	// Call BuildSSAProgram
+	ssaProgram := analyzer.BuildSSAProgram(config)
+
+	// Call DumpPackages with the SSA packages
+	analyzer.DumpPackages(ssaProgram.AllPackages())
+
+	return nil
+}

@@ -45,6 +45,18 @@ var ssaGraphCmd = &cobra.Command{
 	RunE:  ssaGraphCmdRunner,
 }
 
+var dumpPackagesCmdRunner = func(cmd *cobra.Command, args []string) error {
+	projectPath, _ := cmd.Flags().GetString("path")
+	return lib.RunDumpPackages(projectPath)
+}
+
+var dumpPackagesCmd = &cobra.Command{
+	Use:   "dump-packages",
+	Short: "Build SSA program and dump package information",
+	Long:  `Build an SSA program from a Go project and dump detailed package information to stdout.`,
+	RunE:  dumpPackagesCmdRunner,
+}
+
 func init() {
 	// Common flags for both commands
 	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
@@ -58,8 +70,11 @@ func init() {
 	ssaGraphCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
 	ssaGraphCmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
 
+	dumpPackagesCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
+
 	rootCmd.AddCommand(callGraphCmd)
 	rootCmd.AddCommand(ssaGraphCmd)
+	rootCmd.AddCommand(dumpPackagesCmd)
 }
 
 func main() {

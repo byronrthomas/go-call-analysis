@@ -31,12 +31,6 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	prog := BuildSSAProgram(config)
 	ssaPkgs := prog.AllPackages()
 
-	fmt.Printf("\nFound %d packages\n", len(ssaPkgs))
-	for _, pkg := range ssaPkgs {
-		fmt.Printf("Package %s\n", pkg.Pkg.Path())
-	}
-	fmt.Printf("\n")
-
 	// Perform RTA (Rapid Type Analysis) to build call graph
 	var functions []*ssa.Function
 	if config.RootFunction != nil {
@@ -75,6 +69,20 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 		SSAProgram: prog,
 		OutputPath: config.OutputPath,
 	}, nil
+}
+
+func DumpPackages(ssaPkgs []*ssa.Package) {
+	fmt.Printf("\nFound %d packages\n", len(ssaPkgs))
+	for _, pkg := range ssaPkgs {
+		fmt.Printf("Package %s\n", pkg.Pkg.Path())
+		for _, mem := range pkg.Members {
+			fmt.Printf("\tMember %T\n", mem)
+		}
+		for _, nm := range pkg.Pkg.Scope().Names() {
+			fmt.Printf("\tIn Scope Name %s\n", nm)
+		}
+	}
+	fmt.Printf("\n")
 }
 
 func BuildSSAProgram(config *AnalysisConfig) *ssa.Program {
