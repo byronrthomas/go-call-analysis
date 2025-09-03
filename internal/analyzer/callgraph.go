@@ -71,18 +71,25 @@ func CallGraphAnalysis(config *AnalysisConfig) (*CallGraphResult, error) {
 	}, nil
 }
 
-func DumpPackages(ssaPkgs []*ssa.Package) {
-	fmt.Printf("\nFound %d packages\n", len(ssaPkgs))
-	for _, pkg := range ssaPkgs {
-		fmt.Printf("Package %s\n", pkg.Pkg.Path())
-		for _, mem := range pkg.Members {
-			fmt.Printf("\tMember %T\n", mem)
+func DumpPackages(ssaPkgs []*ssa.Package, verbose bool) {
+	if verbose {
+		fmt.Printf("\nFound %d packages\n", len(ssaPkgs))
+		for _, pkg := range ssaPkgs {
+			fmt.Printf("Package %s\n", pkg.Pkg.Path())
+			for _, mem := range pkg.Members {
+				fmt.Printf("\tMember %T\n", mem)
+			}
+			for _, nm := range pkg.Pkg.Scope().Names() {
+				fmt.Printf("\tIn Scope Name %s\n", nm)
+			}
 		}
-		for _, nm := range pkg.Pkg.Scope().Names() {
-			fmt.Printf("\tIn Scope Name %s\n", nm)
+		fmt.Printf("\n")
+	} else {
+		// Non-verbose mode: just print package paths
+		for _, pkg := range ssaPkgs {
+			fmt.Println(pkg.Pkg.Path())
 		}
 	}
-	fmt.Printf("\n")
 }
 
 func BuildSSAProgram(config *AnalysisConfig) *ssa.Program {

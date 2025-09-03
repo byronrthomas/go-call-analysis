@@ -89,7 +89,7 @@ func RunSSASimplification(rootFunction string, projectPath string, outputPath st
 }
 
 // RunDumpPackages builds an SSA program and dumps package information
-func RunDumpPackages(projectPath string) error {
+func RunDumpPackages(projectPath string, verbose bool) error {
 	if projectPath == "" {
 		return fmt.Errorf("project path is required")
 	}
@@ -107,7 +107,7 @@ func RunDumpPackages(projectPath string) error {
 	ssaProgram := analyzer.BuildSSAProgram(config)
 
 	// Call DumpPackages with the SSA packages
-	analyzer.DumpPackages(ssaProgram.AllPackages())
+	analyzer.DumpPackages(ssaProgram.AllPackages(), verbose)
 
 	return nil
 }

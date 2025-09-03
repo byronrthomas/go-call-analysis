@@ -47,7 +47,8 @@ var ssaGraphCmd = &cobra.Command{
 
 var dumpPackagesCmdRunner = func(cmd *cobra.Command, args []string) error {
 	projectPath, _ := cmd.Flags().GetString("path")
-	return lib.RunDumpPackages(projectPath)
+	verbose, _ := cmd.Flags().GetBool("verbose")
+	return lib.RunDumpPackages(projectPath, verbose)
 }
 
 var dumpPackagesCmd = &cobra.Command{
@@ -71,6 +72,7 @@ func init() {
 	ssaGraphCmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
 
 	dumpPackagesCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
+	dumpPackagesCmd.Flags().BoolP("verbose", "v", false, "Enable verbose output with detailed package information")
 
 	rootCmd.AddCommand(callGraphCmd)
 	rootCmd.AddCommand(ssaGraphCmd)
