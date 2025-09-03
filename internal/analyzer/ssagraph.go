@@ -102,165 +102,156 @@ func (e *ResolvedCallEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
-func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAGraphData {
-	var valueNodes []ValueNode
-	var instructionNodes []InstructionNode
-	var orderingEdges []OrderingEdge
-	var controlFlowEdges []ControlFlowEdge
-	var operandEdges []OperandEdge
-	var resultEdges []ResultEdge
-	var resolvedCallEdges []ResolvedCallEdge
-	fileSet := ssaProgram.Fset
+type GraphVisitor struct {
+	BaseSSAVisitor
+	fileSet           *token.FileSet
+	instructionNodes  []InstructionNode
+	orderingEdges     []OrderingEdge
+	controlFlowEdges  []ControlFlowEdge
+	operandEdges      []OperandEdge
+	resultEdges       []ResultEdge
+	resolvedCallEdges []ResolvedCallEdge
+	valueNodes        []ValueNode
+}
 
-	// Helper function to check if a package path matches any of the prefixes
-	matchesPrefix := PackageMatcher(packagePrefixes)
+func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 
-	for _, pkg := range ssaProgram.AllPackages() {
-		// Check if the package path matches any of the provided prefixes
-		if matchesPrefix(pkg.Pkg.Path()) {
-			for _, mem := range pkg.Members {
-				if f, ok := mem.(*ssa.Function); ok {
-					pos := fileSet.Position(f.Pos())
-					// TODO: restrict to reachable functions from the call graph
-					funcId := f.String()
-					instructionNodes = append(instructionNodes, InstructionNode{
-						NodeCommon: graphcommon.NodeCommon{
-							ID:      funcId,
-							Name:    f.Name(),
-							Package: pkg.Pkg.Path(),
-							PositionInfo: graphcommon.PositionInfo{
-								File:   pos.Filename,
-								Line:   pos.Line,
-								Column: pos.Column,
-							},
-						},
-						InstructionType: "function-entry",
-					})
-					// Put an end-then node from the function entry to the first instruction
+	pos := v.fileSet.Position(f.Pos())
+	// TODO: restrict to reachable functions from the call graph
+	funcId := f.String()
+	v.instructionNodes = append(v.instructionNodes, InstructionNode{
+		NodeCommon: graphcommon.NodeCommon{
+			ID:      funcId,
+			Name:    f.Name(),
+			Package: pkg.Pkg.Path(),
+			PositionInfo: graphcommon.PositionInfo{
+				File:   pos.Filename,
+				Line:   pos.Line,
+				Column: pos.Column,
+			},
+		},
+		InstructionType: "function-entry",
+	})
+	// Put an end-then node from the function entry to the first instruction
 
-					for blockInd, b := range f.Blocks {
-						var precInstrId string
-						if blockInd == 0 {
-							precInstrId = funcId
-						}
-						controlFlowEdges = addControlFlowEdges(b, controlFlowEdges)
-						currentBlockId := blockId(b)
+	for blockInd, b := range f.Blocks {
+		var precInstrId string
+		if blockInd == 0 {
+			precInstrId = funcId
+		}
+		v.controlFlowEdges = addControlFlowEdges(b, v.controlFlowEdges)
+		currentBlockId := blockId(b)
 
-						for instrInd, instr := range b.Instrs {
-							instrId := ContextualId(b, instrInd)
+		for instrInd, instr := range b.Instrs {
+			instrId := ContextualId(b, instrInd)
 
-							instrPosition := fileSet.Position(instr.Pos())
-							instructionNodes = append(instructionNodes, InstructionNode{
-								NodeCommon: graphcommon.NodeCommon{
-									ID:      instrId,
-									Name:    instr.String(),
-									Package: pkg.Pkg.Path(),
-									PositionInfo: graphcommon.PositionInfo{
-										File:   instrPosition.Filename,
-										Line:   instrPosition.Line,
-										Column: instrPosition.Column,
-									},
-								},
-								InstructionType: instrTypeAsString(instr),
-							})
+			instrPosition := v.fileSet.Position(instr.Pos())
+			v.instructionNodes = append(v.instructionNodes, InstructionNode{
+				NodeCommon: graphcommon.NodeCommon{
+					ID:      instrId,
+					Name:    instr.String(),
+					Package: pkg.Pkg.Path(),
+					PositionInfo: graphcommon.PositionInfo{
+						File:   instrPosition.Filename,
+						Line:   instrPosition.Line,
+						Column: instrPosition.Column,
+					},
+				},
+				InstructionType: instrTypeAsString(instr),
+			})
 
-							// Add the and-then edge from the previous instruction to the current instruction
-							if precInstrId != "" {
-								orderingEdges = append(orderingEdges, OrderingEdge{
-									EdgeCommon: graphcommon.EdgeCommon{
-										FromID: precInstrId,
-										ToID:   instrId,
-									},
-								})
-							}
-							precInstrId = instrId
+			// Add the and-then edge from the previous instruction to the current instruction
+			if precInstrId != "" {
+				v.orderingEdges = append(v.orderingEdges, OrderingEdge{
+					EdgeCommon: graphcommon.EdgeCommon{
+						FromID: precInstrId,
+						ToID:   instrId,
+					},
+				})
+			}
+			precInstrId = instrId
 
-							for _, op := range instr.Operands(make([]*ssa.Value, 0)) {
-								if *op == nil {
-									continue
-								}
-								opAsInstr, ok := (*op).(ssa.Instruction)
-								producingBlockId := ""
-								if ok {
-									producingBlockId = blockId(opAsInstr.Block())
-								}
-
-								_, opId := ValueId(fileSet, *op, producingBlockId)
-								operandEdges = append(operandEdges, OperandEdge{
-									EdgeCommon: graphcommon.EdgeCommon{
-										FromID: instrId,
-										ToID:   opId,
-									},
-								})
-							}
-
-							if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
-								for _, returnValue := range asAnnotatedCall.ReturnValues {
-									_, returnValueId := ValueId(fileSet, returnValue, currentBlockId)
-									valueNodes = processValue(valueNodes, returnValueId, returnValue, pkg, instrPosition)
-									resultEdges = append(resultEdges, ResultEdge{
-										EdgeCommon: graphcommon.EdgeCommon{
-											FromID: instrId,
-											ToID:   returnValueId,
-										},
-									})
-								}
-								for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
-									resolvedCallEdges = append(resolvedCallEdges, ResolvedCallEdge{
-										EdgeCommon: graphcommon.EdgeCommon{
-											FromID: instrId,
-											ToID:   resolvedTarget.String(),
-										},
-										EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
-								}
-							} else if asValue, ok := instr.(ssa.Value); ok {
-								_, vId := ValueId(fileSet, asValue, currentBlockId)
-								valueNodes = processValue(valueNodes, vId, asValue, pkg, instrPosition)
-
-								// If instruction produces a value, add a result edge from the instruction to the value
-								resultEdges = append(resultEdges, ResultEdge{
-									EdgeCommon: graphcommon.EdgeCommon{
-										FromID: instrId,
-										ToID:   vId,
-									},
-								})
-							}
-						}
-					}
-				} else if v, ok := mem.(ssa.Value); ok {
-					valuePosition, vId := ValueId(fileSet, v, "")
-					valueNodes = processValue(valueNodes, vId, v, pkg, valuePosition)
-				} else if t, ok := mem.(*ssa.Type); ok {
-					log.Printf("INFO: inspecting type %s", t.Name())
-					if asNamed, ok := t.Type().(*types.Named); ok {
-						log.Printf("INFO: type %s is a named type", asNamed.Obj().Name())
-						for meth := range asNamed.Methods() {
-							log.Printf("INFO: method %s", meth.Name())
-							ssaFunc := ssaProgram.FuncValue(meth)
-							if ssaFunc != nil {
-								log.Printf("INFO: ssa function %s", ssaFunc.Name())
-							} else {
-								log.Printf("INFO: ssa function %s is nil", meth.Name())
-							}
-						}
-					} else {
-						log.Printf("INFO: type %s is not a named type", t.Name())
-					}
-				} else {
-					log.Printf("WARN: Unexpected member of type: %T", mem)
+			for _, op := range instr.Operands(make([]*ssa.Value, 0)) {
+				if *op == nil {
+					continue
 				}
+				opAsInstr, ok := (*op).(ssa.Instruction)
+				producingBlockId := ""
+				if ok {
+					producingBlockId = blockId(opAsInstr.Block())
+				}
+
+				_, opId := ValueId(v.fileSet, *op, producingBlockId)
+				v.operandEdges = append(v.operandEdges, OperandEdge{
+					EdgeCommon: graphcommon.EdgeCommon{
+						FromID: instrId,
+						ToID:   opId,
+					},
+				})
+			}
+
+			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
+				for _, returnValue := range asAnnotatedCall.ReturnValues {
+					_, returnValueId := ValueId(v.fileSet, returnValue, currentBlockId)
+					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition)
+					v.resultEdges = append(v.resultEdges, ResultEdge{
+						EdgeCommon: graphcommon.EdgeCommon{
+							FromID: instrId,
+							ToID:   returnValueId,
+						},
+					})
+				}
+				for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
+					v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
+						EdgeCommon: graphcommon.EdgeCommon{
+							FromID: instrId,
+							ToID:   resolvedTarget.String(),
+						},
+						EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
+				}
+			} else if asValue, ok := instr.(ssa.Value); ok {
+				_, vId := ValueId(v.fileSet, asValue, currentBlockId)
+				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition)
+
+				// If instruction produces a value, add a result edge from the instruction to the value
+				v.resultEdges = append(v.resultEdges, ResultEdge{
+					EdgeCommon: graphcommon.EdgeCommon{
+						FromID: instrId,
+						ToID:   vId,
+					},
+				})
 			}
 		}
 	}
+}
+
+func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
+	// v.VisitFunction(ssaFunc, _pkg)
+}
+
+func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
+	valuePosition, vId := ValueId(v.fileSet, valueObj, "")
+	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition)
+}
+
+func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAGraphData {
+	fileSet := ssaProgram.Fset
+
+	visitor := &GraphVisitor{
+		BaseSSAVisitor: BaseSSAVisitor{},
+		fileSet:        fileSet,
+	}
+	traverser := NewSSATraverser(packagePrefixes)
+	traverser.Traverse(ssaProgram, visitor)
 
 	return SSAGraphData{
-		ValueNodes:        valueNodes,
-		InstructionNodes:  instructionNodes,
-		OrderingEdges:     orderingEdges,
-		OperandEdges:      operandEdges,
-		ControlFlowEdges:  controlFlowEdges,
-		ResultEdges:       resultEdges,
-		ResolvedCallEdges: resolvedCallEdges,
+		ValueNodes:        visitor.valueNodes,
+		InstructionNodes:  visitor.instructionNodes,
+		OrderingEdges:     visitor.orderingEdges,
+		OperandEdges:      visitor.operandEdges,
+		ControlFlowEdges:  visitor.controlFlowEdges,
+		ResultEdges:       visitor.resultEdges,
+		ResolvedCallEdges: visitor.resolvedCallEdges,
 	}
 }
 
