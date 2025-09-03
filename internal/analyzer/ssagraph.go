@@ -366,6 +366,10 @@ func instrTypeAsString(instr ssa.Instruction) string {
 		return "ChangeType"
 	case *ssa.Convert:
 		return "Convert"
+	case *ssa.DebugRef:
+		return "DebugRef"
+	case *ssa.Defer:
+		return "Defer"
 	case *ssa.Extract:
 		return "Extract"
 	case *ssa.Field:
@@ -382,6 +386,8 @@ func instrTypeAsString(instr ssa.Instruction) string {
 		return "Index"
 	case *ssa.IndexAddr:
 		return "IndexAddr"
+	case *ssa.Jump:
+		return "Jump"
 	case *ssa.Lookup:
 		return "Lookup"
 	case *ssa.MakeChan:
@@ -434,6 +440,8 @@ func valueTypeAsString(value ssa.Value) string {
 		return "Alloc"
 	case *ssa.BinOp:
 		return "BinOp"
+	case *ssa.Builtin:
+		return "Builtin"
 	case *AnnotatedCall:
 		return "AnnotatedCall"
 	case *ssa.Call:
@@ -442,6 +450,8 @@ func valueTypeAsString(value ssa.Value) string {
 		return "ChangeInterface"
 	case *ssa.ChangeType:
 		return "ChangeType"
+	case *ssa.Const:
+		return "Const"
 	case *ssa.Convert:
 		return "Convert"
 	case *ssa.Extract:
@@ -450,6 +460,12 @@ func valueTypeAsString(value ssa.Value) string {
 		return "Field"
 	case *ssa.FieldAddr:
 		return "FieldAddr"
+	case *ssa.FreeVar:
+		return "FreeVar"
+	case *ssa.Function:
+		return "Function"
+	case *ssa.Global:
+		return "Global"
 	case *ssa.Index:
 		return "Index"
 	case *ssa.IndexAddr:
@@ -470,6 +486,8 @@ func valueTypeAsString(value ssa.Value) string {
 		return "MultiConvert"
 	case *ssa.Next:
 		return "Next"
+	case *ssa.Parameter:
+		return "Parameter"
 	case *ssa.Phi:
 		return "Phi"
 	case *ssa.Range:
