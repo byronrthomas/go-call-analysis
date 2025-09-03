@@ -230,6 +230,8 @@ func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAG
 				} else if v, ok := mem.(ssa.Value); ok {
 					valuePosition, vId := ValueId(fileSet, v, "")
 					valueNodes = processValue(valueNodes, vId, v, pkg, valuePosition)
+				} else {
+					log.Printf("WARN: Unexpected member type: %T", mem)
 				}
 			}
 		}
