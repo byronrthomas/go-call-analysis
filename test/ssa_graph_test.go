@@ -48,6 +48,7 @@ func TestSSAGraphAnalysis(t *testing.T) {
 		"control_flow_edges.csv",
 		"operand_edges.csv",
 		"result_edges.csv",
+		"resolved_call_edges.csv",
 	}
 
 	// Check if all expected files were generated
