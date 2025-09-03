@@ -320,47 +320,45 @@ func isErrorType(t types.Type) bool {
 }
 
 func ValueId(fileSet *token.FileSet, valueObj ssa.Value, producingBlockId string) (token.Position, string) {
-	valuePos := valueObj.Pos()
-	if valuePos == token.NoPos {
-		if asConst, ok := valueObj.(*ssa.Const); ok {
-			if asConst.Value == nil {
-				return token.Position{}, valueObj.String()
-			}
-			asExactString := asConst.Value.ExactString()
-			asString := asConst.Value.String()
-			if asExactString == asString {
-				return token.Position{}, asExactString
-			}
+	if asConst, ok := valueObj.(*ssa.Const); ok {
+		if asConst.Value == nil {
+			return token.Position{}, valueObj.String()
+		}
+		asExactString := asConst.Value.ExactString()
+		asString := asConst.Value.String()
+		if asExactString == asString {
 			return token.Position{}, asExactString
-		} else if asFRP, ok := valueObj.(*FuncReturnPlaceholder); ok {
-			valuePos = asFRP.FromCall.Pos()
-			valuePosition := fileSet.Position(valuePos)
-			valueId := fmt.Sprintf("return-placeholder-%d-%s:%d:%d", asFRP.Index, valuePosition.Filename, valuePosition.Line, valuePosition.Column)
-			return valuePosition, valueId
-		} else if asGlobal, ok := valueObj.(*ssa.Global); ok {
-			valueId := fmt.Sprintf("%s:%s", asGlobal.Pkg.Pkg.Path(), asGlobal.Name())
-			return token.Position{}, valueId
-		} else if asFunction, ok := valueObj.(*ssa.Function); ok {
-			if asFunction.Synthetic != "" {
-				valueId := fmt.Sprintf("synthetic-%s-%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
-				return token.Position{}, valueId
-			}
-			log.Printf("WARN: Function being treated as a value has no synthetic ID: %v", asFunction)
-			valueId := fmt.Sprintf("%s:%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
+		}
+		return token.Position{}, asExactString
+	} else if asFRP, ok := valueObj.(*FuncReturnPlaceholder); ok {
+		valuePos := asFRP.FromCall.Pos()
+		valuePosition := fileSet.Position(valuePos)
+		valueId := fmt.Sprintf("return-placeholder-%d-%s:%d:%d", asFRP.Index, valuePosition.Filename, valuePosition.Line, valuePosition.Column)
+		return valuePosition, valueId
+	} else if asGlobal, ok := valueObj.(*ssa.Global); ok {
+		valueId := fmt.Sprintf("%s:%s", asGlobal.Pkg.Pkg.Path(), asGlobal.Name())
+		return token.Position{}, valueId
+	} else if asFunction, ok := valueObj.(*ssa.Function); ok {
+		if asFunction.Synthetic != "" {
+			valueId := fmt.Sprintf("synthetic-%s-%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
 			return token.Position{}, valueId
 		}
-		// This line should only be hit when we're in a synthetic position that doesn't exist in the source code
-		if producingBlockId != "" {
-			valueId := fmt.Sprintf("value-%s:%s", producingBlockId, valueObj.Name())
-			return token.Position{}, valueId
-		} else {
-			log.Fatalf("Value has no position and no containing block ID: %v", valueObj)
-		}
-		return token.Position{}, valueObj.String()
+		log.Printf("WARN: Function being treated as a value has no synthetic ID: %v", asFunction)
+		valueId := fmt.Sprintf("%s:%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
+		return fileSet.Position(asFunction.Pos()), valueId
+	} else if asParameter, ok := valueObj.(*ssa.Parameter); ok {
+		valueId := fmt.Sprintf("parameter-%s.%s", asParameter.Parent().String(), asParameter.Name())
+		return token.Position{}, valueId
 	}
-	valuePosition := fileSet.Position(valueObj.Pos())
-	valueId := fmt.Sprintf("value-%s:%d:%d", valuePosition.Filename, valuePosition.Line, valuePosition.Column)
-	return valuePosition, valueId
+	// This line should only be hit when we're in a synthetic position that doesn't exist in the source code
+	if producingBlockId != "" {
+		valueId := fmt.Sprintf("value-%s:%s", producingBlockId, valueObj.Name())
+		return token.Position{}, valueId
+	} else {
+		log.Fatalf("Value has no position and no containing block ID: %v", valueObj)
+	}
+	return token.Position{}, valueObj.String()
+
 }
 
 func ContextualId(block *ssa.BasicBlock, instrIndex int) string {
