@@ -290,3 +290,45 @@ Function: main
 Value: init$guard
   Type: *bool
 
+Method: Struct1.Get
+  Block 0 -   Predecessors []   Successors []:
+    0: &s.field [#0]
+      As value: t0  Type: *int
+        <- Referenced by: *t0
+      Operand 0: s  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct1
+    1: *t0
+      As value: t1  Type: int
+        <- Referenced by: return t1
+      Operand 0: t0  Type: *int
+    2: return t1
+      Operand 0: t1  Type: int
+
+
+Method: Struct2.Get
+  Block 0 -   Predecessors []   Successors []:
+    0: &s.fieldX [#0]
+      As value: t0  Type: *int
+        <- Referenced by: *t0
+      Operand 0: s  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    1: *t0
+      As value: t1  Type: int
+        <- Referenced by: t1 + t3
+      Operand 0: t0  Type: *int
+    2: &s.fieldY [#1]
+      As value: t2  Type: *int
+        <- Referenced by: *t2
+      Operand 0: s  Type: *github.com/throwin5tone7/go-call-analysis/test-project.Struct2
+    3: *t2
+      As value: t3  Type: int
+        <- Referenced by: t1 + t3
+      Operand 0: t2  Type: *int
+    4: t1 + t3
+      As value: t4  Type: int
+        <- Referenced by: return t4
+      Operand 0: t1  Type: int
+      Operand 1: t3  Type: int
+    5: return t4
+      Operand 0: t4  Type: int
+
+
+

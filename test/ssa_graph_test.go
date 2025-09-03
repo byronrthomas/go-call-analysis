@@ -3,6 +3,7 @@ package test
 import (
 	"encoding/csv"
 	"fmt"
+	"go/types"
 	"io"
 	"os"
 	"path/filepath"
@@ -243,12 +244,17 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 			// Collect members to sort them for deterministic output
 			var functions []*ssa.Function
 			var values []ssa.Value
+			var namedTypes []*ssa.Type
 
 			for _, mem := range pkg.Members {
 				if f, ok := mem.(*ssa.Function); ok {
 					functions = append(functions, f)
 				} else if v, ok := mem.(ssa.Value); ok {
 					values = append(values, v)
+				} else if t, ok := mem.(*ssa.Type); ok {
+					if _, ok := t.Type().(*types.Named); ok {
+						namedTypes = append(namedTypes, t)
+					}
 				}
 			}
 
@@ -262,50 +268,17 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 				return values[i].Name() < values[j].Name()
 			})
 
+			// Sort types by name for deterministic output
+			sort.Slice(namedTypes, func(i, j int) bool {
+				return namedTypes[i].Name() < namedTypes[j].Name()
+			})
+
 			// Process sorted functions
 			for _, f := range functions {
 				result.WriteString(fmt.Sprintf("Function: %s\n", f.Name()))
 
 				// Process each basic block
-				for blockIndex, block := range f.Blocks {
-					printBlockInfo(&result, blockIndex, block)
-
-					// Process each instruction in the block
-					for instrIndex, instr := range block.Instrs {
-						result.WriteString(fmt.Sprintf("    %d: %s\n", instrIndex, instr.String()))
-
-						if asAnnotatedCall, ok := instr.(*analyzer.AnnotatedCall); ok {
-							for retInd, returnValue := range asAnnotatedCall.ReturnValues {
-								outputValue(&result, fmt.Sprintf("      Return %d: ", retInd), "  Type: ", returnValue)
-								for _, referrer := range extractReferrerStrings(returnValue.Referrers()) {
-									result.WriteString("        <- Referenced by: ")
-									result.WriteString(referrer)
-									result.WriteString("\n")
-								}
-							}
-						} else if val, ok := instr.(ssa.Value); ok {
-							if val.Name() != "" {
-								outputValue(&result, "      As value: ", "  Type: ", val)
-								for _, referrer := range extractReferrerStrings(val.Referrers()) {
-									result.WriteString("        <- Referenced by: ")
-									result.WriteString(referrer)
-									result.WriteString("\n")
-								}
-							}
-						}
-
-						// Show operands
-						for i, op := range instr.Operands(make([]*ssa.Value, 0)) {
-							if *op == nil {
-								continue
-							}
-							outputValue(&result, fmt.Sprintf("      Operand %d: ", i), "  Type: ", *op)
-						}
-					}
-
-					result.WriteString("\n")
-				}
-				result.WriteString("\n")
+				textualizeFunction(f, &result)
 			}
 
 			// Process sorted values
@@ -318,10 +291,69 @@ func generateSSAText(prog *ssa.Program, packagePrefixes []string) string {
 				}
 			}
 			result.WriteString("\n")
+
+			// Process sorted types
+			for _, t := range namedTypes {
+				methods := make([]*types.Func, 0)
+				for meth := range t.Type().(*types.Named).Methods() {
+					methods = append(methods, meth)
+				}
+				sort.Slice(methods, func(i, j int) bool {
+					return methods[i].Name() < methods[j].Name()
+				})
+				for _, meth := range methods {
+					result.WriteString(fmt.Sprintf("Method: %s.%s\n", t.Name(), meth.Name()))
+					textualizeFunction(prog.FuncValue(meth), &result)
+				}
+			}
+
+			result.WriteString("\n")
 		}
 	}
 
 	return result.String()
+}
+
+func textualizeFunction(f *ssa.Function, result *strings.Builder) {
+	for blockIndex, block := range f.Blocks {
+		printBlockInfo(result, blockIndex, block)
+
+		// Process each instruction in the block
+		for instrIndex, instr := range block.Instrs {
+			result.WriteString(fmt.Sprintf("    %d: %s\n", instrIndex, instr.String()))
+
+			if asAnnotatedCall, ok := instr.(*analyzer.AnnotatedCall); ok {
+				for retInd, returnValue := range asAnnotatedCall.ReturnValues {
+					outputValue(result, fmt.Sprintf("      Return %d: ", retInd), "  Type: ", returnValue)
+					for _, referrer := range extractReferrerStrings(returnValue.Referrers()) {
+						result.WriteString("        <- Referenced by: ")
+						result.WriteString(referrer)
+						result.WriteString("\n")
+					}
+				}
+			} else if val, ok := instr.(ssa.Value); ok {
+				if val.Name() != "" {
+					outputValue(result, "      As value: ", "  Type: ", val)
+					for _, referrer := range extractReferrerStrings(val.Referrers()) {
+						result.WriteString("        <- Referenced by: ")
+						result.WriteString(referrer)
+						result.WriteString("\n")
+					}
+				}
+			}
+
+			// Show operands
+			for i, op := range instr.Operands(make([]*ssa.Value, 0)) {
+				if *op == nil {
+					continue
+				}
+				outputValue(result, fmt.Sprintf("      Operand %d: ", i), "  Type: ", *op)
+			}
+		}
+
+		result.WriteString("\n")
+	}
+	result.WriteString("\n")
 }
 
 func extractReferrerStrings(referrers *[]ssa.Instruction) []string {
