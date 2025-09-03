@@ -226,7 +226,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 }
 
 func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
-	// v.VisitFunction(ssaFunc, _pkg)
+	v.VisitFunction(ssaFunc, _pkg)
 }
 
 func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {

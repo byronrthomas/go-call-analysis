@@ -1,4 +1,29 @@
 id,column,file,instruction_type,label,line,name,package
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,33,Get,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0,11,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,FieldAddr,Instruction,34,&s.field [#0],github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1,11,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,UnOp,Instruction,34,*t0,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2,2,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,34,return t1,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,42,Get,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0,11,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,FieldAddr,Instruction,43,&s.fieldX [#0],github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1,11,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,UnOp,Instruction,43,*t0,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,FieldAddr,Instruction,43,&s.fieldY [#1],github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,UnOp,Instruction,43,*t2,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4,18,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,BinOp,Instruction,43,t1 + t3,github.com/throwin5tone7/go-call-analysis/test-project
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5,2,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,43,return t4,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check,6,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,46,check,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,47,invoke getter.Get(),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,0,,AnnotatedIf,Instruction,0,if (t0 < 0) goto 1 else 2,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,49,"errors.New(""negative result"":string)",github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,3,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,49,"return 0:int, t2",github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,2,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,51,"return t0, nil:error",github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init,0,,function-entry,Instruction,0,init,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,0,,UnOp,Instruction,0,*init$guard,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,0,,If,Instruction,0,if t0 goto 2 else 1,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,0,,Store,Instruction,0,*init$guard = true:bool,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,0,,AnnotatedCall,Instruction,0,errors.init(),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,0,,AnnotatedCall,Instruction,0,fmt.init(),github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:3,0,,Jump,Instruction,0,jump 2,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,0,,Return,Instruction,0,return,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main,6,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,8,main,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,21,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Alloc,Instruction,9,new Struct1 (complit),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1,27,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,FieldAddr,Instruction,9,&t0.field [#0],github.com/throwin5tone7/go-call-analysis/test-project
@@ -56,17 +81,3 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,13,/Users/byron/
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9,0,,MakeInterface,Instruction,0,make Getter <- *Struct2 (t2),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,7,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,22,check(t43),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:11,0,,Return,Instruction,0,return,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check,6,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,46,check,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,47,invoke getter.Get(),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,0,,AnnotatedIf,Instruction,0,if (t0 < 0) goto 1 else 2,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,49,"errors.New(""negative result"":string)",github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,3,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,49,"return 0:int, t2",github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,2,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,51,"return t0, nil:error",github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init,0,,function-entry,Instruction,0,init,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,0,,UnOp,Instruction,0,*init$guard,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:1,0,,If,Instruction,0,if t0 goto 2 else 1,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:0,0,,Store,Instruction,0,*init$guard = true:bool,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:1,0,,AnnotatedCall,Instruction,0,errors.init(),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:2,0,,AnnotatedCall,Instruction,0,fmt.init(),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:3,0,,Jump,Instruction,0,jump 2,github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,0,,Return,Instruction,0,return,github.com/throwin5tone7/go-call-analysis/test-project
