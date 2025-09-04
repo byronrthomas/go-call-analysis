@@ -33,10 +33,19 @@ type SSASimplificationVisitor struct {
 }
 
 func (v *SSASimplificationVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
+	// We assume synthetic functions are reachable - they were generated for some reason?
+	if v.CallGraph.Nodes[f] == nil && f.Synthetic == "" {
+		v.unreachableFunctions[f.String()] = true
+		return
+	}
 	tryFunctionSimplification(f, v.CallGraph)
 }
 
 func (v *SSASimplificationVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
+	if v.CallGraph.Nodes[ssaFunc] == nil {
+		v.unreachableFunctions[ssaFunc.String()] = true
+		return
+	}
 	tryFunctionSimplification(ssaFunc, v.CallGraph)
 }
 
