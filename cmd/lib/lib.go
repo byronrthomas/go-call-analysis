@@ -2,9 +2,12 @@ package lib
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
+	"golang.org/x/tools/go/ssa"
 )
 
 // buildCallGraph is a shared function that builds the call graph for both commands
@@ -107,6 +110,68 @@ func RunDumpPackages(projectPath string, verbose bool) error {
 
 	// Call DumpPackages with the SSA packages
 	analyzer.DumpPackages(ssaProgram.AllPackages(), verbose)
+
+	return nil
+}
+
+// RunOutputSSA builds an SSA program and outputs the textual representation
+func RunOutputSSA(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, simplified bool) error {
+	if projectPath == "" {
+		return fmt.Errorf("project path is required")
+	}
+
+	if len(packagePrefixes) == 0 {
+		packagePrefixes = []string{""}
+	}
+
+	var ssaProgram *ssa.Program
+
+	if simplified {
+		// Use simplified SSA form
+		_, simplificationResult, err := RunSSASimplification(rootFunction, projectPath, "", packagePrefixes)
+		if err != nil {
+			return err
+		}
+		ssaProgram = simplificationResult.SSAProgram
+	} else {
+		// Use regular SSA form
+		var rootFunctionId *analyzer.FunctionId
+		if rootFunction != "" {
+			rootFunctionId = &analyzer.FunctionId{
+				Package:  strings.Split(rootFunction, ":")[0],
+				Function: strings.Split(rootFunction, ":")[1],
+			}
+		}
+
+		config := &analyzer.AnalysisConfig{
+			ProjectPath:  projectPath,
+			OutputPath:   "", // Not needed for this command
+			RootFunction: rootFunctionId,
+		}
+
+		ssaProgram = analyzer.BuildSSAProgram(config)
+	}
+
+	// Generate the SSA text
+	ssaText := analyzer.GenerateSSAText(ssaProgram, packagePrefixes)
+
+	// Output to file or stdout
+	if outputPath != "" {
+		// Create output directory if it doesn't exist
+		dir := filepath.Dir(outputPath)
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return fmt.Errorf("failed to create output directory: %v", err)
+		}
+
+		// Write to file
+		if err := os.WriteFile(outputPath, []byte(ssaText), 0644); err != nil {
+			return fmt.Errorf("failed to write output file: %v", err)
+		}
+		fmt.Printf("SSA output written to: %s\n", outputPath)
+	} else {
+		// Output to stdout
+		fmt.Print(ssaText)
+	}
 
 	return nil
 }

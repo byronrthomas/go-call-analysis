@@ -58,6 +58,22 @@ var dumpPackagesCmd = &cobra.Command{
 	RunE:  dumpPackagesCmdRunner,
 }
 
+var outputSSACmdRunner = func(cmd *cobra.Command, args []string) error {
+	packagePrefixes, _ := cmd.Flags().GetStringSlice("package-prefixes")
+	projectPath, _ := cmd.Flags().GetString("path")
+	outputPath, _ := cmd.Flags().GetString("output")
+	rootFunction, _ := cmd.Flags().GetString("root-function")
+	simplified, _ := cmd.Flags().GetBool("simplified")
+	return lib.RunOutputSSA(packagePrefixes, projectPath, outputPath, rootFunction, simplified)
+}
+
+var outputSSACmd = &cobra.Command{
+	Use:   "output-SSA",
+	Short: "Output SSA program text for matching packages",
+	Long:  `Build an SSA program from a Go project and output the textual representation of packages matching the specified prefixes.`,
+	RunE:  outputSSACmdRunner,
+}
+
 func init() {
 	// Common flags for both commands
 	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
@@ -74,9 +90,16 @@ func init() {
 	dumpPackagesCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
 	dumpPackagesCmd.Flags().BoolP("verbose", "v", false, "Enable verbose output with detailed package information")
 
+	outputSSACmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
+	outputSSACmd.Flags().StringP("output", "o", "", "Path to write SSA output file (outputs to stdout if not specified)")
+	outputSSACmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
+	outputSSACmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
+	outputSSACmd.Flags().Bool("simplified", false, "Output simplified SSA form (default: false)")
+
 	rootCmd.AddCommand(callGraphCmd)
 	rootCmd.AddCommand(ssaGraphCmd)
 	rootCmd.AddCommand(dumpPackagesCmd)
+	rootCmd.AddCommand(outputSSACmd)
 }
 
 func main() {
