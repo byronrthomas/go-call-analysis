@@ -7,6 +7,7 @@ from_id,to_id,type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0,Produces_Result
@@ -17,6 +18,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:5,value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:0,value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12,Produces_Result
@@ -28,6 +30,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:1:8,return-placehold
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t20,Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t21,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:0,value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t23,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t24,Produces_Result

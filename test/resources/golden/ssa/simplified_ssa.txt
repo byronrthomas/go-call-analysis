@@ -7,7 +7,12 @@ Function: check
         <- Referenced by: return t0, nil:error
         <- Referenced by: t0 < 0:int
       Operand 0: getter  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
-    1: if (t0 < 0) goto 1 else 2
+    1: t0 < 0:int
+      As value: t1  Type: bool
+        <- Referenced by: if t1 goto 1 else 2
+      Operand 0: t0  Type: int
+      Operand 1: 0:int  Type: int
+    2: if (t0 < 0) goto 1 else 2
       Operand 0: t0  Type: int
 
   Block 1 -   Predecessors [0]   Successors []:
@@ -96,7 +101,12 @@ Function: main
         <- Referenced by: t8 != nil:error
       Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
       Operand 1: t5  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
-    10: if (t8 != nil) goto 1 else 3
+    10: t8 != nil:error
+      As value: t9  Type: bool
+        <- Referenced by: if t9 goto 1 else 3
+      Operand 0: t8  Type: error
+      Operand 1: nil:error  Type: error
+    11: if (t8 != nil) goto 1 else 3
       Operand 0: t8  Type: error
 
   Block 1 -   Predecessors [0]   Successors [2]:
@@ -151,7 +161,12 @@ Function: main
       Return 1: t20  Type: error
       Operand 0: check  Type: func(getter github.com/throwin5tone7/go-call-analysis/test-project.Getter) (int, error)
       Operand 1: t17  Type: github.com/throwin5tone7/go-call-analysis/test-project.Getter
-    2: if (t8 != nil) goto 4 else 5
+    2: t8 != nil:error
+      As value: t21  Type: bool
+        <- Referenced by: if t21 goto 4 else 5
+      Operand 0: t8  Type: error
+      Operand 1: nil:error  Type: error
+    3: if (t8 != nil) goto 4 else 5
       Operand 0: t8  Type: error
 
   Block 3 -   Predecessors [0]   Successors [2]:

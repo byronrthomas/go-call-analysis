@@ -11,6 +11,8 @@ from_id,to_id,type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,0,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:2,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,errors:errors.New,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,"""negative result""",Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,0,Uses_Operand
@@ -36,6 +38,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:8,value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,nil:error,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:11,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,"""Error:""",Uses_Operand
@@ -53,6 +57,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,nil:error,Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,0,Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,"""Result:""",Uses_Operand

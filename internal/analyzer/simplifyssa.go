@@ -200,7 +200,7 @@ func liftIfCondition(block *ssa.BasicBlock) {
 		ConditionDescription: conditionDescription,
 		OtherValue:           *otherValue,
 	}
-	removeInstruction(block, instrToRemove)
+	// removeInstruction(block, instrToRemove)
 	block.Instrs[len(block.Instrs)-1] = &annotatedIf
 }
 

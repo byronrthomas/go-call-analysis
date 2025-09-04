@@ -12,7 +12,8 @@ id,column,file,instruction_type,label,line,name,package
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5,2,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,43,return t4,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.check,6,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,function-entry,Instruction,46,check,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,47,invoke getter.Get(),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,0,,AnnotatedIf,Instruction,0,if (t0 < 0) goto 1 else 2,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,BinOp,Instruction,48,t0 < 0:int,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:2,0,,AnnotatedIf,Instruction,0,if (t0 < 0) goto 1 else 2,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,49,"errors.New(""negative result"":string)",github.com/throwin5tone7/go-call-analysis/test-project
 errors.New,6,/opt/homebrew/Cellar/go/1.25.0/libexec/src/errors/errors.go,function-entry,Instruction,64,New,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,3,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Return,Instruction,49,"return 0:int, t2",github.com/throwin5tone7/go-call-analysis/test-project
@@ -38,7 +39,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:6,28,/Users/byron/
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:7,39,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Store,Instruction,10,*t4 = 3:int,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8,0,,MakeInterface,Instruction,0,make Getter <- *Struct1 (t0),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,11,check(t5),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,0,,AnnotatedIf,Instruction,0,if (t8 != nil) goto 1 else 3,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,BinOp,Instruction,12,t8 != nil:error,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:11,0,,AnnotatedIf,Instruction,0,if (t8 != nil) goto 1 else 3,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:0,28,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Alloc,Instruction,13,new [2]any (varargs),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1,0,,IndexAddr,Instruction,0,&t10[0:int],github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2,0,,MakeInterface,Instruction,0,"make any <- string (""Error:"":string)",github.com/throwin5tone7/go-call-analysis/test-project
@@ -52,7 +54,8 @@ fmt.Println,6,/opt/homebrew/Cellar/go/1.25.0/libexec/src/fmt/print.go,function-e
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:9,0,,Jump,Instruction,0,jump 2,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0,0,,MakeInterface,Instruction,0,make Getter <- *Struct2 (t2),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,AnnotatedCall,Instruction,17,check(t17),github.com/throwin5tone7/go-call-analysis/test-project
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,0,,AnnotatedIf,Instruction,0,if (t8 != nil) goto 4 else 5,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,BinOp,Instruction,18,t8 != nil:error,github.com/throwin5tone7/go-call-analysis/test-project
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:3,0,,AnnotatedIf,Instruction,0,if (t8 != nil) goto 4 else 5,github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:0,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Alloc,Instruction,15,new [2]any (varargs),github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:1,0,,IndexAddr,Instruction,0,&t22[0:int],github.com/throwin5tone7/go-call-analysis/test-project
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:2,0,,MakeInterface,Instruction,0,"make any <- string (""Result:"":string)",github.com/throwin5tone7/go-call-analysis/test-project

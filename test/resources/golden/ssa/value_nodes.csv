@@ -8,6 +8,7 @@ value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4,39,/Users
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5,0,,false,Value,0,t5,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,11,t7,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,11,t8,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
+value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,12,t9,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10,28,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,13,t10,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11,0,,false,Value,0,t11,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12,0,,false,Value,0,t12,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
@@ -19,6 +20,7 @@ return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/m
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17,0,,false,Value,0,t17,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,MakeInterface
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,17,t19,github.com/throwin5tone7/go-call-analysis/test-project,int,Extract
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t20,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,17,t20,github.com/throwin5tone7/go-call-analysis/test-project,error,Extract
+value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t21,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,18,t21,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22,32,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,15,t22,github.com/throwin5tone7/go-call-analysis/test-project,*[2]any,Alloc
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t23,0,,false,Value,0,t23,github.com/throwin5tone7/go-call-analysis/test-project,*any,IndexAddr
 value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t24,0,,false,Value,0,t24,github.com/throwin5tone7/go-call-analysis/test-project,any,MakeInterface
@@ -54,5 +56,6 @@ value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2
 value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3,22,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,43,t3,github.com/throwin5tone7/go-call-analysis/test-project,int,UnOp
 value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4,18,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,43,t4,github.com/throwin5tone7/go-call-analysis/test-project,int,BinOp
 value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0,19,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,47,t0,github.com/throwin5tone7/go-call-analysis/test-project,int,Call
+value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1,9,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,false,Value,48,t1,github.com/throwin5tone7/go-call-analysis/test-project,bool,BinOp
 value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2,23,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,true,Value,49,t2,github.com/throwin5tone7/go-call-analysis/test-project,error,Call
 github.com/throwin5tone7/go-call-analysis/test-project:init$guard,0,,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,Global
