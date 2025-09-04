@@ -31,6 +31,8 @@ type ValueNode struct {
 type InstructionNode struct {
 	graphcommon.NodeCommon
 	InstructionType string
+	// Used to store the condition of an annotated if
+	Annotation string
 }
 
 type OrderingEdge struct {
@@ -68,6 +70,7 @@ func (n *InstructionNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Instruction"
 	nodeCommonMap["instruction_type"] = n.InstructionType
+	nodeCommonMap["annotation"] = n.Annotation
 	return nodeCommonMap
 }
 
@@ -142,6 +145,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 
 		for instrInd, instr := range b.Instrs {
 			instrId := ContextualId(b, instrInd)
+			annotation := ""
+			if asAnnotatedIf, ok := instr.(*AnnotatedIf); ok {
+				annotation = asAnnotatedIf.ConditionDescription
+			}
 
 			instrPosition := v.fileSet.Position(instr.Pos())
 			v.instructionNodes = append(v.instructionNodes, InstructionNode{
@@ -156,6 +163,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					},
 				},
 				InstructionType: instrTypeAsString(instr),
+				Annotation:      annotation,
 			})
 
 			// Add the and-then edge from the previous instruction to the current instruction
@@ -241,6 +249,7 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 			},
 		},
 		InstructionType: "function-entry",
+		Annotation:      "",
 	})
 }
 
