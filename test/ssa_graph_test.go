@@ -97,13 +97,13 @@ func TestSimplifySSA(t *testing.T) {
 		t.Fatalf("Failed to create output directory: %v", err)
 	}
 
-	packagePrefixes, simplifiedSSA, err := main.RunSSASimplification(rootFunction, projectPath, outputPath, packagePrefixes)
+	packagePrefixes, simplificationResult, err := main.RunSSASimplification(rootFunction, projectPath, outputPath, packagePrefixes)
 	if err != nil {
 		t.Fatalf("Failed to run SSA simplification: %v", err)
 	}
 
 	// Generate textual representation of SSA
-	ssaText := generateSSAText(simplifiedSSA, packagePrefixes)
+	ssaText := generateSSAText(simplificationResult.SSAProgram, packagePrefixes)
 
 	// Write the textual representation to a file for comparison
 	outputFile := filepath.Join(outputPath, "simplified_ssa.txt")
@@ -114,6 +114,14 @@ func TestSimplifySSA(t *testing.T) {
 	// Compare with golden file
 	goldenFile := filepath.Join(goldenPath, "simplified_ssa.txt")
 	compareTextFiles(t, goldenFile, outputFile, "simplified_ssa.txt")
+
+	// Also compare text files for the unreachable functions - just a simple list of function names that need sorting
+	unreachableFunctionsFile := filepath.Join(outputPath, "unreachable_functions.txt")
+	if err := os.WriteFile(unreachableFunctionsFile, []byte(strings.Join(simplificationResult.AllUnreachableFunctions(), "\n")), 0644); err != nil {
+		t.Fatalf("Failed to write unreachable functions output: %v", err)
+	}
+	unreachableGoldenFile := filepath.Join(goldenPath, "unreachable_functions.txt")
+	compareTextFiles(t, unreachableGoldenFile, unreachableFunctionsFile, "unreachable_functions.txt")
 }
 
 func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename string) {

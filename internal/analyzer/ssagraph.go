@@ -104,15 +104,16 @@ func (e *ResolvedCallEdge) ToMap() map[string]any {
 
 type GraphVisitor struct {
 	BaseSSAVisitor
-	fileSet           *token.FileSet
-	instructionNodes  []InstructionNode
-	orderingEdges     []OrderingEdge
-	controlFlowEdges  []ControlFlowEdge
-	operandEdges      []OperandEdge
-	resultEdges       []ResultEdge
-	resolvedCallEdges []ResolvedCallEdge
-	valueNodes        []ValueNode
-	functionEntries   map[string]bool
+	SSASimplificationResult *SSASimplificationResult
+	fileSet                 *token.FileSet
+	instructionNodes        []InstructionNode
+	orderingEdges           []OrderingEdge
+	controlFlowEdges        []ControlFlowEdge
+	operandEdges            []OperandEdge
+	resultEdges             []ResultEdge
+	resolvedCallEdges       []ResolvedCallEdge
+	valueNodes              []ValueNode
+	functionEntries         map[string]bool
 }
 
 func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -120,6 +121,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 	pos := v.fileSet.Position(f.Pos())
 	// TODO: restrict to reachable functions from the call graph
 	funcId := f.String()
+	if !v.SSASimplificationResult.ShouldVisitFunction(f) {
+		log.Printf("INFO: Skipping function %s because it is marked as unreachable", funcId)
+		return
+	}
 	if _, ok := v.functionEntries[funcId]; !ok {
 		addFunctionEntryNode(v, funcId, f, pkg, pos)
 	}
@@ -239,6 +244,10 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 }
 
 func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
+	if !v.SSASimplificationResult.ShouldVisitFunction(ssaFunc) {
+		log.Printf("INFO: Skipping type method %s because it is marked as unreachable", ssaFunc.String())
+		return
+	}
 	v.VisitFunction(ssaFunc, _pkg)
 }
 
@@ -247,16 +256,17 @@ func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
 	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition)
 }
 
-func ExtractSSAGraphData(ssaProgram *ssa.Program, packagePrefixes []string) SSAGraphData {
-	fileSet := ssaProgram.Fset
+func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string) SSAGraphData {
+	fileSet := simplificationResult.SSAProgram.Fset
 
 	visitor := &GraphVisitor{
-		BaseSSAVisitor:  BaseSSAVisitor{},
-		fileSet:         fileSet,
-		functionEntries: make(map[string]bool),
+		BaseSSAVisitor:          BaseSSAVisitor{},
+		SSASimplificationResult: simplificationResult,
+		fileSet:                 fileSet,
+		functionEntries:         make(map[string]bool),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
-	traverser.Traverse(ssaProgram, visitor)
+	traverser.Traverse(simplificationResult.SSAProgram, visitor)
 
 	return SSAGraphData{
 		ValueNodes:        visitor.valueNodes,

@@ -5,6 +5,7 @@ import (
 	"go/token"
 	"go/types"
 	"log"
+	"maps"
 	"regexp"
 	"slices"
 	"strings"
@@ -27,7 +28,8 @@ func PackageMatcher(packagePrefixes []string) func(pkgPath string) bool {
 
 type SSASimplificationVisitor struct {
 	BaseSSAVisitor
-	CallGraph *callgraph.Graph
+	CallGraph            *callgraph.Graph
+	unreachableFunctions map[string]bool
 }
 
 func (v *SSASimplificationVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -38,15 +40,32 @@ func (v *SSASimplificationVisitor) VisitTypeMethod(_method *types.Func, ssaFunc 
 	tryFunctionSimplification(ssaFunc, v.CallGraph)
 }
 
-func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *ssa.Program {
+type SSASimplificationResult struct {
+	SSAProgram           *ssa.Program
+	unreachableFunctions map[string]bool
+}
+
+func (r SSASimplificationResult) AllUnreachableFunctions() []string {
+	return slices.Collect(maps.Keys(r.unreachableFunctions))
+}
+
+func (r SSASimplificationResult) ShouldVisitFunction(f *ssa.Function) bool {
+	return !r.unreachableFunctions[f.String()]
+}
+
+func SimplifySSA(input *CallGraphResult, packagePrefixes []string) *SSASimplificationResult {
 	program := input.SSAProgram
 	visitor := &SSASimplificationVisitor{
-		BaseSSAVisitor: BaseSSAVisitor{},
-		CallGraph:      input.CallGraph,
+		BaseSSAVisitor:       BaseSSAVisitor{},
+		CallGraph:            input.CallGraph,
+		unreachableFunctions: make(map[string]bool),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(program, visitor)
-	return program
+	return &SSASimplificationResult{
+		SSAProgram:           program,
+		unreachableFunctions: visitor.unreachableFunctions,
+	}
 }
 
 func formatOperator(op token.Token) string {
