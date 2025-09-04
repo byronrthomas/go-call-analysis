@@ -65,6 +65,8 @@ func (t *SSATraverser) traversePackage(ssaProgram *ssa.Program, pkg *ssa.Package
 			if namedType, ok := m.Type().(*types.Named); ok {
 				t.traverseTypeMethods(ssaProgram, namedType, pkg, visitor)
 			}
+		case *ssa.NamedConst:
+			visitor.VisitValue(m.Value, pkg)
 		default:
 			log.Fatalf("WARN: Unexpected member of package %s: %T", pkg.Pkg.Path(), m)
 		}
