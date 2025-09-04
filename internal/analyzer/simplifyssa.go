@@ -206,11 +206,27 @@ func liftIfCondition(block *ssa.BasicBlock) {
 
 func removeInstruction(block *ssa.BasicBlock, instrToRemove *ssa.Instruction) {
 	foundInstrToRemove := false
-	for i, instr := range block.Instrs {
-		if instr == *instrToRemove {
-			block.Instrs = slices.Delete(block.Instrs, i, i+1)
-			foundInstrToRemove = true
+	blocksVisited := make(map[*ssa.BasicBlock]bool)
+	blocksToVisit := make([]*ssa.BasicBlock, 0)
+	blocksToVisit = append(blocksToVisit, block)
+	for len(blocksToVisit) > 0 {
+		block := blocksToVisit[0]
+		blocksToVisit = blocksToVisit[1:]
+		blocksVisited[block] = true
+		for i, instr := range block.Instrs {
+			if instr == *instrToRemove {
+				block.Instrs = slices.Delete(block.Instrs, i, i+1)
+				foundInstrToRemove = true
+				break
+			}
+		}
+		if foundInstrToRemove {
 			break
+		}
+		for _, pred := range block.Preds {
+			if !blocksVisited[pred] {
+				blocksToVisit = append(blocksToVisit, pred)
+			}
 		}
 	}
 	if !foundInstrToRemove {

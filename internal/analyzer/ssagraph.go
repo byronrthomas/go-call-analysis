@@ -5,6 +5,7 @@ import (
 	"go/token"
 	"go/types"
 	"log"
+	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 	"golang.org/x/tools/go/ssa"
@@ -324,9 +325,59 @@ func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Pack
 	return valueNodes
 }
 
+func checkComparableType(t types.Type) bool {
+	switch t.(type) {
+	case *types.Basic:
+		return true
+
+	case *types.Array:
+		return true
+
+	case *types.Slice:
+		return true
+
+	case *types.Struct:
+		return true
+
+	case *types.Pointer:
+		return true
+
+	case *types.Tuple:
+		return true
+
+	case *types.Signature:
+		return true
+
+	case *types.Union:
+		return true
+
+	case *types.Interface:
+		return true
+
+	case *types.Map:
+		return true
+
+	case *types.Chan:
+		return true
+
+	case *types.Named:
+		return true
+
+	case *types.TypeParam:
+		return true
+	case nil:
+		return true
+	}
+
+	return false
+}
+
 func isErrorType(t types.Type) bool {
-	errorType := types.Universe.Lookup("error").Type()
-	return types.AssignableTo(t, errorType)
+	if checkComparableType(t) {
+		errorType := types.Universe.Lookup("error").Type()
+		return types.AssignableTo(t, errorType)
+	}
+	return false
 }
 
 func ValueId(fileSet *token.FileSet, valueObj ssa.Value, producingBlockId string) (token.Position, string) {
@@ -350,14 +401,21 @@ func ValueId(fileSet *token.FileSet, valueObj ssa.Value, producingBlockId string
 		return token.Position{}, valueId
 	} else if asFunction, ok := valueObj.(*ssa.Function); ok {
 		if asFunction.Synthetic != "" {
+			if asFunction.Pkg == nil && asFunction.Pos() != token.NoPos {
+				valuePosition := fileSet.Position(asFunction.Pos())
+				return valuePosition, strings.ReplaceAll(asFunction.Synthetic, " ", "_")
+			}
 			valueId := fmt.Sprintf("synthetic-%s-%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
 			return token.Position{}, valueId
 		}
-		log.Printf("WARN: Function being treated as a value has no synthetic ID: %v", asFunction)
+		//log.Printf("WARN: Function being treated as a value has no synthetic ID: %v", asFunction)
 		valueId := fmt.Sprintf("%s:%s", asFunction.Pkg.Pkg.Path(), asFunction.String())
 		return fileSet.Position(asFunction.Pos()), valueId
 	} else if asParameter, ok := valueObj.(*ssa.Parameter); ok {
 		valueId := fmt.Sprintf("parameter-%s.%s", asParameter.Parent().String(), asParameter.Name())
+		return token.Position{}, valueId
+	} else if asBuiltin, ok := valueObj.(*ssa.Builtin); ok {
+		valueId := fmt.Sprintf("builtin-%s", asBuiltin.Name())
 		return token.Position{}, valueId
 	}
 	// This line should only be hit when we're in a synthetic position that doesn't exist in the source code
