@@ -173,6 +173,7 @@ type AnnotatedCall struct {
 	InstructionAndValue
 	ResolvedTargets []*ssa.Function
 	ReturnValues    []ssa.Value
+	DynamicCallee   ssa.Value
 }
 
 var _ ssa.Instruction = (*AnnotatedCall)(nil)
@@ -291,21 +292,17 @@ func findAllTargets(call *ssa.Call, callGraph *callgraph.Graph) []*ssa.Function 
 		if call.Parent().Synthetic == "" {
 			log.Fatalf("Non-synthetic site node has no function: %v", call.Parent())
 		}
-		allTargets := make([]*ssa.Function, 1)
-		if call.Call.StaticCallee() == nil {
-			log.Fatalf("Call has no static callee: %v", call)
+		if call.Call.StaticCallee() != nil {
+			return []*ssa.Function{call.Call.StaticCallee()}
 		}
-		allTargets[0] = call.Call.StaticCallee()
-		return allTargets
+		// Otherwise, it is some kind of dynamic value, no targets
+		return nil
 	}
 	allTargets := make([]*ssa.Function, 0)
 	for _, edge := range callSiteNode.Out {
 		if edge.Site != nil && edge.Site.Value() == call {
 			allTargets = append(allTargets, edge.Callee.Func)
 		}
-	}
-	if len(allTargets) == 0 {
-		log.Fatalf("No targets found for call: %v", call)
 	}
 	return allTargets
 }
@@ -322,6 +319,13 @@ func annotateCall(call *ssa.Call, callGraph *callgraph.Graph) *AnnotatedCall {
 	// special value node for void returns and link it up, or add an attrib
 	// on the call itself
 	allTargets := findAllTargets(call, callGraph)
+	dynamicCallee := (ssa.Value)(nil)
+	if len(allTargets) == 0 {
+		// When we fail to resolve targets, we just assume it is some
+		// dynamically-called function value (or builtin)
+		// We leave it to the graph to hook this in appropriately
+		dynamicCallee = call.Call.Value
+	}
 	if asTuple, ok := callType.(*types.Tuple); ok {
 		n = asTuple.Len()
 		if n == 1 {
@@ -336,11 +340,11 @@ func annotateCall(call *ssa.Call, callGraph *callgraph.Graph) *AnnotatedCall {
 			}
 			returnValues[i] = &retVal
 		}
-		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues, ResolvedTargets: allTargets}
+		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee}
 		return &annotatedCall
 	}
 
-	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}, ResolvedTargets: allTargets}
+	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee}
 }
 
 func tryFunctionSimplification(f *ssa.Function, callGraph *callgraph.Graph) {
