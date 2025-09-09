@@ -138,6 +138,7 @@ func (e *CallEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "CALLS"
 	edgeCommonMap["call_site_file"] = e.CallSite.File
+	edgeCommonMap["call_site_last_git_revision"] = e.CallSite.LastGitRevision
 	edgeCommonMap["call_site_line"] = e.CallSite.Line
 	edgeCommonMap["call_site_column"] = e.CallSite.Column
 	edgeCommonMap["call_site_text"] = e.EdgeText
@@ -145,10 +146,11 @@ func (e *CallEdge) ToMap() map[string]any {
 }
 
 // ExtractCallGraphData extracts nodes and edges from the call graph result
-func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) {
+func ExtractCallGraphData(result *CallGraphResult, projectPath string) ([]FunctionNode, []CallEdge) {
 	var nodes []FunctionNode
 	var edges []CallEdge
 	fileSet := result.SSAProgram.Fset
+	gitRevisionCache := NewGitRevisionCache(projectPath)
 
 	for _, node := range result.CallGraph.Nodes {
 		if node.Func == nil {
@@ -177,9 +179,10 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 				Name:    node.Func.Name(),
 				Package: packageName,
 				PositionInfo: graphcommon.PositionInfo{
-					File:   fileName,
-					Line:   sourceLine,
-					Column: sourceColumn,
+					File:            fileName,
+					LastGitRevision: gitRevisionCache.GetFileRevision(fileName),
+					Line:            sourceLine,
+					Column:          sourceColumn,
 				},
 			}})
 
@@ -206,9 +209,10 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 				},
 				EdgeText: edgeText,
 				CallSite: graphcommon.PositionInfo{
-					File:   pos.Filename,
-					Line:   pos.Line,
-					Column: pos.Column,
+					File:            pos.Filename,
+					LastGitRevision: gitRevisionCache.GetFileRevision(pos.Filename),
+					Line:            pos.Line,
+					Column:          pos.Column,
 				},
 			})
 		}
@@ -218,7 +222,7 @@ func ExtractCallGraphData(result *CallGraphResult) ([]FunctionNode, []CallEdge) 
 }
 
 // ExportCallGraph exports the call graph to CSV files
-func ExportCallGraph(result *CallGraphResult) error {
-	nodes, edges := ExtractCallGraphData(result)
+func ExportCallGraph(result *CallGraphResult, projectPath string) error {
+	nodes, edges := ExtractCallGraphData(result, projectPath)
 	return ExportCallGraphToCSV(nodes, edges, result.OutputPath)
 }

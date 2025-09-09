@@ -5,9 +5,10 @@ type Mappable interface {
 }
 
 type PositionInfo struct {
-	File   string
-	Line   int
-	Column int
+	File            string
+	LastGitRevision string
+	Line            int
+	Column          int
 }
 
 type NodeCommon struct {
@@ -19,12 +20,13 @@ type NodeCommon struct {
 
 func NodeCommonAsMap(nodeCommon NodeCommon) map[string]any {
 	return map[string]any{
-		"id":      nodeCommon.ID,
-		"name":    nodeCommon.Name,
-		"package": nodeCommon.Package,
-		"file":    nodeCommon.PositionInfo.File,
-		"line":    nodeCommon.PositionInfo.Line,
-		"column":  nodeCommon.PositionInfo.Column,
+		"id":                nodeCommon.ID,
+		"name":              nodeCommon.Name,
+		"package":           nodeCommon.Package,
+		"file":              nodeCommon.PositionInfo.File,
+		"last_git_revision": nodeCommon.PositionInfo.LastGitRevision,
+		"line":              nodeCommon.PositionInfo.Line,
+		"column":            nodeCommon.PositionInfo.Column,
 	}
 }
 

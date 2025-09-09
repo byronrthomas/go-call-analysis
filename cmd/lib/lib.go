@@ -39,7 +39,7 @@ func RunCallGraph(rootFunction string, projectPath string, outputPath string, us
 		return err
 	}
 
-	nodes, edges := analyzer.ExtractCallGraphData(callGraph)
+	nodes, edges := analyzer.ExtractCallGraphData(callGraph, projectPath)
 	if useNeo4j {
 
 		config := analyzer.Neo4jConfig{
@@ -60,7 +60,7 @@ func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string
 	if err != nil {
 		return err
 	}
-	ssaResult := analyzer.ExtractSSAGraphData(simplificationResult, packagePrefixes)
+	ssaResult := analyzer.ExtractSSAGraphData(simplificationResult, packagePrefixes, projectPath)
 
 	if useNeo4j {
 

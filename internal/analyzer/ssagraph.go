@@ -110,6 +110,7 @@ type GraphVisitor struct {
 	BaseSSAVisitor
 	SSASimplificationResult *SSASimplificationResult
 	fileSet                 *token.FileSet
+	gitRevisionCache        *GitRevisionCache
 	instructionNodes        []InstructionNode
 	orderingEdges           []OrderingEdge
 	controlFlowEdges        []ControlFlowEdge
@@ -157,9 +158,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					Name:    instr.String(),
 					Package: pkg.Pkg.Path(),
 					PositionInfo: graphcommon.PositionInfo{
-						File:   instrPosition.Filename,
-						Line:   instrPosition.Line,
-						Column: instrPosition.Column,
+						File:            instrPosition.Filename,
+						LastGitRevision: v.gitRevisionCache.GetFileRevision(instrPosition.Filename),
+						Line:            instrPosition.Line,
+						Column:          instrPosition.Column,
 					},
 				},
 				InstructionType: instrTypeAsString(instr),
@@ -199,7 +201,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
 				for _, returnValue := range asAnnotatedCall.ReturnValues {
 					_, returnValueId := ValueId(v.fileSet, returnValue, currentBlockId)
-					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition)
+					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache)
 					v.resultEdges = append(v.resultEdges, ResultEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: instrId,
@@ -222,7 +224,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 				}
 			} else if asValue, ok := instr.(ssa.Value); ok {
 				_, vId := ValueId(v.fileSet, asValue, currentBlockId)
-				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition)
+				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache)
 
 				// If instruction produces a value, add a result edge from the instruction to the value
 				v.resultEdges = append(v.resultEdges, ResultEdge{
@@ -243,9 +245,10 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 			Name:    f.Name(),
 			Package: pkg.Pkg.Path(),
 			PositionInfo: graphcommon.PositionInfo{
-				File:   pos.Filename,
-				Line:   pos.Line,
-				Column: pos.Column,
+				File:            pos.Filename,
+				LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
+				Line:            pos.Line,
+				Column:          pos.Column,
 			},
 		},
 		InstructionType: "function-entry",
@@ -263,16 +266,17 @@ func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Functio
 
 func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
 	valuePosition, vId := ValueId(v.fileSet, valueObj, "")
-	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition)
+	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache)
 }
 
-func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string) SSAGraphData {
+func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string, projectPath string) SSAGraphData {
 	fileSet := simplificationResult.SSAProgram.Fset
 
 	visitor := &GraphVisitor{
 		BaseSSAVisitor:          BaseSSAVisitor{},
 		SSASimplificationResult: simplificationResult,
 		fileSet:                 fileSet,
+		gitRevisionCache:        NewGitRevisionCache(projectPath),
 		functionEntries:         make(map[string]bool),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
@@ -315,16 +319,17 @@ func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) 
 	return controlFlowEdges
 }
 
-func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position) []ValueNode {
+func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, gitCache *GitRevisionCache) []ValueNode {
 	valueNodes = append(valueNodes, ValueNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:      vId,
 			Name:    v.Name(),
 			Package: pkg.Pkg.Path(),
 			PositionInfo: graphcommon.PositionInfo{
-				File:   valuePosition.Filename,
-				Line:   valuePosition.Line,
-				Column: valuePosition.Column,
+				File:            valuePosition.Filename,
+				LastGitRevision: gitCache.GetFileRevision(valuePosition.Filename),
+				Line:            valuePosition.Line,
+				Column:          valuePosition.Column,
 			},
 		},
 		ValueType:   valueTypeAsString(v),
