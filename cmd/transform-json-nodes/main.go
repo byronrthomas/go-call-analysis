@@ -63,10 +63,9 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 	writtenFiles := make(map[string]bool)
 
 	scanner := bufio.NewScanner(file)
-	lineNum := 0
+	nextId := 0
 
 	for scanner.Scan() {
-		lineNum++
 		line := scanner.Text()
 
 		if strings.TrimSpace(line) == "" {
@@ -76,14 +75,14 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 		// Parse the entire JSON line
 		var jsonData map[string]interface{}
 		if err := json.Unmarshal([]byte(line), &jsonData); err != nil {
-			log.Printf("Warning: Failed to parse JSON on line %d: %v", lineNum, err)
+			log.Printf("Warning: Failed to parse JSON on line %d: %v", nextId, err)
 			continue
 		}
 
 		// Extract the filename from the nested structure
 		filename, err := extractFilename(jsonData)
 		if err != nil {
-			log.Printf("Warning: Failed to extract filename from line %d: %v", lineNum, err)
+			log.Printf("Warning: Failed to extract filename from line %d: %v", nextId, err)
 			continue
 		}
 
@@ -111,6 +110,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 		}
 
 		writtenFiles[outputFilePath] = true
+		nextId++
 	}
 
 	if err := scanner.Err(); err != nil {
