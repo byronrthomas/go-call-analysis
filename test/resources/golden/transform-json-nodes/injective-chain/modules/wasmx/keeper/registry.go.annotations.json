@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
     "id": 0,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1409565,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 48,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper.Keeper).HandleContractRegistration:0:t14",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper.Keeper).HandleContractRegistration:0:t15",
-          "is_error_type": true,
-          "line": 22,
-          "name": "t15",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 22,
     "character": 0,
     "relativePath": "injective-chain/modules/wasmx/keeper/registry.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
     "id": 1,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1409643,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper.Keeper).HandleContractRegistration:12:t93",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper.Keeper).HandleContractRegistration:12:t94",
-          "is_error_type": true,
-          "line": 66,
-          "name": "t94",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/wasmx/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 66,
     "character": 0,
     "relativePath": "injective-chain/modules/wasmx/keeper/registry.go",
     "priority": "P0"

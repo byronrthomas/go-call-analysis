@@ -21,13 +21,13 @@ type NodeData struct {
 }
 
 type OutputEntry struct {
-	Filename     string      `json:"filename"`
-	Id           int         `json:"id"`
-	Text         string      `json:"text"`
-	Line         interface{} `json:"line"`
-	Character    int         `json:"character"`
-	RelativePath string      `json:"relativePath"`
-	Priority     string      `json:"priority"`
+	Filename     string `json:"filename"`
+	Id           int    `json:"id"`
+	Text         string `json:"text"`
+	Line         int    `json:"line"`
+	Character    int    `json:"character"`
+	RelativePath string `json:"relativePath"`
+	Priority     string `json:"priority"`
 }
 
 func main() {
@@ -90,6 +90,12 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 			log.Printf("Warning: Failed to extract filename from line %d: %v", nextId, err)
 			continue
 		}
+		// Extract the line number from the nested structure
+		lineNumber, err := extractLine(jsonData)
+		if err != nil {
+			log.Printf("Warning: Failed to extract line number from line %d: %v", nextId, err)
+			continue
+		}
 
 		// Strip the relative root from the filename
 		if !strings.HasPrefix(filename, relativeRoot) {
@@ -107,7 +113,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 		outputEntry := OutputEntry{
 			Filename:     filename,
 			Id:           nextId,
-			Line:         jsonData,
+			Line:         lineNumber,
 			Text:         "to check",
 			Priority:     "P0",
 			Character:    0,
@@ -132,14 +138,9 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 
 func extractFilename(jsonData map[string]interface{}) (string, error) {
 	// Navigate through the nested structure to find the file field
-	verr, ok := jsonData["verr"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("missing or invalid 'verr' field")
-	}
-
-	properties, ok := verr["properties"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("missing or invalid 'properties' field")
+	properties, err := extractProperties(jsonData)
+	if err != nil {
+		return "", err
 	}
 
 	file, ok := properties["file"].(string)
@@ -148,6 +149,40 @@ func extractFilename(jsonData map[string]interface{}) (string, error) {
 	}
 
 	return file, nil
+}
+
+func extractLine(jsonData map[string]interface{}) (int, error) {
+	properties, err := extractProperties(jsonData)
+	if err != nil {
+		return -1, err
+	}
+
+	line, ok := properties["line"].(float64)
+	if !ok {
+		return -1, fmt.Errorf("missing or invalid 'line' field")
+	}
+
+	return int(line), nil
+}
+
+func extractProperties(jsonData map[string]interface{}) (map[string]interface{}, error) {
+	// Check that there is one key only the top-level map
+	// and extract whatever it's value is
+	if len(jsonData) != 1 {
+		return nil, fmt.Errorf("Non-singleton map at top-level of JSON data")
+	}
+	var nodeData map[string]interface{}
+	for _, v := range jsonData {
+		nodeData = v.(map[string]interface{})
+		break
+	}
+
+	properties, ok := nodeData["properties"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("missing or invalid 'properties' field")
+	}
+
+	return properties, nil
 }
 
 func writeToOutputFile(outputFilePath string, entry OutputEntry, isNewFile bool) error {

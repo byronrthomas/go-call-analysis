@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 16,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641327,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 38,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).CreateFeed:9:t83",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).CreateFeed:9:t84",
-          "is_error_type": true,
-          "line": 93,
-          "name": "t84",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 93,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 17,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641464,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 38,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).UpdateFeed:28:t136",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).UpdateFeed:28:t137",
-          "is_error_type": true,
-          "line": 162,
-          "name": "t137",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 162,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -63,28 +21,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 18,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641815,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).FundFeedRewardPool:0:t15",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).FundFeedRewardPool:0:t16",
-          "is_error_type": true,
-          "line": 297,
-          "name": "t16",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 297,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -93,28 +30,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 19,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641885,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 42,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).WithdrawFeedRewardPool:5:t47",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).WithdrawFeedRewardPool:5:t48",
-          "is_error_type": true,
-          "line": 329,
-          "name": "t48",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 329,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -123,28 +39,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 20,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641943,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 45,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).SetPayees:7:t48",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).SetPayees:7:t49",
-          "is_error_type": true,
-          "line": 356,
-          "name": "t49",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 356,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -153,28 +48,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 21,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641945,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).SetPayees:7:t51",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).SetPayees:7:t52",
-          "is_error_type": true,
-          "line": 357,
-          "name": "t52",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 357,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -183,28 +57,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 22,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641983,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 44,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t27",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t28",
-          "is_error_type": true,
-          "line": 383,
-          "name": "t28",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 383,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -213,28 +66,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 23,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641987,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t32",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t33",
-          "is_error_type": true,
-          "line": 384,
-          "name": "t33",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 384,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -243,28 +75,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 24,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1641993,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t39",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).TransferPayeeship:3:t40",
-          "is_error_type": true,
-          "line": 387,
-          "name": "t40",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 387,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -273,28 +84,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 25,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1642054,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 44,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).AcceptPayeeship:3:t27",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).AcceptPayeeship:3:t28",
-          "is_error_type": true,
-          "line": 418,
-          "name": "t28",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 418,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"
@@ -303,28 +93,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
     "id": 26,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1642060,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).AcceptPayeeship:3:t34",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.msgServer).AcceptPayeeship:3:t35",
-          "is_error_type": true,
-          "line": 421,
-          "name": "t35",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 421,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/msg_server.go",
     "priority": "P0"

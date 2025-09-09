@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/abci.go",
     "id": 15,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1607971,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 51,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy.BlockHandler).batchSlashing:13:t78",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/abci.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy.BlockHandler).batchSlashing:13:t79",
-          "is_error_type": true,
-          "line": 364,
-          "name": "t79",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 364,
     "character": 0,
     "relativePath": "injective-chain/modules/peggy/abci.go",
     "priority": "P0"

@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 59,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1945944,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 43,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).InstantPerpetualMarketLaunch:5:t33",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).InstantPerpetualMarketLaunch:5:t34",
-          "is_error_type": true,
-          "line": 67,
-          "name": "t34",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 67,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 60,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1946108,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 43,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).InstantExpiryFuturesMarketLaunch:5:t33",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).InstantExpiryFuturesMarketLaunch:5:t34",
-          "is_error_type": true,
-          "line": 124,
-          "name": "t34",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 124,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "priority": "P0"
@@ -63,28 +21,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 61,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1946474,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).CreateDerivativeLimitOrder:3:t41",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).CreateDerivativeLimitOrder:3:t42",
-          "is_error_type": true,
-          "line": 299,
-          "name": "t42",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 299,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "priority": "P0"
@@ -93,28 +30,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 62,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1946746,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).CreateDerivativeMarketOrder:3:t41",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).CreateDerivativeMarketOrder:3:t42",
-          "is_error_type": true,
-          "line": 451,
-          "name": "t42",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 451,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "priority": "P0"

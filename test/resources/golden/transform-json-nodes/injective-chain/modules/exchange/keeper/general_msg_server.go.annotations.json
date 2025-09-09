@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/general_msg_server.go",
     "id": 63,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1952030,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.GeneralMsgServer).BatchUpdateOrders:3:t28",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/general_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.GeneralMsgServer).BatchUpdateOrders:3:t29",
-          "is_error_type": true,
-          "line": 58,
-          "name": "t29",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 58,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/general_msg_server.go",
     "priority": "P0"

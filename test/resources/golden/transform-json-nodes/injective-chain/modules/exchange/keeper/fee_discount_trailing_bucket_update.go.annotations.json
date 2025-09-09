@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "id": 49,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1928886,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).ProcessFeeDiscountBuckets:9:t34",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).ProcessFeeDiscountBuckets:9:t35",
-          "is_error_type": true,
-          "line": 38,
-          "name": "t35",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 38,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "id": 50,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1928902,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).ProcessFeeDiscountBuckets:16:t53",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).ProcessFeeDiscountBuckets:16:t54",
-          "is_error_type": true,
-          "line": 54,
-          "name": "t54",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 54,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "priority": "P0"

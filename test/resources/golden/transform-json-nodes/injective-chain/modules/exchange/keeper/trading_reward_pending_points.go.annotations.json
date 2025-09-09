@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "id": 53,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1941477,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 38,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PersistTradingRewardPendingPoints:2:t10",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PersistTradingRewardPendingPoints:2:t11",
-          "is_error_type": true,
-          "line": 268,
-          "name": "t11",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 268,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "id": 54,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1941504,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).handleTradingRewardPendingPointsUpdateProposal:6:t24",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).handleTradingRewardPendingPointsUpdateProposal:6:t25",
-          "is_error_type": true,
-          "line": 293,
-          "name": "t25",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 293,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "priority": "P0"

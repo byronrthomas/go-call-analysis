@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "id": 64,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1952549,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 43,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).InstantBinaryOptionsMarketLaunch:0:t15",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).InstantBinaryOptionsMarketLaunch:0:t16",
-          "is_error_type": true,
-          "line": 41,
-          "name": "t16",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 41,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "id": 65,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1952720,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).CreateBinaryOptionsLimitOrder:3:t41",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).CreateBinaryOptionsLimitOrder:3:t42",
-          "is_error_type": true,
-          "line": 118,
-          "name": "t42",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 118,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "priority": "P0"
@@ -63,28 +21,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "id": 66,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1952840,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).CreateBinaryOptionsMarketOrder:3:t41",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.BinaryOptionsMsgServer).CreateBinaryOptionsMarketOrder:3:t42",
-          "is_error_type": true,
-          "line": 171,
-          "name": "t42",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 171,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_msg_server.go",
     "priority": "P0"

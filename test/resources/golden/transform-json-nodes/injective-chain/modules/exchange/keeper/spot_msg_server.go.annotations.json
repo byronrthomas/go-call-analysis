@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
     "id": 67,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1955528,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.SpotMsgServer).InstantSpotMarketLaunch:0:t15",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.SpotMsgServer).InstantSpotMarketLaunch:0:t16",
-          "is_error_type": true,
-          "line": 44,
-          "name": "t16",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 44,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/spot_msg_server.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
     "id": 68,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1955792,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.SpotMsgServer).CreateSpotLimitOrder:3:t41",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.SpotMsgServer).CreateSpotLimitOrder:3:t42",
-          "is_error_type": true,
-          "line": 175,
-          "name": "t42",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 175,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/spot_msg_server.go",
     "priority": "P0"

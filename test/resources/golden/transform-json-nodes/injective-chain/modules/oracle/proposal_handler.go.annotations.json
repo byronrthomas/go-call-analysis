@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/proposal_handler.go",
     "id": 14,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1562410,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle.handleRevokeProviderPrivilegeProposal:4:t12",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/proposal_handler.go",
-          "id": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle.handleRevokeProviderPrivilegeProposal:4:t13",
-          "is_error_type": true,
-          "line": 233,
-          "name": "t13",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 233,
     "character": 0,
     "relativePath": "injective-chain/modules/oracle/proposal_handler.go",
     "priority": "P0"

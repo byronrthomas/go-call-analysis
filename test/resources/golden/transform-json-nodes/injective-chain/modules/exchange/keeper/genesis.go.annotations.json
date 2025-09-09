@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/genesis.go",
     "id": 51,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1929752,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 42,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).InitGenesis:87:t392",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/genesis.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).InitGenesis:87:t393",
-          "is_error_type": true,
-          "line": 181,
-          "name": "t393",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 181,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/genesis.go",
     "priority": "P0"

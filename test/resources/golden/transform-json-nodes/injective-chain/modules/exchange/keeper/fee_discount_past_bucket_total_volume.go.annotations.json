@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_past_bucket_total_volume.go",
     "id": 48,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1928675,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).DeleteAllPastBucketTotalVolume:3:t18",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_past_bucket_total_volume.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).DeleteAllPastBucketTotalVolume:3:t19",
-          "is_error_type": true,
-          "line": 92,
-          "name": "t19",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 92,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_past_bucket_total_volume.go",
     "priority": "P0"

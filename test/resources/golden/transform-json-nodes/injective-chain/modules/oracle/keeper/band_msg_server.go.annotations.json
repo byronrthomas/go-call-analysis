@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/band_msg_server.go",
     "id": 32,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1714273,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 40,
-          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.BandMsgServer).RelayBandRates:0:t15",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/band_msg_server.go",
-          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.BandMsgServer).RelayBandRates:0:t16",
-          "is_error_type": true,
-          "line": 39,
-          "name": "t16",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 39,
     "character": 0,
     "relativePath": "injective-chain/modules/oracle/keeper/band_msg_server.go",
     "priority": "P0"

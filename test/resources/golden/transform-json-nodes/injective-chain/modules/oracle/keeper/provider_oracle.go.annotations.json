@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 34,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1716798,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).GetProviderRelayers:5:t27",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).GetProviderRelayers:5:t28",
-          "is_error_type": true,
-          "line": 51,
-          "name": "t28",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 51,
     "character": 0,
     "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 35,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1716833,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).DeleteProviderRelayers:8:t31",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).DeleteProviderRelayers:8:t32",
-          "is_error_type": true,
-          "line": 73,
-          "name": "t32",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 73,
     "character": 0,
     "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
     "priority": "P0"
@@ -63,28 +21,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 36,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1716903,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).SetProviderInfo:3:t28",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper.Keeper).SetProviderInfo:3:t29",
-          "is_error_type": true,
-          "line": 120,
-          "name": "t29",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/oracle/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 120,
     "character": 0,
     "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
     "priority": "P0"

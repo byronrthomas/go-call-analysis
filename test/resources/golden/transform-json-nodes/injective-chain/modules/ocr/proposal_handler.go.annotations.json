@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
     "id": 2,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1550811,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 38,
-          "err_partner_of": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr.handleSetConfigProposal:6:t46",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
-          "id": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr.handleSetConfigProposal:6:t47",
-          "is_error_type": true,
-          "line": 42,
-          "name": "t47",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 42,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/proposal_handler.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
     "id": 3,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1551044,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr.handleBatchSetConfigProposal:9:t83",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
-          "id": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr.handleBatchSetConfigProposal:9:t84",
-          "is_error_type": true,
-          "line": 85,
-          "name": "t84",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 85,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/proposal_handler.go",
     "priority": "P0"

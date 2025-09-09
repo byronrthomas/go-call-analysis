@@ -3,28 +3,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
     "id": 56,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1944100,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 39,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PrivilegedExecuteContractWithVersion:0:t5",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PrivilegedExecuteContractWithVersion:0:t6",
-          "is_error_type": true,
-          "line": 24,
-          "name": "t6",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 24,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
     "priority": "P0"
@@ -33,28 +12,7 @@
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
     "id": 57,
     "text": "to check",
-    "line": {
-      "verr": {
-        "id": 1944104,
-        "labels": [
-          "Value"
-        ],
-        "properties": {
-          "authenticator_func": "AccAddressFromBech32",
-          "column": 41,
-          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PrivilegedExecuteContractWithVersion:0:t10",
-          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
-          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).PrivilegedExecuteContractWithVersion:0:t11",
-          "is_error_type": true,
-          "line": 25,
-          "name": "t11",
-          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
-          "type_name": "error",
-          "value_type": "Extract"
-        },
-        "type": "node"
-      }
-    },
+    "line": 25,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
     "priority": "P0"
