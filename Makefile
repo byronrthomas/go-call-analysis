@@ -1,8 +1,15 @@
-.PHONY: build test clean lint copy-csvs-to-memgraph
+.PHONY: build test clean lint copy-csvs-to-memgraph build-transform build-all
 
 # Build the application
 build:
 	go build -o bin/gca ./cmd/gca
+
+# Build the transform-json-nodes tool
+build-transform:
+	go build -o bin/transform-json-nodes ./cmd/transform-json-nodes
+
+# Build all tools
+build-all: build build-transform
 
 # Run tests
 test:
