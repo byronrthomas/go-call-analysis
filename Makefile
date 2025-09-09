@@ -31,7 +31,7 @@ regenerate-golden-ssa:
 regenerate-golden-transform:
 	@echo "Regenerating golden files for transform-json-nodes..."
 	rm -rf ./test/resources/golden/transform-json-nodes
-	bin/transform-json-nodes -input ./test/resources/transform-json-nodes/sample_input.jsonl -root '/Users/byron/repos/third-party/injective/injective-core' -output ./test/resources/golden/transform-json-nodes
+	bin/transform-json-nodes -input ./test/resources/transform-json-nodes/sample_input.jsonl -root '/Users/byron/repos/third-party/injective/injective-core' -output ./test/resources/golden/transform-json-nodes -annotation 'to check'
 
 # Clean build artifacts
 clean:
