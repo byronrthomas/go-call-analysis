@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/keeper.go",
+    "line": {
+      "verr": {
+        "id": 1930211,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 39,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).FixedGasBatchUpdateOrders:0:t19",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/keeper.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).FixedGasBatchUpdateOrders:0:t20",
+          "is_error_type": true,
+          "line": 242,
+          "name": "t20",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

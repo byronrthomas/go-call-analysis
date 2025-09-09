@@ -1,0 +1,202 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1555850,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 53,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).SetOrchestratorAddresses:0:t15",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).SetOrchestratorAddresses:0:t16",
+          "is_error_type": true,
+          "line": 47,
+          "name": "t16",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1555861,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 49,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).SetOrchestratorAddresses:2:t27",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).SetOrchestratorAddresses:2:t28",
+          "is_error_type": true,
+          "line": 53,
+          "name": "t28",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1555970,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 41,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ValsetConfirm:5:t54",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ValsetConfirm:5:t55",
+          "is_error_type": true,
+          "line": 109,
+          "name": "t55",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1556234,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 41,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ConfirmBatch:5:t57",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ConfirmBatch:5:t58",
+          "is_error_type": true,
+          "line": 243,
+          "name": "t58",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1556329,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 45,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).DepositClaim:0:t15",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).DepositClaim:0:t16",
+          "is_error_type": true,
+          "line": 293,
+          "name": "t16",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1556433,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 45,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).WithdrawClaim:0:t15",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).WithdrawClaim:0:t16",
+          "is_error_type": true,
+          "line": 346,
+          "name": "t16",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1556517,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 37,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ERC20DeployedClaim:0:t15",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ERC20DeployedClaim:0:t16",
+          "is_error_type": true,
+          "line": 387,
+          "name": "t16",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "line": {
+      "verr": {
+        "id": 1556601,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 41,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ValsetUpdateClaim:0:t15",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.msgServer).ValsetUpdateClaim:0:t16",
+          "is_error_type": true,
+          "line": 428,
+          "name": "t16",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

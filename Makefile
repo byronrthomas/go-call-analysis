@@ -1,4 +1,4 @@
-.PHONY: build test clean lint copy-csvs-to-memgraph build-transform build-all
+.PHONY: build test clean lint copy-csvs-to-memgraph build-transform build-all test-ssa test-transform regenerate-golden-ssa regenerate-golden-transform
 
 # Build the application
 build:
@@ -19,9 +19,19 @@ test:
 test-ssa:
 	go test -v ./test -run TestSSAGraphAnalysis
 
+# Run transform-json-nodes tests specifically
+test-transform:
+	go test -v ./test -run TestTransformJSONNodes
+
 # Regenerate golden files for SSA graph tests
 regenerate-golden-ssa:
 	bin/gca ssa-graph -p ./test-project -o ./test/resources/golden/ssa -r 'github.com/throwin5tone7/go-call-analysis/test-project:main' --package-prefixes='github.com/throwin5tone7/go-call-analysis'
+
+# Regenerate golden files for transform-json-nodes tests
+regenerate-golden-transform:
+	@echo "Regenerating golden files for transform-json-nodes..."
+	rm -rf ./test/resources/golden/transform-json-nodes
+	bin/transform-json-nodes -input ./test/resources/transform-json-nodes/sample_input.jsonl -root '/Users/byron/repos/third-party/injective' -output ./test/resources/golden/transform-json-nodes
 
 # Clean build artifacts
 clean:

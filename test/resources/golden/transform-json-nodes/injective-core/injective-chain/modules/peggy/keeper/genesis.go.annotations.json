@@ -1,0 +1,52 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+    "line": {
+      "verr": {
+        "id": 1557265,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 57,
+          "err_partner_of": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.InitGenesis:36:t136",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+          "id": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.InitGenesis:36:t137",
+          "is_error_type": true,
+          "line": 131,
+          "name": "t137",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+    "line": {
+      "verr": {
+        "id": 1557271,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 46,
+          "err_partner_of": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.InitGenesis:36:t143",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+          "id": "value-github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper.InitGenesis:36:t144",
+          "is_error_type": true,
+          "line": 133,
+          "name": "t144",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

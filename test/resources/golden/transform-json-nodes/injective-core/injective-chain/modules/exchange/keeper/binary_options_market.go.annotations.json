@@ -1,0 +1,52 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+    "line": {
+      "verr": {
+        "id": 1920663,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 46,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).BinaryOptionsMarketLaunch:14:t108",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).BinaryOptionsMarketLaunch:14:t109",
+          "is_error_type": true,
+          "line": 69,
+          "name": "t109",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+    "line": {
+      "verr": {
+        "id": 1921514,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 39,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).validateAdmin:1:t6",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).validateAdmin:1:t7",
+          "is_error_type": true,
+          "line": 777,
+          "name": "t7",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

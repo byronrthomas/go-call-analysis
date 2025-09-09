@@ -1,0 +1,52 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+    "line": {
+      "verr": {
+        "id": 1922849,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 43,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).executeDeposit:2:t17",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).executeDeposit:2:t18",
+          "is_error_type": true,
+          "line": 25,
+          "name": "t18",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+    "line": {
+      "verr": {
+        "id": 1922940,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 49,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).ExecuteWithdraw:0:t10",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+          "id": "return-placeholder-1-/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go:67:49",
+          "is_error_type": true,
+          "line": 67,
+          "name": "func_return_placeholder_1_t9",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "FuncReturnPlaceholder"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

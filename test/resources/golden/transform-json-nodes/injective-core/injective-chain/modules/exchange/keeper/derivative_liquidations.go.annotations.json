@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_liquidations.go",
+    "line": {
+      "verr": {
+        "id": 1945566,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 47,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).liquidatePosition:0:t24",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_liquidations.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.DerivativesMsgServer).liquidatePosition:0:t25",
+          "is_error_type": true,
+          "line": 228,
+          "name": "t25",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

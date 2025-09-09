@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_bucket_volume.go",
+    "line": {
+      "verr": {
+        "id": 1928308,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 42,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).DeleteAllAccountVolumeInAllBucketsWithMetadata:6:t35",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_bucket_volume.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper.Keeper).DeleteAllAccountVolumeInAllBucketsWithMetadata:6:t36",
+          "is_error_type": true,
+          "line": 109,
+          "name": "t36",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

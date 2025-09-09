@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/types/v2/derivative_orders.go",
+    "line": {
+      "verr": {
+        "id": 1789393,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 40,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/types/v2.OrderInfo).FeeRecipientAddress:0:t3",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/types/v2/derivative_orders.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/types/v2.OrderInfo).FeeRecipientAddress:0:t4",
+          "is_error_type": true,
+          "line": 543,
+          "name": "t4",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/exchange/types/v2",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

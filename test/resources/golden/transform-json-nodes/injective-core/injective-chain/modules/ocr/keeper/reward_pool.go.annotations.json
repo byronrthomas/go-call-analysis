@@ -1,0 +1,77 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+    "line": {
+      "verr": {
+        "id": 1643423,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 45,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:2:t32",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:2:t33",
+          "is_error_type": true,
+          "line": 284,
+          "name": "t33",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+    "line": {
+      "verr": {
+        "id": 1643488,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 38,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:23:t99",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:23:t100",
+          "is_error_type": true,
+          "line": 336,
+          "name": "t100",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+    "line": {
+      "verr": {
+        "id": 1643509,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 38,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:28:t121",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper.Keeper).ProcessRewardPayout:28:t122",
+          "is_error_type": true,
+          "line": 349,
+          "name": "t122",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/keeper",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

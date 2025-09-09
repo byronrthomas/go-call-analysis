@@ -1,0 +1,102 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "line": {
+      "verr": {
+        "id": 1885648,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 36,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgERC20DeployedClaim).GetClaimer:2:t7",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgERC20DeployedClaim).GetClaimer:2:t8",
+          "is_error_type": true,
+          "line": 466,
+          "name": "t8",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "line": {
+      "verr": {
+        "id": 1888660,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 36,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgValsetUpdatedClaim).GetClaimer:2:t7",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgValsetUpdatedClaim).GetClaimer:2:t8",
+          "is_error_type": true,
+          "line": 534,
+          "name": "t8",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "line": {
+      "verr": {
+        "id": 1908981,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 36,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgWithdrawClaim).GetClaimer:2:t7",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgWithdrawClaim).GetClaimer:2:t8",
+          "is_error_type": true,
+          "line": 409,
+          "name": "t8",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "line": {
+      "verr": {
+        "id": 1909516,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 36,
+          "err_partner_of": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgDepositClaim).GetClaimer:2:t9",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+          "id": "value-(github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types.MsgDepositClaim).GetClaimer:2:t10",
+          "is_error_type": true,
+          "line": 337,
+          "name": "t10",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/peggy/types",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]

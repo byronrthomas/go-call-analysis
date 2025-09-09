@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/types/types.go",
+    "line": {
+      "verr": {
+        "id": 1687872,
+        "labels": [
+          "Value"
+        ],
+        "properties": {
+          "authenticator_func": "AccAddressFromBech32",
+          "column": 38,
+          "err_partner_of": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/types.FeedConfig).TransmitterFromSigner:2:t14",
+          "file": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/types/types.go",
+          "id": "value-(*github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/types.FeedConfig).TransmitterFromSigner:2:t15",
+          "is_error_type": true,
+          "line": 59,
+          "name": "t15",
+          "package": "github.com/InjectiveLabs/injective-core/injective-chain/modules/ocr/types",
+          "type_name": "error",
+          "value_type": "Extract"
+        },
+        "type": "node"
+      }
+    }
+  }
+]
