@@ -1,6 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+    "id": 12,
     "line": {
       "verr": {
         "id": 1557265,
@@ -26,6 +27,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
+    "id": 13,
     "line": {
       "verr": {
         "id": 1557271,

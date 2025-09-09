@@ -1,6 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+    "id": 42,
     "line": {
       "verr": {
         "id": 1920663,
@@ -26,6 +27,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
+    "id": 43,
     "line": {
       "verr": {
         "id": 1921514,

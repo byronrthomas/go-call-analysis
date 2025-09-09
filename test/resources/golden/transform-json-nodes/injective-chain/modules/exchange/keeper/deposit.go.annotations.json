@@ -1,6 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+    "id": 44,
     "line": {
       "verr": {
         "id": 1922849,
@@ -26,6 +27,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
+    "id": 45,
     "line": {
       "verr": {
         "id": 1922940,

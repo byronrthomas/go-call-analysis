@@ -1,6 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
+    "id": 56,
     "line": {
       "verr": {
         "id": 1944100,
@@ -26,6 +27,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/wasm_privileged_action.go",
+    "id": 57,
     "line": {
       "verr": {
         "id": 1944104,

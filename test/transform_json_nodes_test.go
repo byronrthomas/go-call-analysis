@@ -21,13 +21,11 @@ func TestTransformJSONNodes(t *testing.T) {
 
 	// Build the transform tool if it doesn't exist
 	toolPath := "../bin/transform-json-nodes"
-	if _, err := os.Stat(toolPath); os.IsNotExist(err) {
-		t.Log("Building transform-json-nodes tool...")
-		cmd := exec.Command("make", "build-transform")
-		cmd.Dir = ".."
-		if output, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("Failed to build transform-json-nodes tool: %v\nOutput: %s", err, output)
-		}
+	t.Log("Building transform-json-nodes tool...")
+	cmd := exec.Command("make", "build-transform")
+	cmd.Dir = ".."
+	if output, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("Failed to build transform-json-nodes tool: %v\nOutput: %s", err, output)
 	}
 
 	// Clean up previous test output
@@ -41,7 +39,7 @@ func TestTransformJSONNodes(t *testing.T) {
 	}
 
 	// Run the transform-json-nodes tool
-	cmd := exec.Command(toolPath,
+	cmd = exec.Command(toolPath,
 		"-input", inputFile,
 		"-root", relativeRoot,
 		"-output", outputPath)

@@ -1,6 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 4,
     "line": {
       "verr": {
         "id": 1555850,
@@ -26,6 +27,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 5,
     "line": {
       "verr": {
         "id": 1555861,
@@ -51,6 +53,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 6,
     "line": {
       "verr": {
         "id": 1555970,
@@ -76,6 +79,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 7,
     "line": {
       "verr": {
         "id": 1556234,
@@ -101,6 +105,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 8,
     "line": {
       "verr": {
         "id": 1556329,
@@ -126,6 +131,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 9,
     "line": {
       "verr": {
         "id": 1556433,
@@ -151,6 +157,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 10,
     "line": {
       "verr": {
         "id": 1556517,
@@ -176,6 +183,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
+    "id": 11,
     "line": {
       "verr": {
         "id": 1556601,
