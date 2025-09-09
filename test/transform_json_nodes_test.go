@@ -17,7 +17,7 @@ func TestTransformJSONNodes(t *testing.T) {
 	inputFile := "resources/transform-json-nodes/sample_input.jsonl"
 	outputPath := "../test-output/transform-json-nodes"
 	goldenPath := "resources/golden/transform-json-nodes"
-	relativeRoot := "/Users/byron/repos/third-party/injective"
+	relativeRoot := "/Users/byron/repos/third-party/injective/injective-core"
 
 	// Build the transform tool if it doesn't exist
 	toolPath := "../bin/transform-json-nodes"
