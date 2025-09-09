@@ -34,6 +34,7 @@ func main() {
 	var inputFile = flag.String("input", "", "Path to input JSONL file")
 	var relativeRoot = flag.String("root", "", "Relative path root to strip from filenames")
 	var outputFolder = flag.String("output", "", "Output folder for generated JSON files")
+	var annotationText = flag.String("annotation", "Auto-generated annotation", "Text to add to the annotations")
 
 	flag.Parse()
 
@@ -49,7 +50,7 @@ func main() {
 		*relativeRoot += "/"
 	}
 
-	err := processJSONL(*inputFile, *relativeRoot, *outputFolder)
+	err := processJSONL(*inputFile, *relativeRoot, *outputFolder, *annotationText)
 	if err != nil {
 		log.Fatalf("Error processing file: %v", err)
 	}
@@ -57,7 +58,7 @@ func main() {
 	fmt.Printf("Successfully processed %s\n", *inputFile)
 }
 
-func processJSONL(inputFile, relativeRoot, outputFolder string) error {
+func processJSONL(inputFile, relativeRoot, outputFolder, annotationText string) error {
 	file, err := os.Open(inputFile)
 	if err != nil {
 		return fmt.Errorf("failed to open input file: %w", err)
@@ -114,7 +115,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 			Filename:     filename,
 			Id:           nextId,
 			Line:         lineNumber,
-			Text:         "to check",
+			Text:         annotationText,
 			Priority:     "P0",
 			Character:    0,
 			RelativePath: relativePath,

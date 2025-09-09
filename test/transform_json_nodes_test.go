@@ -18,6 +18,7 @@ func TestTransformJSONNodes(t *testing.T) {
 	outputPath := "../test-output/transform-json-nodes"
 	goldenPath := "resources/golden/transform-json-nodes"
 	relativeRoot := "/Users/byron/repos/third-party/injective/injective-core"
+	annotationText := "to check"
 
 	// Build the transform tool if it doesn't exist
 	toolPath := "../bin/transform-json-nodes"
@@ -42,7 +43,8 @@ func TestTransformJSONNodes(t *testing.T) {
 	cmd = exec.Command(toolPath,
 		"-input", inputFile,
 		"-root", relativeRoot,
-		"-output", outputPath)
+		"-output", outputPath,
+		"-annotation", annotationText)
 	cmd.Dir = "."
 
 	if output, err := cmd.CombinedOutput(); err != nil {
