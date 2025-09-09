@@ -1,7 +1,7 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
-    "id": 0,
+    "id": 10000,
     "text": "to check",
     "line": 22,
     "character": 0,
@@ -10,7 +10,7 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/keeper/registry.go",
-    "id": 1,
+    "id": 10001,
     "text": "to check",
     "line": 66,
     "character": 0,

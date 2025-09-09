@@ -68,7 +68,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 	writtenFiles := make(map[string]bool)
 
 	scanner := bufio.NewScanner(file)
-	nextId := 0
+	nextId := 10000
 
 	for scanner.Scan() {
 		line := scanner.Text()
