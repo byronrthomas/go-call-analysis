@@ -5,6 +5,8 @@ import (
 	"go/token"
 	"go/types"
 	"log"
+	"maps"
+	"slices"
 	"strings"
 
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
@@ -12,6 +14,8 @@ import (
 )
 
 type SSAGraphData struct {
+	FileVersionNodes  []graphcommon.FileVersionNode
+	BelongsToEdges    []BelongsToEdge
 	ValueNodes        []ValueNode
 	InstructionNodes  []InstructionNode
 	OrderingEdges     []OrderingEdge
@@ -54,6 +58,10 @@ type ResolvedCallEdge struct {
 }
 
 type ResultEdge struct {
+	graphcommon.EdgeCommon
+}
+
+type BelongsToEdge struct {
 	graphcommon.EdgeCommon
 }
 
@@ -106,11 +114,18 @@ func (e *ResolvedCallEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *BelongsToEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Belongs_To"
+	return edgeCommonMap
+}
+
 type GraphVisitor struct {
 	BaseSSAVisitor
 	SSASimplificationResult *SSASimplificationResult
 	fileSet                 *token.FileSet
 	gitRevisionCache        *GitRevisionCache
+	fileVersionNodes        map[string]graphcommon.FileVersionNode
 	instructionNodes        []InstructionNode
 	orderingEdges           []OrderingEdge
 	controlFlowEdges        []ControlFlowEdge
@@ -118,6 +133,7 @@ type GraphVisitor struct {
 	resultEdges             []ResultEdge
 	resolvedCallEdges       []ResolvedCallEdge
 	valueNodes              []ValueNode
+	belongsToEdges          []BelongsToEdge
 	functionEntries         map[string]bool
 }
 
@@ -130,9 +146,21 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		log.Printf("INFO: Skipping function %s because it is marked as unreachable", funcId)
 		return
 	}
+	if _, ok := v.fileVersionNodes[pos.Filename]; !ok {
+		v.fileVersionNodes[pos.Filename] = graphcommon.FileVersionNode{
+			Id:              pos.Filename,
+			LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
+		}
+	}
 	if _, ok := v.functionEntries[funcId]; !ok {
 		addFunctionEntryNode(v, funcId, f, pkg, pos)
 	}
+	v.belongsToEdges = append(v.belongsToEdges, BelongsToEdge{
+		EdgeCommon: graphcommon.EdgeCommon{
+			FromID: funcId,
+			ToID:   pos.Filename,
+		},
+	})
 	v.functionEntries[funcId] = true
 	// Put an end-then node from the function entry to the first instruction
 
@@ -158,10 +186,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					Name:    instr.String(),
 					Package: pkg.Pkg.Path(),
 					PositionInfo: graphcommon.PositionInfo{
-						File:            instrPosition.Filename,
-						LastGitRevision: v.gitRevisionCache.GetFileRevision(instrPosition.Filename),
-						Line:            instrPosition.Line,
-						Column:          instrPosition.Column,
+						Line:   instrPosition.Line,
+						Column: instrPosition.Column,
 					},
 				},
 				InstructionType: instrTypeAsString(instr),
@@ -245,10 +271,8 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 			Name:    f.Name(),
 			Package: pkg.Pkg.Path(),
 			PositionInfo: graphcommon.PositionInfo{
-				File:            pos.Filename,
-				LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
-				Line:            pos.Line,
-				Column:          pos.Column,
+				Line:   pos.Line,
+				Column: pos.Column,
 			},
 		},
 		InstructionType: "function-entry",
@@ -278,11 +302,13 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		fileSet:                 fileSet,
 		gitRevisionCache:        NewGitRevisionCache(projectPath),
 		functionEntries:         make(map[string]bool),
+		fileVersionNodes:        make(map[string]graphcommon.FileVersionNode),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(simplificationResult.SSAProgram, visitor)
 
 	return SSAGraphData{
+		FileVersionNodes:  slices.Collect(maps.Values(visitor.fileVersionNodes)),
 		ValueNodes:        visitor.valueNodes,
 		InstructionNodes:  visitor.instructionNodes,
 		OrderingEdges:     visitor.orderingEdges,
@@ -290,6 +316,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		ControlFlowEdges:  visitor.controlFlowEdges,
 		ResultEdges:       visitor.resultEdges,
 		ResolvedCallEdges: visitor.resolvedCallEdges,
+		BelongsToEdges:    visitor.belongsToEdges,
 	}
 }
 
@@ -326,10 +353,8 @@ func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Pack
 			Name:    v.Name(),
 			Package: pkg.Pkg.Path(),
 			PositionInfo: graphcommon.PositionInfo{
-				File:            valuePosition.Filename,
-				LastGitRevision: gitCache.GetFileRevision(valuePosition.Filename),
-				Line:            valuePosition.Line,
-				Column:          valuePosition.Column,
+				Line:   valuePosition.Line,
+				Column: valuePosition.Column,
 			},
 		},
 		ValueType:   valueTypeAsString(v),

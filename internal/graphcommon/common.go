@@ -1,14 +1,19 @@
 package graphcommon
 
+import "path/filepath"
+
 type Mappable interface {
 	ToMap() map[string]any
 }
 
-type PositionInfo struct {
-	File            string
+type FileVersionNode struct {
+	Id              string
 	LastGitRevision string
-	Line            int
-	Column          int
+}
+
+type PositionInfo struct {
+	Line   int
+	Column int
 }
 
 type NodeCommon struct {
@@ -18,15 +23,22 @@ type NodeCommon struct {
 	PositionInfo PositionInfo
 }
 
+func (node *FileVersionNode) ToMap() map[string]any {
+	return map[string]any{
+		"id":                node.Id,
+		"name":              filepath.Base(node.Id),
+		"last_git_revision": node.LastGitRevision,
+		"label":             "FileVersion",
+	}
+}
+
 func NodeCommonAsMap(nodeCommon NodeCommon) map[string]any {
 	return map[string]any{
-		"id":                nodeCommon.ID,
-		"name":              nodeCommon.Name,
-		"package":           nodeCommon.Package,
-		"file":              nodeCommon.PositionInfo.File,
-		"last_git_revision": nodeCommon.PositionInfo.LastGitRevision,
-		"line":              nodeCommon.PositionInfo.Line,
-		"column":            nodeCommon.PositionInfo.Column,
+		"id":      nodeCommon.ID,
+		"name":    nodeCommon.Name,
+		"package": nodeCommon.Package,
+		"line":    nodeCommon.PositionInfo.Line,
+		"column":  nodeCommon.PositionInfo.Column,
 	}
 }
 

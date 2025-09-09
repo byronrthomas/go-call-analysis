@@ -240,6 +240,13 @@ func ExportCallGraphToCSV(nodes []FunctionNode, edges []CallEdge, outputPath str
 func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	dataMap := make(map[string][]graphcommon.Mappable)
 
+	// Convert file revision nodes
+	fileVersionNodeMappables := make([]graphcommon.Mappable, len(ssaData.FileVersionNodes))
+	for i := range ssaData.FileVersionNodes {
+		fileVersionNodeMappables[i] = &ssaData.FileVersionNodes[i]
+	}
+	dataMap["file_version_nodes"] = fileVersionNodeMappables
+
 	// Convert value nodes to Mappable interface
 	valueNodeMappables := make([]graphcommon.Mappable, len(ssaData.ValueNodes))
 	for i := range ssaData.ValueNodes {
@@ -288,6 +295,13 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 		resolvedCallEdgeMappables[i] = &ssaData.ResolvedCallEdges[i]
 	}
 	dataMap["resolved_call_edges"] = resolvedCallEdgeMappables
+
+	// Convert belongs to edges
+	belongsToEdgeMappables := make([]graphcommon.Mappable, len(ssaData.BelongsToEdges))
+	for i := range ssaData.BelongsToEdges {
+		belongsToEdgeMappables[i] = &ssaData.BelongsToEdges[i]
+	}
+	dataMap["belongs_to_edges"] = belongsToEdgeMappables
 
 	return ExportToCSV(dataMap, outputPath)
 }

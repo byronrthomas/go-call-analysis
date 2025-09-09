@@ -119,6 +119,8 @@ func BuildSSAProgram(config *AnalysisConfig) *ssa.Program {
 // FunctionNode represents a function in the call graph
 type FunctionNode struct {
 	graphcommon.NodeCommon
+	File            string
+	LastGitRevision string
 }
 
 func (n *FunctionNode) ToMap() map[string]any {
@@ -130,15 +132,17 @@ func (n *FunctionNode) ToMap() map[string]any {
 // CallEdge represents a call relationship between functions
 type CallEdge struct {
 	graphcommon.EdgeCommon
-	EdgeText string
-	CallSite graphcommon.PositionInfo
+	EdgeText        string
+	CallSite        graphcommon.PositionInfo
+	File            string
+	LastGitRevision string
 }
 
 func (e *CallEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "CALLS"
-	edgeCommonMap["call_site_file"] = e.CallSite.File
-	edgeCommonMap["call_site_last_git_revision"] = e.CallSite.LastGitRevision
+	edgeCommonMap["call_site_file"] = e.File
+	edgeCommonMap["call_site_last_git_revision"] = e.LastGitRevision
 	edgeCommonMap["call_site_line"] = e.CallSite.Line
 	edgeCommonMap["call_site_column"] = e.CallSite.Column
 	edgeCommonMap["call_site_text"] = e.EdgeText
@@ -179,12 +183,13 @@ func ExtractCallGraphData(result *CallGraphResult, projectPath string) ([]Functi
 				Name:    node.Func.Name(),
 				Package: packageName,
 				PositionInfo: graphcommon.PositionInfo{
-					File:            fileName,
-					LastGitRevision: gitRevisionCache.GetFileRevision(fileName),
-					Line:            sourceLine,
-					Column:          sourceColumn,
+					Line:   sourceLine,
+					Column: sourceColumn,
 				},
-			}})
+			},
+			File:            fileName,
+			LastGitRevision: gitRevisionCache.GetFileRevision(fileName),
+		})
 
 		// Extract edge data
 		for _, edge := range node.Out {
@@ -207,12 +212,12 @@ func ExtractCallGraphData(result *CallGraphResult, projectPath string) ([]Functi
 					FromID: edge.Caller.Func.String(),
 					ToID:   edge.Callee.Func.String(),
 				},
-				EdgeText: edgeText,
+				EdgeText:        edgeText,
+				File:            pos.Filename,
+				LastGitRevision: gitRevisionCache.GetFileRevision(pos.Filename),
 				CallSite: graphcommon.PositionInfo{
-					File:            pos.Filename,
-					LastGitRevision: gitRevisionCache.GetFileRevision(pos.Filename),
-					Line:            pos.Line,
-					Column:          pos.Column,
+					Line:   pos.Line,
+					Column: pos.Column,
 				},
 			})
 		}
