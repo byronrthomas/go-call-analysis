@@ -6,6 +6,7 @@
     "line": 228,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_liquidations.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
   }
 ]

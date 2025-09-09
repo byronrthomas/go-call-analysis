@@ -6,6 +6,7 @@
     "line": 58,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/general_msg_server.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
   }
 ]

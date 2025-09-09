@@ -6,7 +6,8 @@
     "line": 67,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
@@ -15,7 +16,8 @@
     "line": 124,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
@@ -24,7 +26,8 @@
     "line": 299,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
@@ -33,6 +36,7 @@
     "line": 451,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
   }
 ]

@@ -6,7 +6,8 @@
     "line": 284,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
@@ -15,7 +16,8 @@
     "line": 336,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
@@ -24,6 +26,7 @@
     "line": 349,
     "character": 0,
     "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
   }
 ]

@@ -21,13 +21,14 @@ type NodeData struct {
 }
 
 type OutputEntry struct {
-	Filename     string `json:"filename"`
-	Id           int    `json:"id"`
-	Text         string `json:"text"`
-	Line         int    `json:"line"`
-	Character    int    `json:"character"`
-	RelativePath string `json:"relativePath"`
-	Priority     string `json:"priority"`
+	Filename         string `json:"filename"`
+	Id               int    `json:"id"`
+	Text             string `json:"text"`
+	Line             int    `json:"line"`
+	Character        int    `json:"character"`
+	RelativePath     string `json:"relativePath"`
+	Priority         string `json:"priority"`
+	AnnotationCommit string `json:"annotationCommit"`
 }
 
 func main() {
@@ -98,6 +99,13 @@ func processJSONL(inputFile, relativeRoot, outputFolder, annotationText string) 
 			continue
 		}
 
+		// Extract the revision info from the nested structure
+		fileRevision, err := extractFileRevision(jsonData)
+		if err != nil {
+			log.Printf("Warning: Failed to extract file revision from line %d: %v", nextId, err)
+			continue
+		}
+
 		// Strip the relative root from the filename
 		if !strings.HasPrefix(filename, relativeRoot) {
 			log.Printf("Warning: File %s does not start with root %s, skipping", filename, relativeRoot)
@@ -112,13 +120,14 @@ func processJSONL(inputFile, relativeRoot, outputFolder, annotationText string) 
 
 		// Create the output entry
 		outputEntry := OutputEntry{
-			Filename:     filename,
-			Id:           nextId,
-			Line:         lineNumber,
-			Text:         annotationText,
-			Priority:     "P0",
-			Character:    0,
-			RelativePath: relativePath,
+			Filename:         filename,
+			Id:               nextId,
+			Line:             lineNumber,
+			Text:             annotationText,
+			AnnotationCommit: fileRevision,
+			Priority:         "P0",
+			Character:        0,
+			RelativePath:     relativePath,
 		}
 
 		// Write to output file
@@ -164,6 +173,21 @@ func extractLine(jsonData map[string]interface{}) (int, error) {
 	}
 
 	return int(line), nil
+}
+
+func extractFileRevision(jsonData map[string]interface{}) (string, error) {
+
+	properties, err := extractProperties(jsonData)
+	if err != nil {
+		return "", err
+	}
+
+	fileRevision, ok := properties["last_file_revision"].(string)
+	if !ok {
+		return "", fmt.Errorf("missing or invalid 'last_file_revision' field")
+	}
+
+	return fileRevision, nil
 }
 
 func extractProperties(jsonData map[string]interface{}) (map[string]interface{}, error) {

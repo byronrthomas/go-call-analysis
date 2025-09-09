@@ -6,7 +6,8 @@
     "line": 47,
     "character": 0,
     "relativePath": "injective-chain/modules/wasmx/types/msgs.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/wasmx/types/msgs.go",
@@ -15,6 +16,7 @@
     "line": 224,
     "character": 0,
     "relativePath": "injective-chain/modules/wasmx/types/msgs.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
   }
 ]

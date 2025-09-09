@@ -6,7 +6,8 @@
     "line": 69,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_market.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
@@ -15,6 +16,7 @@
     "line": 776,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_market.go",
-    "priority": "P0"
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
   }
 ]
