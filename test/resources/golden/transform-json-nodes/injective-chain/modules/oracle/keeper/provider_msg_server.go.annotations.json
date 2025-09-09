@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_msg_server.go",
     "id": 31,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1713977,
@@ -23,6 +24,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/oracle/keeper/provider_msg_server.go",
+    "priority": "P0"
   }
 ]

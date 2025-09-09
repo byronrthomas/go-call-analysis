@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
     "id": 27,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1643423,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
     "id": 28,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1643488,
@@ -49,11 +54,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/keeper/reward_pool.go",
     "id": 29,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1643509,
@@ -75,6 +84,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/ocr/keeper/reward_pool.go",
+    "priority": "P0"
   }
 ]

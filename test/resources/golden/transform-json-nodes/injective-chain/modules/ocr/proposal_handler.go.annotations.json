@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
     "id": 2,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1550811,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/ocr/proposal_handler.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/ocr/proposal_handler.go",
     "id": 3,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1551044,
@@ -49,6 +54,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/ocr/proposal_handler.go",
+    "priority": "P0"
   }
 ]

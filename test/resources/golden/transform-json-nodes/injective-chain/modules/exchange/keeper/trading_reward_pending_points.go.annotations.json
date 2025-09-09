@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "id": 53,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1941477,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
     "id": 54,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1941504,
@@ -49,6 +54,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/trading_reward_pending_points.go",
+    "priority": "P0"
   }
 ]

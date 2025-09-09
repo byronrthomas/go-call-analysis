@@ -21,9 +21,13 @@ type NodeData struct {
 }
 
 type OutputEntry struct {
-	Filename string      `json:"filename"`
-	Id       int         `json:"id"`
-	Line     interface{} `json:"line"`
+	Filename     string      `json:"filename"`
+	Id           int         `json:"id"`
+	Text         string      `json:"text"`
+	Line         interface{} `json:"line"`
+	Character    int         `json:"character"`
+	RelativePath string      `json:"relativePath"`
+	Priority     string      `json:"priority"`
 }
 
 func main() {
@@ -101,9 +105,13 @@ func processJSONL(inputFile, relativeRoot, outputFolder string) error {
 
 		// Create the output entry
 		outputEntry := OutputEntry{
-			Filename: filename,
-			Id:       nextId,
-			Line:     jsonData,
+			Filename:     filename,
+			Id:           nextId,
+			Line:         jsonData,
+			Text:         "to check",
+			Priority:     "P0",
+			Character:    0,
+			RelativePath: relativePath,
 		}
 
 		// Write to output file

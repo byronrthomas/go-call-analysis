@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 4,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1555850,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 5,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1555861,
@@ -49,11 +54,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 6,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1555970,
@@ -75,11 +84,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 7,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1556234,
@@ -101,11 +114,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 8,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1556329,
@@ -127,11 +144,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 9,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1556433,
@@ -153,11 +174,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 10,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1556517,
@@ -179,11 +204,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/msg_server.go",
     "id": 11,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1556601,
@@ -205,6 +234,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/msg_server.go",
+    "priority": "P0"
   }
 ]

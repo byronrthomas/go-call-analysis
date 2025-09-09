@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
     "id": 44,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1922849,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/deposit.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/deposit.go",
     "id": 45,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1922940,
@@ -49,6 +54,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/deposit.go",
+    "priority": "P0"
   }
 ]

@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/general_msg_server.go",
     "id": 63,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1952030,
@@ -23,6 +24,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/general_msg_server.go",
+    "priority": "P0"
   }
 ]

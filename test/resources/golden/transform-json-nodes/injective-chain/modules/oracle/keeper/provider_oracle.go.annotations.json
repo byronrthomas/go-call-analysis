@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 34,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1716798,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 35,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1716833,
@@ -49,11 +54,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/oracle/keeper/provider_oracle.go",
     "id": 36,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1716903,
@@ -75,6 +84,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/oracle/keeper/provider_oracle.go",
+    "priority": "P0"
   }
 ]

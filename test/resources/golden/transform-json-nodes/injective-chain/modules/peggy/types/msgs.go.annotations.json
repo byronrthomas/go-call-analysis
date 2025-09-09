@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
     "id": 38,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1885648,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
     "id": 39,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1888660,
@@ -49,11 +54,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
     "id": 40,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1908981,
@@ -75,11 +84,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
     "id": 41,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1909516,
@@ -101,6 +114,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
   }
 ]

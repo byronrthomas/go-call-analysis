@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
     "id": 12,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1557265,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/genesis.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/keeper/genesis.go",
     "id": 13,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1557271,
@@ -49,6 +54,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/keeper/genesis.go",
+    "priority": "P0"
   }
 ]

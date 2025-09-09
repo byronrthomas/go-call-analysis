@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 59,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1945944,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 60,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1946108,
@@ -49,11 +54,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 61,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1946474,
@@ -75,11 +84,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/derivative_msg_server.go",
     "id": 62,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1946746,
@@ -101,6 +114,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/derivative_msg_server.go",
+    "priority": "P0"
   }
 ]

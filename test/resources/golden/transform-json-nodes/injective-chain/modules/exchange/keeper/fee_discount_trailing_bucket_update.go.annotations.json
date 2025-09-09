@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "id": 49,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1928886,
@@ -23,11 +24,15 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
+    "priority": "P0"
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
     "id": 50,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1928902,
@@ -49,6 +54,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
+    "priority": "P0"
   }
 ]

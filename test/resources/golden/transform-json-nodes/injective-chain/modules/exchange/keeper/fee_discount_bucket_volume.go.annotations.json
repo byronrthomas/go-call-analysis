@@ -2,6 +2,7 @@
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_bucket_volume.go",
     "id": 47,
+    "text": "to check",
     "line": {
       "verr": {
         "id": 1928308,
@@ -23,6 +24,9 @@
         },
         "type": "node"
       }
-    }
+    },
+    "character": 0,
+    "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_bucket_volume.go",
+    "priority": "P0"
   }
 ]
