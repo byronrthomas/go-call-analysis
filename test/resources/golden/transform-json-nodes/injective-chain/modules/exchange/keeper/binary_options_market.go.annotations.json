@@ -1,8 +1,8 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
-    "id": 10042,
-    "text": "to check",
+    "id": 10046,
+    "text": "Auto-generated annotation",
     "line": 69,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_market.go",
@@ -10,9 +10,9 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/binary_options_market.go",
-    "id": 10043,
-    "text": "to check",
-    "line": 777,
+    "id": 10047,
+    "text": "Auto-generated annotation",
+    "line": 776,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/binary_options_market.go",
     "priority": "P0"

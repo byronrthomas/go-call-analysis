@@ -1,8 +1,8 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
-    "id": 10067,
-    "text": "to check",
+    "id": 10041,
+    "text": "Auto-generated annotation",
     "line": 44,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/spot_msg_server.go",
@@ -10,8 +10,8 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/spot_msg_server.go",
-    "id": 10068,
-    "text": "to check",
+    "id": 10042,
+    "text": "Auto-generated annotation",
     "line": 175,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/spot_msg_server.go",

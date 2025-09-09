@@ -1,8 +1,8 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
-    "id": 10049,
-    "text": "to check",
+    "id": 10053,
+    "text": "Auto-generated annotation",
     "line": 38,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
@@ -10,8 +10,8 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",
-    "id": 10050,
-    "text": "to check",
+    "id": 10054,
+    "text": "Auto-generated annotation",
     "line": 54,
     "character": 0,
     "relativePath": "injective-chain/modules/exchange/keeper/fee_discount_trailing_bucket_update.go",

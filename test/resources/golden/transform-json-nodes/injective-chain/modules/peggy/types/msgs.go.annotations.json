@@ -1,17 +1,8 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
-    "id": 10038,
-    "text": "to check",
-    "line": 466,
-    "character": 0,
-    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
-    "priority": "P0"
-  },
-  {
-    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
-    "id": 10039,
-    "text": "to check",
+    "id": 10002,
+    "text": "Auto-generated annotation",
     "line": 534,
     "character": 0,
     "relativePath": "injective-chain/modules/peggy/types/msgs.go",
@@ -19,8 +10,35 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
-    "id": 10040,
-    "text": "to check",
+    "id": 10003,
+    "text": "Auto-generated annotation",
+    "line": 337,
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "id": 10004,
+    "text": "Auto-generated annotation",
+    "line": 678,
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "id": 10005,
+    "text": "Auto-generated annotation",
+    "line": 52,
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "id": 10006,
+    "text": "Auto-generated annotation",
     "line": 409,
     "character": 0,
     "relativePath": "injective-chain/modules/peggy/types/msgs.go",
@@ -28,9 +46,18 @@
   },
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
-    "id": 10041,
-    "text": "to check",
-    "line": 337,
+    "id": 10007,
+    "text": "Auto-generated annotation",
+    "line": 649,
+    "character": 0,
+    "relativePath": "injective-chain/modules/peggy/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/types/msgs.go",
+    "id": 10008,
+    "text": "Auto-generated annotation",
+    "line": 466,
     "character": 0,
     "relativePath": "injective-chain/modules/peggy/types/msgs.go",
     "priority": "P0"

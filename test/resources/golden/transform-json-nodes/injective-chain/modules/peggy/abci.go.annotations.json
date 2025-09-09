@@ -1,9 +1,9 @@
 [
   {
     "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/peggy/abci.go",
-    "id": 10015,
-    "text": "to check",
-    "line": 364,
+    "id": 10018,
+    "text": "Auto-generated annotation",
+    "line": 354,
     "character": 0,
     "relativePath": "injective-chain/modules/peggy/abci.go",
     "priority": "P0"

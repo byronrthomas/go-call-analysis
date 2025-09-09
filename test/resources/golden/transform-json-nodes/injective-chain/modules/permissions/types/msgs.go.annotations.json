@@ -1,0 +1,38 @@
+[
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/permissions/types/msgs.go",
+    "id": 10079,
+    "text": "Auto-generated annotation",
+    "line": 135,
+    "character": 0,
+    "relativePath": "injective-chain/modules/permissions/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/permissions/types/msgs.go",
+    "id": 10080,
+    "text": "Auto-generated annotation",
+    "line": 317,
+    "character": 0,
+    "relativePath": "injective-chain/modules/permissions/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/permissions/types/msgs.go",
+    "id": 10081,
+    "text": "Auto-generated annotation",
+    "line": 50,
+    "character": 0,
+    "relativePath": "injective-chain/modules/permissions/types/msgs.go",
+    "priority": "P0"
+  },
+  {
+    "filename": "/Users/byron/repos/third-party/injective/injective-core/injective-chain/modules/permissions/types/msgs.go",
+    "id": 10082,
+    "text": "Auto-generated annotation",
+    "line": 91,
+    "character": 0,
+    "relativePath": "injective-chain/modules/permissions/types/msgs.go",
+    "priority": "P0"
+  }
+]
