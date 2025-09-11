@@ -15,6 +15,63 @@ const (
 	defaultBatchSize = 10000
 )
 
+// GenerateNodeQuery dynamically generates a Neo4j CREATE query for a node
+// based on the properties in the provided map.
+// The map must contain "label" and "id" keys, otherwise the function will return an error.
+func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
+	// Validate required fields
+	label, hasLabel := nodeMap["label"]
+	if !hasLabel {
+		return "", fmt.Errorf("node map must contain 'label' key")
+	}
+
+	_, hasID := nodeMap["id"]
+	if !hasID {
+		return "", fmt.Errorf("node map must contain 'id' key")
+	}
+
+	// Convert label to string
+	labelStr, ok := label.(string)
+	if !ok {
+		return "", fmt.Errorf("label must be a string, got %T", label)
+	}
+
+	if labelStr == "" {
+		return "", fmt.Errorf("label cannot be empty")
+	}
+
+	// Build the property list dynamically
+	var properties []string
+	for key := range nodeMap {
+		if key != "label" { // Skip label as it's used for the node type
+			properties = append(properties, fmt.Sprintf("%s: node.%s", key, key))
+		}
+	}
+
+	// Construct the query
+	query := fmt.Sprintf("UNWIND $nodes AS node CREATE (n:%s {%s})",
+		labelStr,
+		joinProperties(properties))
+
+	return query, nil
+}
+
+// joinProperties joins property assignments with commas
+func joinProperties(properties []string) string {
+	if len(properties) == 0 {
+		return ""
+	}
+
+	result := ""
+	for i, prop := range properties {
+		if i > 0 {
+			result += ", "
+		}
+		result += prop
+	}
+	return result
+}
+
 // Neo4jConfig holds the connection configuration for Neo4j
 type Neo4jConfig struct {
 	URI      string // Full URI including protocol, host, port
