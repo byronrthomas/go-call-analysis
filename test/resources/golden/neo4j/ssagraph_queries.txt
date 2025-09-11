@@ -1,4 +1,4 @@
-Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, last_git_revision: node.last_git_revision})
+Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, last_git_revision: node.last_git_revision, name: node.name})
 Parameters:
 id	label	last_git_revision	name
 	FileVersion		.
@@ -8,7 +8,7 @@ id	label	last_git_revision	name
 Query: CREATE INDEX ON :FileVersion(id)
 
 
-Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, instruction_type: node.instruction_type, annotation: node.annotation})
+Query: UNWIND $nodes AS node CREATE (n:node.label {annotation: node.annotation, column: node.column, id: node.id, instruction_type: node.instruction_type, line: node.line, name: node.name, package: node.package})
 Parameters:
 annotation	column	id	instruction_type	label	line	name	package
 	0	errors.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
@@ -105,7 +105,7 @@ annotation	column	id	instruction_type	label	line	name	package
 Query: CREATE INDEX ON :Instruction(id)
 
 
-Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, value_type: node.value_type, type_name: node.type_name, is_error_type: node.is_error_type})
+Query: UNWIND $nodes AS node CREATE (n:node.label {column: node.column, id: node.id, is_error_type: node.is_error_type, line: node.line, name: node.name, package: node.package, type_name: node.type_name, value_type: node.value_type})
 Parameters:
 column	id	is_error_type	label	line	name	package	type_name	value_type
 0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	false	Value	0	init$guard	github.com/throwin5tone7/go-call-analysis/test-project	*bool	Global

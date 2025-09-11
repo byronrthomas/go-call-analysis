@@ -88,11 +88,25 @@ func (e *OrderingEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *OrderingEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "Instruction",
+	}
+}
+
 func (e *ControlFlowEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Control_Flow"
 	edgeCommonMap["condition"] = e.Condition
 	return edgeCommonMap
+}
+
+func (e *ControlFlowEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "Instruction",
+	}
 }
 
 func (e *OperandEdge) ToMap() map[string]any {
@@ -101,10 +115,24 @@ func (e *OperandEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *OperandEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "Value",
+	}
+}
+
 func (e *ResultEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Produces_Result"
 	return edgeCommonMap
+}
+
+func (e *ResultEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "Value",
+	}
 }
 
 func (e *ResolvedCallEdge) ToMap() map[string]any {
@@ -114,10 +142,24 @@ func (e *ResolvedCallEdge) ToMap() map[string]any {
 	return edgeCommonMap
 }
 
+func (e *ResolvedCallEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "Instruction",
+	}
+}
+
 func (e *BelongsToEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Belongs_To"
 	return edgeCommonMap
+}
+
+func (e *BelongsToEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Instruction",
+		ToLabel:   "FileVersion",
+	}
 }
 
 type GraphVisitor struct {

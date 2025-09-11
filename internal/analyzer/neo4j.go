@@ -52,8 +52,7 @@ func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
 
 	sort.Strings(properties)
 	// Construct the query
-	query := fmt.Sprintf("UNWIND $nodes AS node CREATE (n:%s {%s})",
-		labelStr,
+	query := fmt.Sprintf("UNWIND $nodes AS node CREATE (n:node.label {%s})",
 		strings.Join(properties, ", "))
 
 	return query, nil
@@ -315,18 +314,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.FileVersionNodes[i:end]
-			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, last_git_revision: node.last_git_revision})"
-
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, node := range batch {
 				mappableBatch[i] = &node
+			}
+
+			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate node query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"nodes": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
 			}
@@ -360,18 +362,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.InstructionNodes[i:end]
-			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, instruction_type: node.instruction_type, annotation: node.annotation})"
-
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, node := range batch {
 				mappableBatch[i] = &node
+			}
+
+			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate node query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"nodes": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
 			}
@@ -405,18 +410,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.ValueNodes[i:end]
-			query := "UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, value_type: node.value_type, type_name: node.type_name, is_error_type: node.is_error_type})"
-
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, node := range batch {
 				mappableBatch[i] = &node
+			}
+
+			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate node query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"nodes": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
 			}
@@ -450,22 +458,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.OrderingEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
@@ -492,22 +499,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.OperandEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Value {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
@@ -534,22 +540,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.ResultEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Value {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
@@ -576,22 +581,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.ControlFlowEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
-				CREATE (from)-[:edge.type {condition: edge.condition}]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
@@ -618,22 +622,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.ResolvedCallEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
-				CREATE (from)-[:edge.type {edge_cardinality: edge.edge_cardinality}]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
@@ -661,22 +664,21 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 			}
 
 			batch := graphData.BelongsToEdges[i:end]
-			query := `
-				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:FileVersion {id: edge.to_id})
-				CREATE (from)-[:edge.type]->(to)
-			`
-
+			types := batch[0].NodeTypes()
 			mappableBatch := make([]graphcommon.Mappable, len(batch))
 			for i, edge := range batch {
 				mappableBatch[i] = &edge
+			}
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
 			params := map[string]interface{}{
 				"edges": mapify(mappableBatch),
 			}
 
-			_, err := tx.Run(ctx, query, params)
+			_, err = tx.Run(ctx, query, params)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
 			}
