@@ -72,6 +72,67 @@ func joinProperties(properties []string) string {
 	return result
 }
 
+// GenerateEdgeQuery dynamically generates a Neo4j CREATE query for an edge
+// based on the properties in the provided map.
+// The map must contain "type", "from_id", "to_id", "from_label", and "to_label" keys.
+func GenerateEdgeQuery(edgeMap map[string]interface{}, fromLabel string, toLabel string) (string, error) {
+	// Validate required fields
+	requiredFields := []string{"type", "from_id", "to_id"}
+	for _, field := range requiredFields {
+		if _, exists := edgeMap[field]; !exists {
+			return "", fmt.Errorf("edge map must contain '%s' key", field)
+		}
+	}
+
+	// Extract and validate required string fields
+	edgeType, ok := edgeMap["type"].(string)
+	if !ok {
+		return "", fmt.Errorf("type must be a string, got %T", edgeMap["type"])
+	}
+	if edgeType == "" {
+		return "", fmt.Errorf("type cannot be empty")
+	}
+
+	if fromLabel == "" {
+		return "", fmt.Errorf("from_label cannot be empty")
+	}
+
+	if toLabel == "" {
+		return "", fmt.Errorf("to_label cannot be empty")
+	}
+
+	// Build edge properties (excluding the structural fields)
+	excludedFields := map[string]bool{
+		"type":    true,
+		"from_id": true,
+		"to_id":   true,
+	}
+
+	var edgeProperties []string
+	for key := range edgeMap {
+		if !excludedFields[key] {
+			edgeProperties = append(edgeProperties, fmt.Sprintf("%s: edge.%s", key, key))
+		}
+	}
+
+	// Build the relationship part
+	var relationshipPart string
+	if len(edgeProperties) > 0 {
+		relationshipPart = fmt.Sprintf("[:edge.type {%s}]", joinProperties(edgeProperties))
+	} else {
+		relationshipPart = "[:edge.type]"
+	}
+
+	// Construct the complete query
+	query := fmt.Sprintf(`
+				UNWIND $edges AS edge
+				MATCH (from:%s {id: edge.from_id}), (to:%s {id: edge.to_id})
+				CREATE (from)-%s->(to)
+			`, fromLabel, toLabel, relationshipPart)
+
+	return query, nil
+}
+
 // Neo4jConfig holds the connection configuration for Neo4j
 type Neo4jConfig struct {
 	URI      string // Full URI including protocol, host, port

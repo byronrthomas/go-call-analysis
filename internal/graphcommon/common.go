@@ -6,6 +6,16 @@ type Mappable interface {
 	ToMap() map[string]any
 }
 
+type NodeTypes struct {
+	FromLabel string
+	ToLabel   string
+}
+
+type EdgeMappable interface {
+	ToMap() map[string]any
+	NodeTypes() NodeTypes
+}
+
 type FileVersionNode struct {
 	Id              string
 	LastGitRevision string
