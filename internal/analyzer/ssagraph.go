@@ -59,6 +59,7 @@ type ResolvedCallEdge struct {
 
 type ResultEdge struct {
 	graphcommon.EdgeCommon
+	Index int
 }
 
 type BelongsToEdge struct {
@@ -125,6 +126,7 @@ func (e OperandEdge) NodeTypes() graphcommon.NodeTypes {
 func (e ResultEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Produces_Result"
+	edgeCommonMap["index"] = e.Index
 	return edgeCommonMap
 }
 
@@ -267,7 +269,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			}
 
 			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
-				for _, returnValue := range asAnnotatedCall.ReturnValues {
+				for returnValueIndex, returnValue := range asAnnotatedCall.ReturnValues {
 					_, returnValueId := ValueId(v.fileSet, returnValue, currentBlockId)
 					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache)
 					v.resultEdges = append(v.resultEdges, ResultEdge{
@@ -275,6 +277,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 							FromID: instrId,
 							ToID:   returnValueId,
 						},
+						Index: returnValueIndex,
 					})
 				}
 				for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
@@ -300,6 +303,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						FromID: instrId,
 						ToID:   vId,
 					},
+					Index: 0,
 				})
 			}
 		}
