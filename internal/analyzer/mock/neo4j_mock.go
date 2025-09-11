@@ -104,7 +104,15 @@ func extractParamMapValues(params map[string]any) []map[string]interface{} {
 	}
 	capturedParams := make([]map[string]interface{}, 0)
 	for _, v := range params {
-		capturedParams = append(capturedParams, v.(map[string]interface{}))
+		// The parameter value is an array of maps (e.g., "nodes": []map[string]any)
+		if mapArray, ok := v.([]map[string]any); ok {
+			for _, m := range mapArray {
+				capturedParams = append(capturedParams, m)
+			}
+		} else {
+			// Fallback for single map parameters
+			capturedParams = append(capturedParams, v.(map[string]interface{}))
+		}
 	}
 	return capturedParams
 }

@@ -13,6 +13,7 @@ import (
 
 	main "github.com/throwin5tone7/go-call-analysis/cmd/lib"
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer"
+	"github.com/throwin5tone7/go-call-analysis/internal/analyzer/mock"
 )
 
 func TestSSAGraphAnalysis(t *testing.T) {
@@ -303,4 +304,56 @@ func normalizeText(text string) string {
 
 	// Join back together
 	return strings.Join(lines, "\n")
+}
+
+func TestNeo4jSSAGraphExport(t *testing.T) {
+
+	// Setup mock mode
+	originalMockMode := analyzer.InMockMode
+	analyzer.InMockMode = true
+	defer func() {
+		analyzer.InMockMode = originalMockMode
+		analyzer.MockSession = nil
+	}()
+
+	// Create test data
+	projectPath := "../test-project"
+	outputPath := "../test-output/neo4j-ssagraph"
+	goldenPath := "resources/golden/neo4j"
+	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
+	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
+
+	// Clean up previous test output
+	if err := os.RemoveAll(outputPath); err != nil {
+		t.Fatalf("Failed to clean up test output directory: %v", err)
+	}
+
+	// Create output directory
+	if err := os.MkdirAll(outputPath, 0755); err != nil {
+		t.Fatalf("Failed to create output directory: %v", err)
+	}
+
+	err := main.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, true)
+	if err != nil {
+		t.Fatalf("Failed to run SSA graph analysis for Neo4j: %v", err)
+	}
+
+	// Capture the mock session results
+	if analyzer.MockSession == nil {
+		t.Fatalf("MockSession was not created")
+	}
+
+	var sb strings.Builder
+	mockSession := analyzer.MockSession.(*mock.MockSession)
+	mockSession.FormatCapturedQueries(&sb)
+
+	// Write captured queries to output file
+	outputFile := filepath.Join(outputPath, "captured_queries.txt")
+	if err := os.WriteFile(outputFile, []byte(sb.String()), 0644); err != nil {
+		t.Fatalf("Failed to write captured queries: %v", err)
+	}
+
+	// Compare with golden file
+	goldenFile := filepath.Join(goldenPath, "ssagraph_queries.txt")
+	compareTextFiles(t, goldenFile, outputFile, "ssagraph_queries.txt")
 }
