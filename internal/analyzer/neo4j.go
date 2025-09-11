@@ -297,401 +297,172 @@ func ExportSSAGraphToNeo4j(graphData SSAGraphData, config Neo4jConfig) error {
 	})
 }
 
+// importNodesInBatches is a generic helper function to import nodes of any type
+func importNodesInBatches[T graphcommon.Mappable](ctx context.Context, session neo4j.SessionWithContext, nodes *[]T, nodeTypeName string) error {
+	if len(*nodes) == 0 {
+		return nil
+	}
+
+	log.Printf("Starting node import of %d %s nodes...", len(*nodes), nodeTypeName)
+	startTime := time.Now()
+
+	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+		for i := 0; i < len(*nodes); i += defaultBatchSize {
+			batchStartTime := time.Now()
+			end := i + defaultBatchSize
+			if end > len(*nodes) {
+				end = len(*nodes)
+			}
+
+			mappableBatch := make([]graphcommon.Mappable, end-i)
+			for j := i; j < end; j++ {
+				mappableBatch[j-i] = (*nodes)[j]
+			}
+
+			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate node query: %v", err)
+			}
+
+			params := map[string]interface{}{
+				"nodes": mapify(mappableBatch),
+			}
+
+			_, err = tx.Run(ctx, query, params)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
+			}
+
+			batchDuration := time.Since(batchStartTime)
+			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(*nodes), float64(end)/float64(len(*nodes))*100, batchDuration)
+		}
+		return nil, nil
+	})
+	if err != nil {
+		return fmt.Errorf("failed to import %s nodes: %v", nodeTypeName, err)
+	}
+
+	log.Printf("%s node import completed in %v", nodeTypeName, time.Since(startTime))
+	return nil
+}
+
+// importEdgesInBatches is a generic helper function to import edges of any type
+func importEdgesInBatches[T graphcommon.EdgeMappable](ctx context.Context, session neo4j.SessionWithContext, edges *[]T, edgeTypeName string) error {
+	if len(*edges) == 0 {
+		return nil
+	}
+
+	log.Printf("Starting edge import of %d %s edges...", len(*edges), edgeTypeName)
+	startTime := time.Now()
+
+	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+		for i := 0; i < len(*edges); i += defaultBatchSize {
+			batchStartTime := time.Now()
+			end := i + defaultBatchSize
+			if end > len(*edges) {
+				end = len(*edges)
+			}
+
+			types := (*edges)[i].NodeTypes()
+			mappableBatch := make([]graphcommon.Mappable, end-i)
+			for j := i; j < end; j++ {
+				mappableBatch[j-i] = (*edges)[j]
+			}
+
+			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate edge query: %v", err)
+			}
+
+			params := map[string]interface{}{
+				"edges": mapify(mappableBatch),
+			}
+
+			_, err = tx.Run(ctx, query, params)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
+			}
+
+			batchDuration := time.Since(batchStartTime)
+			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(*edges), float64(end)/float64(len(*edges))*100, batchDuration)
+		}
+		return nil, nil
+	})
+	if err != nil {
+		return fmt.Errorf("failed to import %s edges: %v", edgeTypeName, err)
+	}
+
+	log.Printf("%s edge import completed in %v", edgeTypeName, time.Since(startTime))
+	return nil
+}
+
+// createNodeIndex creates an index for the specified node type
+func createNodeIndex(ctx context.Context, session neo4j.SessionWithContext, nodeType string) error {
+	log.Printf("Creating index on %s node IDs...", nodeType)
+	_, err := session.Run(ctx, fmt.Sprintf("CREATE INDEX ON :%s(id)", nodeType), nil)
+	if err != nil {
+		return fmt.Errorf("failed to create index: %v", err)
+	}
+	return nil
+}
+
 func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, graphData SSAGraphData) error {
 	// Start timing
 	startTime := time.Now()
 
 	// Import file version nodes
-	log.Printf("Starting node import of %d file version nodes...", len(graphData.FileVersionNodes))
-	fileRevisionStartTime := time.Now()
-	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.FileVersionNodes); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-
-			if end > len(graphData.FileVersionNodes) {
-				end = len(graphData.FileVersionNodes)
-			}
-
-			batch := graphData.FileVersionNodes[i:end]
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, node := range batch {
-				mappableBatch[i] = &node
-			}
-
-			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate node query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"nodes": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.FileVersionNodes), float64(end)/float64(len(graphData.FileVersionNodes))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import file version nodes: %v", err)
+	if err := importNodesInBatches(ctx, session, &graphData.FileVersionNodes, "file version"); err != nil {
+		return err
 	}
-	log.Printf("file version node import completed in %v", time.Since(fileRevisionStartTime))
-
-	// Create index
-	log.Println("Creating index on FileVersion node IDs...")
-	_, err = session.Run(ctx, "CREATE INDEX ON :FileVersion(id)", nil)
-	if err != nil {
-		return fmt.Errorf("failed to create index: %v", err)
+	if err := createNodeIndex(ctx, session, "FileVersion"); err != nil {
+		return err
 	}
 
 	// Import instruction nodes
-	log.Printf("Starting node import of %d instruction nodes...", len(graphData.InstructionNodes))
-	nodeStartTime := time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.InstructionNodes); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.InstructionNodes) {
-				end = len(graphData.InstructionNodes)
-			}
-
-			batch := graphData.InstructionNodes[i:end]
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, node := range batch {
-				mappableBatch[i] = &node
-			}
-
-			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate node query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"nodes": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.InstructionNodes), float64(end)/float64(len(graphData.InstructionNodes))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import instruction nodes: %v", err)
+	if err := importNodesInBatches(ctx, session, &graphData.InstructionNodes, "instruction"); err != nil {
+		return err
 	}
-	log.Printf("Instruction node import completed in %v", time.Since(nodeStartTime))
-
-	// Create index
-	log.Println("Creating index on Instruction node IDs...")
-	_, err = session.Run(ctx, "CREATE INDEX ON :Instruction(id)", nil)
-	if err != nil {
-		return fmt.Errorf("failed to create index: %v", err)
+	if err := createNodeIndex(ctx, session, "Instruction"); err != nil {
+		return err
 	}
 
 	// Import value nodes
-	log.Printf("Starting node import of %d value nodes...", len(graphData.ValueNodes))
-	valueStartTime := time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.ValueNodes); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.ValueNodes) {
-				end = len(graphData.ValueNodes)
-			}
-
-			batch := graphData.ValueNodes[i:end]
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, node := range batch {
-				mappableBatch[i] = &node
-			}
-
-			query, err := GenerateNodeQuery(mappableBatch[0].ToMap())
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate node query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"nodes": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create nodes batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed nodes %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ValueNodes), float64(end)/float64(len(graphData.ValueNodes))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import value nodes: %v", err)
+	if err := importNodesInBatches(ctx, session, &graphData.ValueNodes, "value"); err != nil {
+		return err
 	}
-	log.Printf("Value node import completed in %v", time.Since(valueStartTime))
-
-	// Create index
-	log.Println("Creating index on Value node IDs...")
-	_, err = session.Run(ctx, "CREATE INDEX ON :Value(id)", nil)
-	if err != nil {
-		return fmt.Errorf("failed to create index: %v", err)
+	if err := createNodeIndex(ctx, session, "Value"); err != nil {
+		return err
 	}
 
 	// Import ordering edges
-	log.Printf("Starting edge import of %d ordering edges...", len(graphData.OrderingEdges))
-	edgeStartTime := time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.OrderingEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.OrderingEdges) {
-				end = len(graphData.OrderingEdges)
-			}
-
-			batch := graphData.OrderingEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.OrderingEdges), float64(end)/float64(len(graphData.OrderingEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import ordering edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.OrderingEdges, "ordering"); err != nil {
+		return err
 	}
-	log.Printf("Ordering edge import completed in %v", time.Since(edgeStartTime))
 
 	// Import operand edges
-	log.Printf("Starting edge import of %d operand edges...", len(graphData.OperandEdges))
-	edgeStartTime = time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.OperandEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.OperandEdges) {
-				end = len(graphData.OperandEdges)
-			}
-
-			batch := graphData.OperandEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.OperandEdges), float64(end)/float64(len(graphData.OperandEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import operand edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.OperandEdges, "operand"); err != nil {
+		return err
 	}
-	log.Printf("Operand edge import completed in %v", time.Since(edgeStartTime))
 
 	// Import result edges
-	log.Printf("Starting edge import of %d result edges...", len(graphData.ResultEdges))
-	edgeStartTime = time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.ResultEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.ResultEdges) {
-				end = len(graphData.ResultEdges)
-			}
-
-			batch := graphData.ResultEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ResultEdges), float64(end)/float64(len(graphData.ResultEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import result edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.ResultEdges, "result"); err != nil {
+		return err
 	}
-	log.Printf("Result edge import completed in %v", time.Since(edgeStartTime))
 
 	// Import control flow edges
-	log.Printf("Starting edge import of %d control flow edges...", len(graphData.ControlFlowEdges))
-	edgeStartTime = time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.ControlFlowEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.ControlFlowEdges) {
-				end = len(graphData.ControlFlowEdges)
-			}
-
-			batch := graphData.ControlFlowEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ControlFlowEdges), float64(end)/float64(len(graphData.ControlFlowEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import control flow edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.ControlFlowEdges, "control flow"); err != nil {
+		return err
 	}
-	log.Printf("Control flow edge import completed in %v", time.Since(edgeStartTime))
 
 	// Import resolved call edges
-	log.Printf("Starting edge import of %d resolved call edges...", len(graphData.ResolvedCallEdges))
-	edgeStartTime = time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.ResolvedCallEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-			if end > len(graphData.ResolvedCallEdges) {
-				end = len(graphData.ResolvedCallEdges)
-			}
-
-			batch := graphData.ResolvedCallEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.ResolvedCallEdges), float64(end)/float64(len(graphData.ResolvedCallEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import resolved call edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.ResolvedCallEdges, "resolved call"); err != nil {
+		return err
 	}
-	log.Printf("Resolved call edge import completed in %v", time.Since(edgeStartTime))
 
 	// Import belongs to edges
-	log.Printf("Starting edge import of %d belongs to edges...", len(graphData.BelongsToEdges))
-	edgeStartTime = time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		for i := 0; i < len(graphData.BelongsToEdges); i += defaultBatchSize {
-			batchStartTime := time.Now()
-			end := i + defaultBatchSize
-
-			if end > len(graphData.BelongsToEdges) {
-				end = len(graphData.BelongsToEdges)
-			}
-
-			batch := graphData.BelongsToEdges[i:end]
-			types := batch[0].NodeTypes()
-			mappableBatch := make([]graphcommon.Mappable, len(batch))
-			for i, edge := range batch {
-				mappableBatch[i] = &edge
-			}
-			query, err := GenerateEdgeQuery(mappableBatch[0].ToMap(), types.FromLabel, types.ToLabel)
-			if err != nil {
-				return nil, fmt.Errorf("failed to generate edge query: %v", err)
-			}
-
-			params := map[string]interface{}{
-				"edges": mapify(mappableBatch),
-			}
-
-			_, err = tx.Run(ctx, query, params)
-			if err != nil {
-				return nil, fmt.Errorf("failed to create edges batch %d-%d: %v", i, end, err)
-			}
-
-			batchDuration := time.Since(batchStartTime)
-			log.Printf("Processed edges %d-%d/%d (%.2f%%) in %v", i, end, len(graphData.BelongsToEdges), float64(end)/float64(len(graphData.BelongsToEdges))*100, batchDuration)
-		}
-		return nil, nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to import belongs to edges: %v", err)
+	if err := importEdgesInBatches(ctx, session, &graphData.BelongsToEdges, "belongs to"); err != nil {
+		return err
 	}
-	log.Printf("Belongs to edge import completed in %v", time.Since(edgeStartTime))
 
 	log.Printf("Total import completed in %v", time.Since(startTime))
 	return nil

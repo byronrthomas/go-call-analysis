@@ -33,7 +33,7 @@ type NodeCommon struct {
 	PositionInfo PositionInfo
 }
 
-func (node *FileVersionNode) ToMap() map[string]any {
+func (node FileVersionNode) ToMap() map[string]any {
 	return map[string]any{
 		"id":                node.Id,
 		"name":              filepath.Base(node.Id),

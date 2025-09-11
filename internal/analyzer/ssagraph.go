@@ -65,7 +65,7 @@ type BelongsToEdge struct {
 	graphcommon.EdgeCommon
 }
 
-func (n *ValueNode) ToMap() map[string]any {
+func (n ValueNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Value"
 	nodeCommonMap["value_type"] = n.ValueType
@@ -74,7 +74,7 @@ func (n *ValueNode) ToMap() map[string]any {
 	return nodeCommonMap
 }
 
-func (n *InstructionNode) ToMap() map[string]any {
+func (n InstructionNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Instruction"
 	nodeCommonMap["instruction_type"] = n.InstructionType
@@ -82,80 +82,80 @@ func (n *InstructionNode) ToMap() map[string]any {
 	return nodeCommonMap
 }
 
-func (e *OrderingEdge) ToMap() map[string]any {
+func (e OrderingEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "And_Then"
 	return edgeCommonMap
 }
 
-func (e *OrderingEdge) NodeTypes() graphcommon.NodeTypes {
+func (e OrderingEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "Instruction",
 	}
 }
 
-func (e *ControlFlowEdge) ToMap() map[string]any {
+func (e ControlFlowEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Control_Flow"
 	edgeCommonMap["condition"] = e.Condition
 	return edgeCommonMap
 }
 
-func (e *ControlFlowEdge) NodeTypes() graphcommon.NodeTypes {
+func (e ControlFlowEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "Instruction",
 	}
 }
 
-func (e *OperandEdge) ToMap() map[string]any {
+func (e OperandEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Uses_Operand"
 	return edgeCommonMap
 }
 
-func (e *OperandEdge) NodeTypes() graphcommon.NodeTypes {
+func (e OperandEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "Value",
 	}
 }
 
-func (e *ResultEdge) ToMap() map[string]any {
+func (e ResultEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Produces_Result"
 	return edgeCommonMap
 }
 
-func (e *ResultEdge) NodeTypes() graphcommon.NodeTypes {
+func (e ResultEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "Value",
 	}
 }
 
-func (e *ResolvedCallEdge) ToMap() map[string]any {
+func (e ResolvedCallEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Resolved_Call"
 	edgeCommonMap["edge_cardinality"] = e.EdgeCardinality
 	return edgeCommonMap
 }
 
-func (e *ResolvedCallEdge) NodeTypes() graphcommon.NodeTypes {
+func (e ResolvedCallEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "Instruction",
 	}
 }
 
-func (e *BelongsToEdge) ToMap() map[string]any {
+func (e BelongsToEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Belongs_To"
 	return edgeCommonMap
 }
 
-func (e *BelongsToEdge) NodeTypes() graphcommon.NodeTypes {
+func (e BelongsToEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
 		ToLabel:   "FileVersion",
