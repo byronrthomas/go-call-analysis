@@ -84,14 +84,21 @@ func (ms *MockSession) FormatCapturedQueries(sb *strings.Builder) {
 			}
 			sb.WriteString("\n")
 
+			mapValues := make([]string, len(capture.ParamMapValues))
 			// Write each parameter map as a row
-			for _, paramMap := range capture.ParamMapValues {
+			for pIndex, paramMap := range capture.ParamMapValues {
+				innerSb := strings.Builder{}
 				for j, key := range keys {
 					if j > 0 {
-						sb.WriteString("\t")
+						innerSb.WriteString("\t")
 					}
-					sb.WriteString(fmt.Sprintf("%v", paramMap[key]))
+					innerSb.WriteString(fmt.Sprintf("%v", paramMap[key]))
 				}
+				mapValues[pIndex] = innerSb.String()
+			}
+			sort.Strings(mapValues)
+			for _, mapValue := range mapValues {
+				sb.WriteString(mapValue)
 				sb.WriteString("\n")
 			}
 		}

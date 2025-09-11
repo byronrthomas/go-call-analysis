@@ -11,95 +11,95 @@ Query: CREATE INDEX ON :FileVersion(id)
 Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, instruction_type: node.instruction_type, annotation: node.annotation})
 Parameters:
 annotation	column	id	instruction_type	label	line	name	package
+	0	errors.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
+	0	fmt.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	UnOp	Instruction	0	*init$guard	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	If	Instruction	0	if t0 goto 2 else 1	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	Store	Instruction	0	*init$guard = true:bool	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	AnnotatedCall	Instruction	0	errors.init()	github.com/throwin5tone7/go-call-analysis/test-project
-	0	errors.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	AnnotatedCall	Instruction	0	fmt.init()	github.com/throwin5tone7/go-call-analysis/test-project
-	0	fmt.init	function-entry	Instruction	0	init	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:3	Jump	Instruction	0	jump 2	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.init:2:0	Return	Instruction	0	return	github.com/throwin5tone7/go-call-analysis/test-project
-	6	github.com/throwin5tone7/go-call-analysis/test-project.main	function-entry	Instruction	8	main	github.com/throwin5tone7/go-call-analysis/test-project
-	21	github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	Alloc	Instruction	9	new Struct1 (complit)	github.com/throwin5tone7/go-call-analysis/test-project
-	27	github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	FieldAddr	Instruction	9	&t0.field [#0]	github.com/throwin5tone7/go-call-analysis/test-project
-	27	github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	Store	Instruction	9	*t1 = 1:int	github.com/throwin5tone7/go-call-analysis/test-project
-	21	github.com/throwin5tone7/go-call-analysis/test-project.main:0:3	Alloc	Instruction	10	new Struct2 (complit)	github.com/throwin5tone7/go-call-analysis/test-project
-	28	github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	FieldAddr	Instruction	10	&t2.fieldX [#0]	github.com/throwin5tone7/go-call-analysis/test-project
-	39	github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	FieldAddr	Instruction	10	&t2.fieldY [#1]	github.com/throwin5tone7/go-call-analysis/test-project
-	28	github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	Store	Instruction	10	*t3 = 2:int	github.com/throwin5tone7/go-call-analysis/test-project
-	39	github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	Store	Instruction	10	*t4 = 3:int	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	MakeInterface	Instruction	0	make Getter <- *Struct1 (t0)	github.com/throwin5tone7/go-call-analysis/test-project
-	22	github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	AnnotatedCall	Instruction	11	check(t5)	github.com/throwin5tone7/go-call-analysis/test-project
-	6	github.com/throwin5tone7/go-call-analysis/test-project.check	function-entry	Instruction	46	check	github.com/throwin5tone7/go-call-analysis/test-project
-	9	github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	BinOp	Instruction	12	t8 != nil:error	github.com/throwin5tone7/go-call-analysis/test-project
-!= nil	0	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	AnnotatedIf	Instruction	0	if (t8 != nil) goto 1 else 3	github.com/throwin5tone7/go-call-analysis/test-project
-	28	github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	Alloc	Instruction	13	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	IndexAddr	Instruction	0	&t10[0:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	MakeInterface	Instruction	0	make any <- string ("Error:":string)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	Store	Instruction	0	*t11 = t12	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	IndexAddr	Instruction	0	&t10[1:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:5	ChangeInterface	Instruction	0	change interface any <- error (t8)	github.com/throwin5tone7/go-call-analysis/test-project
-	25	github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	Store	Instruction	13	*t13 = t14	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:7	Slice	Instruction	0	slice t10[:]	github.com/throwin5tone7/go-call-analysis/test-project
-	14	github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	AnnotatedCall	Instruction	13	fmt.Println(t15...)	github.com/throwin5tone7/go-call-analysis/test-project
-	6	fmt.Println	function-entry	Instruction	313	Println	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:9	Jump	Instruction	0	jump 2	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	MakeInterface	Instruction	0	make Getter <- *Struct2 (t2)	github.com/throwin5tone7/go-call-analysis/test-project
-	19	github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	AnnotatedCall	Instruction	17	check(t17)	github.com/throwin5tone7/go-call-analysis/test-project
-	9	github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	BinOp	Instruction	18	t8 != nil:error	github.com/throwin5tone7/go-call-analysis/test-project
-!= nil	0	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	AnnotatedIf	Instruction	0	if (t8 != nil) goto 4 else 5	github.com/throwin5tone7/go-call-analysis/test-project
-	32	github.com/throwin5tone7/go-call-analysis/test-project.main:3:0	Alloc	Instruction	15	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:1	IndexAddr	Instruction	0	&t22[0:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:2	MakeInterface	Instruction	0	make any <- string ("Result:":string)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:3	Store	Instruction	0	*t23 = t24	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	IndexAddr	Instruction	0	&t22[1:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:5	MakeInterface	Instruction	0	make any <- int (t7)	github.com/throwin5tone7/go-call-analysis/test-project
-	26	github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	Store	Instruction	15	*t25 = t26	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:7	Slice	Instruction	0	slice t22[:]	github.com/throwin5tone7/go-call-analysis/test-project
-	14	github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	AnnotatedCall	Instruction	15	fmt.Println(t27...)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:3:9	Jump	Instruction	0	jump 2	github.com/throwin5tone7/go-call-analysis/test-project
-	28	github.com/throwin5tone7/go-call-analysis/test-project.main:4:0	Alloc	Instruction	19	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	IndexAddr	Instruction	0	&t29[0:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:2	MakeInterface	Instruction	0	make any <- string ("Error:":string)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:3	Store	Instruction	0	*t30 = t31	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	IndexAddr	Instruction	0	&t29[1:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:5	ChangeInterface	Instruction	0	change interface any <- error (t8)	github.com/throwin5tone7/go-call-analysis/test-project
-	25	github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	Store	Instruction	19	*t32 = t33	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:7	Slice	Instruction	0	slice t29[:]	github.com/throwin5tone7/go-call-analysis/test-project
-	14	github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	AnnotatedCall	Instruction	19	fmt.Println(t34...)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:4:9	Jump	Instruction	0	jump 5	github.com/throwin5tone7/go-call-analysis/test-project
-	31	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	Alloc	Instruction	21	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	IndexAddr	Instruction	0	&t36[0:int]	github.com/throwin5tone7/go-call-analysis/test-project
+	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:11	Return	Instruction	0	return	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	MakeInterface	Instruction	0	make any <- string ("Result:":string)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	Store	Instruction	0	*t37 = t38	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	IndexAddr	Instruction	0	&t36[1:int]	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	MakeInterface	Instruction	0	make any <- int (t19)	github.com/throwin5tone7/go-call-analysis/test-project
-	25	github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	Store	Instruction	21	*t39 = t40	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	Slice	Instruction	0	slice t36[:]	github.com/throwin5tone7/go-call-analysis/test-project
-	13	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	AnnotatedCall	Instruction	21	fmt.Println(t41...)	github.com/throwin5tone7/go-call-analysis/test-project
 	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	MakeInterface	Instruction	0	make Getter <- *Struct2 (t2)	github.com/throwin5tone7/go-call-analysis/test-project
-	7	github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	AnnotatedCall	Instruction	22	check(t43)	github.com/throwin5tone7/go-call-analysis/test-project
-	0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:11	Return	Instruction	0	return	github.com/throwin5tone7/go-call-analysis/test-project
-	19	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	function-entry	Instruction	33	Get	github.com/throwin5tone7/go-call-analysis/test-project
 	11	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	FieldAddr	Instruction	34	&s.field [#0]	github.com/throwin5tone7/go-call-analysis/test-project
 	11	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	UnOp	Instruction	34	*t0	github.com/throwin5tone7/go-call-analysis/test-project
-	2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	Return	Instruction	34	return t1	github.com/throwin5tone7/go-call-analysis/test-project
-	19	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	function-entry	Instruction	42	Get	github.com/throwin5tone7/go-call-analysis/test-project
 	11	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	FieldAddr	Instruction	43	&s.fieldX [#0]	github.com/throwin5tone7/go-call-analysis/test-project
 	11	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	UnOp	Instruction	43	*t0	github.com/throwin5tone7/go-call-analysis/test-project
+	13	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	AnnotatedCall	Instruction	21	fmt.Println(t41...)	github.com/throwin5tone7/go-call-analysis/test-project
+	14	github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	AnnotatedCall	Instruction	13	fmt.Println(t15...)	github.com/throwin5tone7/go-call-analysis/test-project
+	14	github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	AnnotatedCall	Instruction	15	fmt.Println(t27...)	github.com/throwin5tone7/go-call-analysis/test-project
+	14	github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	AnnotatedCall	Instruction	19	fmt.Println(t34...)	github.com/throwin5tone7/go-call-analysis/test-project
+	18	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	BinOp	Instruction	43	t1 + t3	github.com/throwin5tone7/go-call-analysis/test-project
+	19	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	function-entry	Instruction	33	Get	github.com/throwin5tone7/go-call-analysis/test-project
+	19	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	function-entry	Instruction	42	Get	github.com/throwin5tone7/go-call-analysis/test-project
+	19	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	AnnotatedCall	Instruction	47	invoke getter.Get()	github.com/throwin5tone7/go-call-analysis/test-project
+	19	github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	AnnotatedCall	Instruction	17	check(t17)	github.com/throwin5tone7/go-call-analysis/test-project
+	2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	Return	Instruction	34	return t1	github.com/throwin5tone7/go-call-analysis/test-project
+	2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	Return	Instruction	43	return t4	github.com/throwin5tone7/go-call-analysis/test-project
+	2	github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	Return	Instruction	51	return t0, nil:error	github.com/throwin5tone7/go-call-analysis/test-project
+	21	github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	Alloc	Instruction	9	new Struct1 (complit)	github.com/throwin5tone7/go-call-analysis/test-project
+	21	github.com/throwin5tone7/go-call-analysis/test-project.main:0:3	Alloc	Instruction	10	new Struct2 (complit)	github.com/throwin5tone7/go-call-analysis/test-project
 	22	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	FieldAddr	Instruction	43	&s.fieldY [#1]	github.com/throwin5tone7/go-call-analysis/test-project
 	22	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	UnOp	Instruction	43	*t2	github.com/throwin5tone7/go-call-analysis/test-project
-	18	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	BinOp	Instruction	43	t1 + t3	github.com/throwin5tone7/go-call-analysis/test-project
-	2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	Return	Instruction	43	return t4	github.com/throwin5tone7/go-call-analysis/test-project
-	19	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	AnnotatedCall	Instruction	47	invoke getter.Get()	github.com/throwin5tone7/go-call-analysis/test-project
-	9	github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	BinOp	Instruction	48	t0 < 0:int	github.com/throwin5tone7/go-call-analysis/test-project
-< 0	0	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	AnnotatedIf	Instruction	0	if (t0 < 0) goto 1 else 2	github.com/throwin5tone7/go-call-analysis/test-project
+	22	github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	AnnotatedCall	Instruction	11	check(t5)	github.com/throwin5tone7/go-call-analysis/test-project
 	23	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	AnnotatedCall	Instruction	49	errors.New("negative result":string)	github.com/throwin5tone7/go-call-analysis/test-project
-	6	errors.New	function-entry	Instruction	64	New	github.com/throwin5tone7/go-call-analysis/test-project
+	25	github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	Store	Instruction	13	*t13 = t14	github.com/throwin5tone7/go-call-analysis/test-project
+	25	github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	Store	Instruction	19	*t32 = t33	github.com/throwin5tone7/go-call-analysis/test-project
+	25	github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	Store	Instruction	21	*t39 = t40	github.com/throwin5tone7/go-call-analysis/test-project
+	26	github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	Store	Instruction	15	*t25 = t26	github.com/throwin5tone7/go-call-analysis/test-project
+	27	github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	FieldAddr	Instruction	9	&t0.field [#0]	github.com/throwin5tone7/go-call-analysis/test-project
+	27	github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	Store	Instruction	9	*t1 = 1:int	github.com/throwin5tone7/go-call-analysis/test-project
+	28	github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	FieldAddr	Instruction	10	&t2.fieldX [#0]	github.com/throwin5tone7/go-call-analysis/test-project
+	28	github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	Store	Instruction	10	*t3 = 2:int	github.com/throwin5tone7/go-call-analysis/test-project
+	28	github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	Alloc	Instruction	13	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
+	28	github.com/throwin5tone7/go-call-analysis/test-project.main:4:0	Alloc	Instruction	19	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
 	3	github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	Return	Instruction	49	return 0:int, t2	github.com/throwin5tone7/go-call-analysis/test-project
-	2	github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	Return	Instruction	51	return t0, nil:error	github.com/throwin5tone7/go-call-analysis/test-project
+	31	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	Alloc	Instruction	21	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
+	32	github.com/throwin5tone7/go-call-analysis/test-project.main:3:0	Alloc	Instruction	15	new [2]any (varargs)	github.com/throwin5tone7/go-call-analysis/test-project
+	39	github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	FieldAddr	Instruction	10	&t2.fieldY [#1]	github.com/throwin5tone7/go-call-analysis/test-project
+	39	github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	Store	Instruction	10	*t4 = 3:int	github.com/throwin5tone7/go-call-analysis/test-project
+	6	errors.New	function-entry	Instruction	64	New	github.com/throwin5tone7/go-call-analysis/test-project
+	6	fmt.Println	function-entry	Instruction	313	Println	github.com/throwin5tone7/go-call-analysis/test-project
+	6	github.com/throwin5tone7/go-call-analysis/test-project.check	function-entry	Instruction	46	check	github.com/throwin5tone7/go-call-analysis/test-project
+	6	github.com/throwin5tone7/go-call-analysis/test-project.main	function-entry	Instruction	8	main	github.com/throwin5tone7/go-call-analysis/test-project
+	7	github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	AnnotatedCall	Instruction	22	check(t43)	github.com/throwin5tone7/go-call-analysis/test-project
+	9	github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	BinOp	Instruction	48	t0 < 0:int	github.com/throwin5tone7/go-call-analysis/test-project
+	9	github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	BinOp	Instruction	12	t8 != nil:error	github.com/throwin5tone7/go-call-analysis/test-project
+	9	github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	BinOp	Instruction	18	t8 != nil:error	github.com/throwin5tone7/go-call-analysis/test-project
+!= nil	0	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	AnnotatedIf	Instruction	0	if (t8 != nil) goto 1 else 3	github.com/throwin5tone7/go-call-analysis/test-project
+!= nil	0	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	AnnotatedIf	Instruction	0	if (t8 != nil) goto 4 else 5	github.com/throwin5tone7/go-call-analysis/test-project
+< 0	0	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	AnnotatedIf	Instruction	0	if (t0 < 0) goto 1 else 2	github.com/throwin5tone7/go-call-analysis/test-project
 
 
 Query: CREATE INDEX ON :Instruction(id)
@@ -108,66 +108,66 @@ Query: CREATE INDEX ON :Instruction(id)
 Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, name: node.name, package: node.package, line: node.line, column: node.column, value_type: node.value_type, type_name: node.type_name, is_error_type: node.is_error_type})
 Parameters:
 column	id	is_error_type	label	line	name	package	type_name	value_type
+0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	false	Value	0	init$guard	github.com/throwin5tone7/go-call-analysis/test-project	*bool	Global
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0	false	Value	0	t0	github.com/throwin5tone7/go-call-analysis/test-project	bool	UnOp
-21	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	false	Value	9	t0	github.com/throwin5tone7/go-call-analysis/test-project	*github.com/throwin5tone7/go-call-analysis/test-project.Struct1	Alloc
-27	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t1	false	Value	9	t1	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
-21	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	false	Value	10	t2	github.com/throwin5tone7/go-call-analysis/test-project	*github.com/throwin5tone7/go-call-analysis/test-project.Struct2	Alloc
-28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t3	false	Value	10	t3	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
-39	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4	false	Value	10	t4	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5	false	Value	0	t5	github.com/throwin5tone7/go-call-analysis/test-project	github.com/throwin5tone7/go-call-analysis/test-project.Getter	MakeInterface
-22	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7	false	Value	11	t7	github.com/throwin5tone7/go-call-analysis/test-project	int	Extract
-22	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	true	Value	11	t8	github.com/throwin5tone7/go-call-analysis/test-project	error	Extract
-9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9	false	Value	12	t9	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
-28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	false	Value	13	t10	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11	false	Value	0	t11	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12	false	Value	0	t12	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t13	false	Value	0	t13	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t14	false	Value	0	t14	github.com/throwin5tone7/go-call-analysis/test-project	any	ChangeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t15	false	Value	0	t15	github.com/throwin5tone7/go-call-analysis/test-project	[]any	Slice
-14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14	false	Value	13	func_return_placeholder_0_t16	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
-14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14	true	Value	13	func_return_placeholder_1_t16	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17	false	Value	0	t17	github.com/throwin5tone7/go-call-analysis/test-project	github.com/throwin5tone7/go-call-analysis/test-project.Getter	MakeInterface
-19	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19	false	Value	17	t19	github.com/throwin5tone7/go-call-analysis/test-project	int	Extract
-19	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t20	true	Value	17	t20	github.com/throwin5tone7/go-call-analysis/test-project	error	Extract
-9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t21	false	Value	18	t21	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
-32	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	false	Value	15	t22	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t23	false	Value	0	t23	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t24	false	Value	0	t24	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t25	false	Value	0	t25	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t26	false	Value	0	t26	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t27	false	Value	0	t27	github.com/throwin5tone7/go-call-analysis/test-project	[]any	Slice
-14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	false	Value	15	func_return_placeholder_0_t28	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
-14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	true	Value	15	func_return_placeholder_1_t28	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
-28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	false	Value	19	t29	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t30	false	Value	0	t30	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t31	false	Value	0	t31	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t32	false	Value	0	t32	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t33	false	Value	0	t33	github.com/throwin5tone7/go-call-analysis/test-project	any	ChangeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t34	false	Value	0	t34	github.com/throwin5tone7/go-call-analysis/test-project	[]any	Slice
-14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14	false	Value	19	func_return_placeholder_0_t35	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
-14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14	true	Value	19	func_return_placeholder_1_t35	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
-31	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	false	Value	21	t36	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t37	false	Value	0	t37	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t38	false	Value	0	t38	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t39	false	Value	0	t39	github.com/throwin5tone7/go-call-analysis/test-project	*any	IndexAddr
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t40	false	Value	0	t40	github.com/throwin5tone7/go-call-analysis/test-project	any	MakeInterface
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t41	false	Value	0	t41	github.com/throwin5tone7/go-call-analysis/test-project	[]any	Slice
-13	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	false	Value	21	func_return_placeholder_0_t42	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
-13	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	true	Value	21	func_return_placeholder_1_t42	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
 0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43	false	Value	0	t43	github.com/throwin5tone7/go-call-analysis/test-project	github.com/throwin5tone7/go-call-analysis/test-project.Getter	MakeInterface
-7	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	false	Value	22	func_return_placeholder_0_t44	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
-7	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	true	Value	22	func_return_placeholder_1_t44	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
 11	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	false	Value	34	t0	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
 11	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	false	Value	34	t1	github.com/throwin5tone7/go-call-analysis/test-project	int	UnOp
 11	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0	false	Value	43	t0	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
 11	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t1	false	Value	43	t1	github.com/throwin5tone7/go-call-analysis/test-project	int	UnOp
-22	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2	false	Value	43	t2	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
-22	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	false	Value	43	t3	github.com/throwin5tone7/go-call-analysis/test-project	int	UnOp
+13	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	false	Value	21	func_return_placeholder_0_t42	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
+13	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	true	Value	21	func_return_placeholder_1_t42	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
+14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14	false	Value	13	func_return_placeholder_0_t16	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
+14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	false	Value	15	func_return_placeholder_0_t28	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
+14	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14	false	Value	19	func_return_placeholder_0_t35	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
+14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14	true	Value	13	func_return_placeholder_1_t16	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
+14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	true	Value	15	func_return_placeholder_1_t28	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
+14	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14	true	Value	19	func_return_placeholder_1_t35	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
 18	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4	false	Value	43	t4	github.com/throwin5tone7/go-call-analysis/test-project	int	BinOp
 19	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	false	Value	47	t0	github.com/throwin5tone7/go-call-analysis/test-project	int	Call
-9	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1	false	Value	48	t1	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
+19	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19	false	Value	17	t19	github.com/throwin5tone7/go-call-analysis/test-project	int	Extract
+19	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t20	true	Value	17	t20	github.com/throwin5tone7/go-call-analysis/test-project	error	Extract
+21	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	false	Value	9	t0	github.com/throwin5tone7/go-call-analysis/test-project	*github.com/throwin5tone7/go-call-analysis/test-project.Struct1	Alloc
+21	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	false	Value	10	t2	github.com/throwin5tone7/go-call-analysis/test-project	*github.com/throwin5tone7/go-call-analysis/test-project.Struct2	Alloc
+22	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2	false	Value	43	t2	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
+22	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	false	Value	43	t3	github.com/throwin5tone7/go-call-analysis/test-project	int	UnOp
+22	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7	false	Value	11	t7	github.com/throwin5tone7/go-call-analysis/test-project	int	Extract
+22	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	true	Value	11	t8	github.com/throwin5tone7/go-call-analysis/test-project	error	Extract
 23	value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2	true	Value	49	t2	github.com/throwin5tone7/go-call-analysis/test-project	error	Call
-0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	false	Value	0	init$guard	github.com/throwin5tone7/go-call-analysis/test-project	*bool	Global
+27	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t1	false	Value	9	t1	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
+28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t3	false	Value	10	t3	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
+28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	false	Value	13	t10	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
+28	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	false	Value	19	t29	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
+31	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	false	Value	21	t36	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
+32	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	false	Value	15	t22	github.com/throwin5tone7/go-call-analysis/test-project	*[2]any	Alloc
+39	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4	false	Value	10	t4	github.com/throwin5tone7/go-call-analysis/test-project	*int	FieldAddr
+7	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	false	Value	22	func_return_placeholder_0_t44	github.com/throwin5tone7/go-call-analysis/test-project	int	FuncReturnPlaceholder
+7	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	true	Value	22	func_return_placeholder_1_t44	github.com/throwin5tone7/go-call-analysis/test-project	error	FuncReturnPlaceholder
+9	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1	false	Value	48	t1	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
+9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9	false	Value	12	t9	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
+9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t21	false	Value	18	t21	github.com/throwin5tone7/go-call-analysis/test-project	bool	BinOp
 
 
 Query: CREATE INDEX ON :Value(id)
@@ -180,6 +180,19 @@ Query:
 			
 Parameters:
 from_id	to_id	type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	And_Then
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.check	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init	github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	And_Then
@@ -188,6 +201,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	github.com/throwin5tone7/go-call-analysis/test-project.main:0:3	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:3	github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	And_Then
@@ -196,7 +210,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	And_Then
@@ -229,6 +242,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:4:7	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	github.com/throwin5tone7/go-call-analysis/test-project.main:4:9	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	And_Then
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	github.com/throwin5tone7/go-call-analysis/test-project.main:5:11	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	And_Then
@@ -237,20 +251,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	github.com/throwin5tone7/go-call-analysis/test-project.main:5:11	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.check	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	And_Then
 
 
 Query: 
@@ -260,88 +260,6 @@ Query:
 			
 Parameters:
 from_id	to_id	type
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	true	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	synthetic-errors-errors.init	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	synthetic-fmt-fmt.init	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t3	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	3	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	nil:error	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	"Error:"	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t13	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t14	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	fmt:fmt.Println	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t15	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	nil:error	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:1	0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:2	"Result:"	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t23	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t24	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t25	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t26	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	fmt:fmt.Println	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t27	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:2	"Error:"	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t30	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t31	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t32	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t33	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	fmt:fmt.Println	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t34	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	"Result:"	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t37	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t38	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	1	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t39	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t40	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	fmt:fmt.Println	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t41	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43	Uses_Operand
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	Uses_Operand
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	Uses_Operand
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	Uses_Operand
@@ -353,15 +271,97 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	value-github.co
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	Uses_Operand
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	errors:errors.New	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	"negative result"	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	errors:errors.New	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	0	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2	Uses_Operand
-github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Uses_Operand
 github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	nil:error	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	github.com/throwin5tone7/go-call-analysis/test-project:init$guard	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	true	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	synthetic-errors-errors.init	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	synthetic-fmt-fmt.init	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	nil:error	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	2	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t3	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	3	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	"Error:"	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t13	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t14	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	fmt:fmt.Println	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t15	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	nil:error	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:1	0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:2	"Result:"	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t23	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t24	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t25	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t26	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t22	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	fmt:fmt.Println	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t27	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:2	"Error:"	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t30	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t31	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t32	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t33	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	fmt:fmt.Println	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t34	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	0	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	github.com/throwin5tone7/go-call-analysis/test-project:github.com/throwin5tone7/go-call-analysis/test-project.check	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	"Result:"	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t37	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t38	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	1	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t39	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t40	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	fmt:fmt.Println	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t41	Uses_Operand
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Uses_Operand
 
 
 Query: 
@@ -371,16 +371,26 @@ Query:
 			
 Parameters:
 from_id	to_id	type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t1	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	Produces_Result
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.init:0:t0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:3	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t2	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t3	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t4	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:8	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t5	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t7	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t8	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	value-github.com/throwin5tone7/go-call-analysis/test-project.main:0:t9	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t10	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t11	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t12	Produces_Result
@@ -411,6 +421,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placehold
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t37	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t38	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t39	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t40	Produces_Result
@@ -418,18 +430,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:13	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:22:7	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t1	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2	Produces_Result
 
 
 Query: 
@@ -439,18 +439,18 @@ Query:
 			
 Parameters:
 condition	from_id	to_id	type
-true	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	github.com/throwin5tone7/go-call-analysis/test-project.init:2:0	Control_Flow
-false	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	Control_Flow
 	github.com/throwin5tone7/go-call-analysis/test-project.init:1:3	github.com/throwin5tone7/go-call-analysis/test-project.init:2:0	Control_Flow
-true	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	Control_Flow
-false	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	github.com/throwin5tone7/go-call-analysis/test-project.main:3:0	Control_Flow
 	github.com/throwin5tone7/go-call-analysis/test-project.main:1:9	github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	Control_Flow
-true	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	github.com/throwin5tone7/go-call-analysis/test-project.main:4:0	Control_Flow
-false	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	Control_Flow
 	github.com/throwin5tone7/go-call-analysis/test-project.main:3:9	github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	Control_Flow
 	github.com/throwin5tone7/go-call-analysis/test-project.main:4:9	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	Control_Flow
-true	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	Control_Flow
 false	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	github.com/throwin5tone7/go-call-analysis/test-project.check:2:0	Control_Flow
+false	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	Control_Flow
+false	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	github.com/throwin5tone7/go-call-analysis/test-project.main:3:0	Control_Flow
+false	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	Control_Flow
+true	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	Control_Flow
+true	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	github.com/throwin5tone7/go-call-analysis/test-project.init:2:0	Control_Flow
+true	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	github.com/throwin5tone7/go-call-analysis/test-project.main:1:0	Control_Flow
+true	github.com/throwin5tone7/go-call-analysis/test-project.main:2:3	github.com/throwin5tone7/go-call-analysis/test-project.main:4:0	Control_Flow
 
 
 Query: 
@@ -460,6 +460,7 @@ Query:
 			
 Parameters:
 edge_cardinality	from_id	to_id	type
+1	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	errors.New	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	errors.init	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	fmt.init	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.main:0:9	github.com/throwin5tone7/go-call-analysis/test-project.check	Resolved_Call
@@ -467,11 +468,10 @@ edge_cardinality	from_id	to_id	type
 1	github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	github.com/throwin5tone7/go-call-analysis/test-project.check	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	fmt.Println	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	fmt.Println	Resolved_Call
-1	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	fmt.Println	Resolved_Call
 1	github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	github.com/throwin5tone7/go-call-analysis/test-project.check	Resolved_Call
-2	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	Resolved_Call
+1	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	fmt.Println	Resolved_Call
 2	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	Resolved_Call
-1	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	errors.New	Resolved_Call
+2	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	Resolved_Call
 
 
 Query: 
@@ -481,8 +481,8 @@ Query:
 			
 Parameters:
 from_id	to_id	type
-github.com/throwin5tone7/go-call-analysis/test-project.init		Belongs_To
-github.com/throwin5tone7/go-call-analysis/test-project.main	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.check	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.init		Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.main	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
