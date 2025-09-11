@@ -58,22 +58,6 @@ func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
 	return query, nil
 }
 
-// joinProperties joins property assignments with commas
-func joinProperties(properties []string) string {
-	if len(properties) == 0 {
-		return ""
-	}
-
-	result := ""
-	for i, prop := range properties {
-		if i > 0 {
-			result += ", "
-		}
-		result += prop
-	}
-	return result
-}
-
 // GenerateEdgeQuery dynamically generates a Neo4j CREATE query for an edge
 // based on the properties in the provided map.
 // The map must contain "type", "from_id", "to_id", "from_label", and "to_label" keys.
