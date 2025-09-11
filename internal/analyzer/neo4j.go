@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -48,10 +50,11 @@ func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
 		}
 	}
 
+	sort.Strings(properties)
 	// Construct the query
 	query := fmt.Sprintf("UNWIND $nodes AS node CREATE (n:%s {%s})",
 		labelStr,
-		joinProperties(properties))
+		strings.Join(properties, ", "))
 
 	return query, nil
 }
@@ -115,10 +118,12 @@ func GenerateEdgeQuery(edgeMap map[string]interface{}, fromLabel string, toLabel
 		}
 	}
 
+	sort.Strings(edgeProperties)
+
 	// Build the relationship part
 	var relationshipPart string
 	if len(edgeProperties) > 0 {
-		relationshipPart = fmt.Sprintf("[:edge.type {%s}]", joinProperties(edgeProperties))
+		relationshipPart = fmt.Sprintf("[:edge.type {%s}]", strings.Join(edgeProperties, ", "))
 	} else {
 		relationshipPart = "[:edge.type]"
 	}
