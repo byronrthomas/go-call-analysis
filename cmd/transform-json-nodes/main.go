@@ -194,7 +194,7 @@ func extractProperties(jsonData map[string]interface{}) (map[string]interface{},
 	// Check that there is one key only the top-level map
 	// and extract whatever it's value is
 	if len(jsonData) != 1 {
-		return nil, fmt.Errorf("Non-singleton map at top-level of JSON data")
+		return nil, fmt.Errorf("non-singleton map at top-level of JSON data")
 	}
 	var nodeData map[string]interface{}
 	for _, v := range jsonData {
