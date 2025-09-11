@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"github.com/throwin5tone7/go-call-analysis/internal/analyzer/mock"
 	"github.com/throwin5tone7/go-call-analysis/internal/graphcommon"
 )
 
@@ -142,13 +143,28 @@ func runInNeoSession(config Neo4jConfig, runnerFunc func(ctx context.Context, se
 	defer driver.Close(ctx)
 
 	// Create session
-	session := driver.NewSession(ctx, neo4j.SessionConfig{
-		DatabaseName: config.Database,
-	})
+	session := createSession(ctx, driver, config)
 	defer session.Close(ctx)
 
 	err = runnerFunc(ctx, session)
 	return err
+}
+
+var InMockMode = false
+var MockSession neo4j.SessionWithContext
+
+func createSession(ctx context.Context, driver neo4j.DriverWithContext, config Neo4jConfig) neo4j.SessionWithContext {
+	if InMockMode {
+		MockSession = &mock.MockSession{
+			SessionWithContext: driver.NewSession(ctx, neo4j.SessionConfig{
+				DatabaseName: config.Database,
+			}),
+		}
+		return MockSession
+	}
+	return driver.NewSession(ctx, neo4j.SessionConfig{
+		DatabaseName: config.Database,
+	})
 }
 
 // ExportSSAGraphToNeo4j exports the SSA graph data to a Neo4j database
