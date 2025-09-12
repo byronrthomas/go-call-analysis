@@ -208,6 +208,19 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		},
 	})
 	v.functionEntries[funcId] = true
+
+	for paramIndex, param := range f.Params {
+		_, paramId := ValueId(v.fileSet, param, "")
+		v.valueNodes = processValue(v.valueNodes, paramId, param, pkg, pos, v.gitRevisionCache)
+		v.resultEdges = append(v.resultEdges, ResultEdge{
+			EdgeCommon: graphcommon.EdgeCommon{
+				FromID: funcId,
+				ToID:   paramId,
+			},
+			Index: paramIndex,
+		})
+	}
+
 	// Put an end-then node from the function entry to the first instruction
 
 	for blockInd, b := range f.Blocks {

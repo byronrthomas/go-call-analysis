@@ -1,5 +1,8 @@
 id,column,is_error_type,label,line,name,package,type_name,value_type
 github.com/throwin5tone7/go-call-analysis/test-project:init$guard,0,false,Value,0,init$guard,github.com/throwin5tone7/go-call-analysis/test-project,*bool,Global
+parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s,19,false,Value,33,s,github.com/throwin5tone7/go-call-analysis/test-project,*github.com/throwin5tone7/go-call-analysis/test-project.Struct1,Parameter
+parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s,19,false,Value,42,s,github.com/throwin5tone7/go-call-analysis/test-project,*github.com/throwin5tone7/go-call-analysis/test-project.Struct2,Parameter
+parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter,6,false,Value,46,getter,github.com/throwin5tone7/go-call-analysis/test-project,github.com/throwin5tone7/go-call-analysis/test-project.Getter,Parameter
 return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:13:14,14,false,Value,13,func_return_placeholder_0_t16,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
 return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14,14,false,Value,15,func_return_placeholder_0_t28,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
 return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:19:14,14,false,Value,19,func_return_placeholder_0_t35,github.com/throwin5tone7/go-call-analysis/test-project,int,FuncReturnPlaceholder
