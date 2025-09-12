@@ -44,11 +44,11 @@ func (node FileVersionNode) ToMap() map[string]any {
 
 func NodeCommonAsMap(nodeCommon NodeCommon) map[string]any {
 	return map[string]any{
-		"id":      nodeCommon.ID,
-		"name":    nodeCommon.Name,
-		"package": nodeCommon.Package,
-		"line":    nodeCommon.PositionInfo.Line,
-		"column":  nodeCommon.PositionInfo.Column,
+		"id":   nodeCommon.ID,
+		"name": nodeCommon.Name,
+		// "package": nodeCommon.Package,
+		"line":   nodeCommon.PositionInfo.Line,
+		"column": nodeCommon.PositionInfo.Column,
 	}
 }
 
