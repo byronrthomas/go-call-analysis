@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 
@@ -65,17 +67,34 @@ func (ms *MockSession) FormatCapturedQueries(sb *strings.Builder) {
 		sb.WriteString(capture.Query)
 		sb.WriteString("\n")
 
+		excludedFromSort := []string{"id", "from_id", "to_id"}
+
 		// Format parameters if any exist
 		if len(capture.ParamMapValues) > 0 {
 			// Get sorted keys from the first parameter map (assuming all maps have same keys)
 			var keys []string
 			for key := range capture.ParamMapValues[0] {
+				if slices.Contains(excludedFromSort, key) {
+					continue
+				}
 				keys = append(keys, key)
 			}
 			sort.Strings(keys)
 
 			// Write header line with map keys
 			sb.WriteString("Parameters:\n")
+			if capture.ParamMapValues[0]["id"] != nil {
+				if capture.ParamMapValues[0]["from_id"] != nil || capture.ParamMapValues[0]["to_id"] != nil {
+					log.Fatalf("Do not support mixed id, from_id, and to_id in param values for output - keys: %s", strings.Join(slices.Collect(maps.Keys(capture.ParamMapValues[0])), ", "))
+				}
+				keys = slices.Insert(keys, 0, "id")
+			} else if capture.ParamMapValues[0]["from_id"] != nil && capture.ParamMapValues[0]["to_id"] != nil {
+				keys = slices.Insert(keys, 0, "from_id")
+				keys = slices.Insert(keys, 1, "to_id")
+			} else {
+				log.Fatalf("Do not support mixed id, from_id, and to_id in param values for output - keys: %s", strings.Join(slices.Collect(maps.Keys(capture.ParamMapValues[0])), ", "))
+			}
+
 			for j, key := range keys {
 				if j > 0 {
 					sb.WriteString("\t")
@@ -113,9 +132,7 @@ func extractParamMapValues(params map[string]any) []map[string]interface{} {
 	for _, v := range params {
 		// The parameter value is an array of maps (e.g., "nodes": []map[string]any)
 		if mapArray, ok := v.([]map[string]any); ok {
-			for _, m := range mapArray {
-				capturedParams = append(capturedParams, m)
-			}
+			capturedParams = append(capturedParams, mapArray...)
 		} else {
 			// Fallback for single map parameters
 			capturedParams = append(capturedParams, v.(map[string]interface{}))
