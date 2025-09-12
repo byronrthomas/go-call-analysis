@@ -80,7 +80,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder, annotationText string) 
 		}
 
 		// Parse the entire JSON line
-		var jsonData map[string]interface{}
+		var jsonData map[string]any
 		if err := json.Unmarshal([]byte(line), &jsonData); err != nil {
 			log.Printf("Warning: Failed to parse JSON on line %d: %v", nextId, err)
 			continue
@@ -146,7 +146,7 @@ func processJSONL(inputFile, relativeRoot, outputFolder, annotationText string) 
 	return nil
 }
 
-func extractFilename(jsonData map[string]interface{}) (string, error) {
+func extractFilename(jsonData map[string]any) (string, error) {
 	// Navigate through the nested structure to find the file field
 	properties, err := extractProperties(jsonData)
 	if err != nil {
@@ -161,7 +161,7 @@ func extractFilename(jsonData map[string]interface{}) (string, error) {
 	return file, nil
 }
 
-func extractLine(jsonData map[string]interface{}) (int, error) {
+func extractLine(jsonData map[string]any) (int, error) {
 	properties, err := extractProperties(jsonData)
 	if err != nil {
 		return -1, err
@@ -175,7 +175,7 @@ func extractLine(jsonData map[string]interface{}) (int, error) {
 	return int(line), nil
 }
 
-func extractFileRevision(jsonData map[string]interface{}) (string, error) {
+func extractFileRevision(jsonData map[string]any) (string, error) {
 
 	properties, err := extractProperties(jsonData)
 	if err != nil {
@@ -190,19 +190,19 @@ func extractFileRevision(jsonData map[string]interface{}) (string, error) {
 	return fileRevision, nil
 }
 
-func extractProperties(jsonData map[string]interface{}) (map[string]interface{}, error) {
+func extractProperties(jsonData map[string]any) (map[string]any, error) {
 	// Check that there is one key only the top-level map
 	// and extract whatever it's value is
 	if len(jsonData) != 1 {
 		return nil, fmt.Errorf("non-singleton map at top-level of JSON data")
 	}
-	var nodeData map[string]interface{}
+	var nodeData map[string]any
 	for _, v := range jsonData {
-		nodeData = v.(map[string]interface{})
+		nodeData = v.(map[string]any)
 		break
 	}
 
-	properties, ok := nodeData["properties"].(map[string]interface{})
+	properties, ok := nodeData["properties"].(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("missing or invalid 'properties' field")
 	}

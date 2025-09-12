@@ -20,7 +20,7 @@ const (
 // GenerateNodeQuery dynamically generates a Neo4j CREATE query for a node
 // based on the properties in the provided map.
 // The map must contain "label" and "id" keys, otherwise the function will return an error.
-func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
+func GenerateNodeQuery(nodeMap map[string]any) (string, error) {
 	// Validate required fields
 	label, hasLabel := nodeMap["label"]
 	if !hasLabel {
@@ -61,7 +61,7 @@ func GenerateNodeQuery(nodeMap map[string]interface{}) (string, error) {
 // GenerateEdgeQuery dynamically generates a Neo4j CREATE query for an edge
 // based on the properties in the provided map.
 // The map must contain "type", "from_id", "to_id", "from_label", and "to_label" keys.
-func GenerateEdgeQuery(edgeMap map[string]interface{}, fromLabel string, toLabel string) (string, error) {
+func GenerateEdgeQuery(edgeMap map[string]any, fromLabel string, toLabel string) (string, error) {
 	// Validate required fields
 	requiredFields := []string{"type", "from_id", "to_id"}
 	for _, field := range requiredFields {
@@ -152,7 +152,7 @@ func runCallGraphInNeoSession(ctx context.Context, session neo4j.SessionWithCont
 	// Import nodes
 	log.Printf("Starting node import of %d nodes...", len(nodes))
 	nodeStartTime := time.Now()
-	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		for i := 0; i < len(nodes); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -168,7 +168,7 @@ func runCallGraphInNeoSession(ctx context.Context, session neo4j.SessionWithCont
 				mappableBatch[i] = &node
 			}
 
-			params := map[string]interface{}{
+			params := map[string]any{
 				"nodes": mapify(mappableBatch),
 			}
 
@@ -197,7 +197,7 @@ func runCallGraphInNeoSession(ctx context.Context, session neo4j.SessionWithCont
 	// Import edges
 	log.Printf("Starting edge import of %d edges...", len(edges))
 	edgeStartTime := time.Now()
-	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		for i := 0; i < len(edges); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -217,7 +217,7 @@ func runCallGraphInNeoSession(ctx context.Context, session neo4j.SessionWithCont
 				mappableBatch[i] = &edge
 			}
 
-			params := map[string]interface{}{
+			params := map[string]any{
 				"edges": mapify(mappableBatch),
 			}
 
@@ -290,7 +290,7 @@ func importNodesInBatches[T graphcommon.Mappable](ctx context.Context, session n
 	log.Printf("Starting node import of %d %s nodes...", len(*nodes), nodeTypeName)
 	startTime := time.Now()
 
-	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		for i := 0; i < len(*nodes); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -308,7 +308,7 @@ func importNodesInBatches[T graphcommon.Mappable](ctx context.Context, session n
 				return nil, fmt.Errorf("failed to generate node query: %v", err)
 			}
 
-			params := map[string]interface{}{
+			params := map[string]any{
 				"nodes": mapify(mappableBatch),
 			}
 
@@ -339,7 +339,7 @@ func importEdgesInBatches[T graphcommon.EdgeMappable](ctx context.Context, sessi
 	log.Printf("Starting edge import of %d %s edges...", len(*edges), edgeTypeName)
 	startTime := time.Now()
 
-	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+	_, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		for i := 0; i < len(*edges); i += defaultBatchSize {
 			batchStartTime := time.Now()
 			end := i + defaultBatchSize
@@ -358,7 +358,7 @@ func importEdgesInBatches[T graphcommon.EdgeMappable](ctx context.Context, sessi
 				return nil, fmt.Errorf("failed to generate edge query: %v", err)
 			}
 
-			params := map[string]interface{}{
+			params := map[string]any{
 				"edges": mapify(mappableBatch),
 			}
 

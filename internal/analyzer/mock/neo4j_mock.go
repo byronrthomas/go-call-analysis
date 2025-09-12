@@ -14,7 +14,7 @@ import (
 
 type QueryExecutionCapture struct {
 	Query          string
-	ParamMapValues []map[string]interface{}
+	ParamMapValues []map[string]any
 }
 
 type MockSession struct {
@@ -25,19 +25,19 @@ type MockSession struct {
 func (ms *MockSession) BeginTransaction(ctx context.Context, configurers ...func(*neo4j.TransactionConfig)) (neo4j.ExplicitTransaction, error) {
 	return nil, nil
 }
-func (ms *MockSession) ReadTransaction(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (interface{}, error) {
+func (ms *MockSession) ReadTransaction(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (any, error) {
 	return nil, nil
 }
 
-func (ms *MockSession) WriteTransaction(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (interface{}, error) {
+func (ms *MockSession) WriteTransaction(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (any, error) {
 	return nil, nil
 }
 
-func (ms *MockSession) ExecuteRead(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (interface{}, error) {
+func (ms *MockSession) ExecuteRead(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (any, error) {
 	return nil, nil
 }
 
-func (ms *MockSession) ExecuteWrite(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (interface{}, error) {
+func (ms *MockSession) ExecuteWrite(ctx context.Context, work neo4j.ManagedTransactionWork, configurers ...func(*neo4j.TransactionConfig)) (any, error) {
 	tx := &MockTransaction{MySession: ms}
 	return work(tx)
 }
@@ -124,18 +124,18 @@ func (ms *MockSession) FormatCapturedQueries(sb *strings.Builder) {
 	}
 }
 
-func extractParamMapValues(params map[string]any) []map[string]interface{} {
+func extractParamMapValues(params map[string]any) []map[string]any {
 	if len(params) > 1 {
 		log.Fatalf("Cannot handle more than one parameter in mock session")
 	}
-	capturedParams := make([]map[string]interface{}, 0)
+	capturedParams := make([]map[string]any, 0)
 	for _, v := range params {
 		// The parameter value is an array of maps (e.g., "nodes": []map[string]any)
 		if mapArray, ok := v.([]map[string]any); ok {
 			capturedParams = append(capturedParams, mapArray...)
 		} else {
 			// Fallback for single map parameters
-			capturedParams = append(capturedParams, v.(map[string]interface{}))
+			capturedParams = append(capturedParams, v.(map[string]any))
 		}
 	}
 	return capturedParams

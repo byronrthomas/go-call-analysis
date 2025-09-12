@@ -199,13 +199,13 @@ func compareJSONFiles(t *testing.T, goldenFile, outputFile, filename string) {
 }
 
 // readJSONArrayFile reads a JSON file containing an array of objects
-func readJSONArrayFile(filepath string) ([]interface{}, error) {
+func readJSONArrayFile(filepath string) ([]any, error) {
 	data, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
 
-	var jsonArray []interface{}
+	var jsonArray []any
 	if err := json.Unmarshal(data, &jsonArray); err != nil {
 		return nil, err
 	}
@@ -214,13 +214,13 @@ func readJSONArrayFile(filepath string) ([]interface{}, error) {
 }
 
 // sortJSONArray sorts an array of JSON objects by their string representation for consistent comparison
-func sortJSONArray(data []interface{}) []interface{} {
+func sortJSONArray(data []any) []any {
 	if len(data) <= 1 {
 		return data
 	}
 
 	// Create a copy to avoid modifying the original
-	sorted := make([]interface{}, len(data))
+	sorted := make([]any, len(data))
 	copy(sorted, data)
 
 	// Sort by converting each object to a string and comparing
