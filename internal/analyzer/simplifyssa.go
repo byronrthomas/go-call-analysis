@@ -173,6 +173,7 @@ type AnnotatedCall struct {
 	InstructionAndValue
 	ResolvedTargets []*ssa.Function
 	ReturnValues    []ssa.Value
+	Args            []*ssa.Value
 	DynamicCallee   ssa.Value
 }
 
@@ -356,11 +357,40 @@ func annotateCall(call *ssa.Call, callGraph *callgraph.Graph) *AnnotatedCall {
 			}
 			returnValues[i] = &retVal
 		}
-		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee}
+		annotatedCall := AnnotatedCall{InstructionAndValue: call, ReturnValues: returnValues, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee, Args: makeArgs(call)}
 		return &annotatedCall
 	}
 
-	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee}
+	return &AnnotatedCall{InstructionAndValue: call, ReturnValues: []ssa.Value{call}, ResolvedTargets: allTargets, DynamicCallee: dynamicCallee, Args: makeArgs(call)}
+}
+
+func makeArgs(call *ssa.Call) []*ssa.Value {
+	// NOTE: this is based on the description in https://pkg.go.dev/golang.org/x/tools@v0.36.0/go/ssa#Call
+	//
+	// Here our code attempts to say "keep a receiver value from invoke mode",
+	// although if the resolved callee is a method and we're not in invoke mode, then args[0] will be the
+	// receiver.
+
+	// Did this because we want to drop function values from the args:
+	// * this was done to avoid statically-resolved values like main.check or fmt.Println
+	// being included in as an operand in the graph (they are not parameters of the receiving
+	// function, and so it makes it hard to match call operands to parameter values)
+	// * however we want to keep receiver values on method calls in the args (because these
+	// are parameters of the receiving function)
+	//
+	// NOTE - when the value is a dynamic function value, we'll just have to figure out another way to include them.
+	// If we were to include true dynamic callees, we'd need to put them in the graph in a
+	// more sensible place.
+	//
+	args := make([]*ssa.Value, 0)
+	if call.Common().Method != nil {
+		args = append(args, &call.Common().Value)
+	}
+
+	for _, arg := range call.Common().Args {
+		args = append(args, &arg)
+	}
+	return args
 }
 
 func tryFunctionSimplification(f *ssa.Function, callGraph *callgraph.Graph) {

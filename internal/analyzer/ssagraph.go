@@ -264,7 +264,13 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			}
 			precInstrId = instrId
 
-			for opIndex, op := range instr.Operands(make([]*ssa.Value, 0)) {
+			operands := instr.Operands(make([]*ssa.Value, 0))
+			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
+				operands = make([]*ssa.Value, len(asAnnotatedCall.Args))
+				copy(operands, asAnnotatedCall.Args)
+			}
+
+			for opIndex, op := range operands {
 				if *op == nil {
 					continue
 				}
@@ -310,6 +316,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
 				}
 			} else if asValue, ok := instr.(ssa.Value); ok {
+
 				_, vId := ValueId(v.fileSet, asValue, currentBlockId)
 				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache)
 
