@@ -50,6 +50,7 @@ type ControlFlowEdge struct {
 
 type OperandEdge struct {
 	graphcommon.EdgeCommon
+	Index int
 }
 
 type ResolvedCallEdge struct {
@@ -113,6 +114,7 @@ func (e ControlFlowEdge) NodeTypes() graphcommon.NodeTypes {
 func (e OperandEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Uses_Operand"
+	edgeCommonMap["index"] = e.Index
 	return edgeCommonMap
 }
 
@@ -249,7 +251,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			}
 			precInstrId = instrId
 
-			for _, op := range instr.Operands(make([]*ssa.Value, 0)) {
+			for opIndex, op := range instr.Operands(make([]*ssa.Value, 0)) {
 				if *op == nil {
 					continue
 				}
@@ -265,6 +267,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						FromID: instrId,
 						ToID:   opId,
 					},
+					Index: opIndex,
 				})
 			}
 
