@@ -157,6 +157,11 @@ func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename string) {
 	// Compare data (sort rows first to handle non-deterministic order)
 	sortedGoldenData := sortCSVRows(goldenData)
 	sortedOutputData := sortCSVRows(outputData)
+	// Output the sorted data to the output file to make updating goldens easier
+	if err := writeCSVFile(outputFile, sortedOutputData); err != nil {
+		t.Errorf("Failed to write sorted output data to %s: %v", outputFile, err)
+		return
+	}
 
 	if !reflect.DeepEqual(sortedGoldenData, sortedOutputData) {
 		t.Errorf("Files %s and %s differ", goldenFile, outputFile)
@@ -177,6 +182,21 @@ func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename string) {
 			}
 		}
 	}
+}
+
+func writeCSVFile(filepath string, data [][]string) error {
+	file, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	if err := writer.WriteAll(data); err != nil {
+		return err
+	}
+	writer.Flush()
+	return nil
 }
 
 func readCSVFile(filepath string) ([][]string, error) {
@@ -214,10 +234,16 @@ func sortCSVRows(rows [][]string) [][]string {
 
 	// Sort by converting each row to a string and comparing
 	// This ensures consistent ordering regardless of the original order
-	for i := 0; i < len(sorted)-1; i++ {
+	for i := 1; i < len(sorted)-1; i++ {
 		for j := i + 1; j < len(sorted); j++ {
-			rowI := strings.Join(sorted[i], ",")
-			rowJ := strings.Join(sorted[j], ",")
+			// NOTE: This relies on the fact that the first column is the ID
+			// or the first two columns are from_id and to_id
+			rowI := sorted[i][0]
+			rowJ := sorted[j][0]
+			if rowI == rowJ {
+				rowI = sorted[i][1]
+				rowJ = sorted[j][1]
+			}
 			if rowI > rowJ {
 				sorted[i], sorted[j] = sorted[j], sorted[i]
 			}
