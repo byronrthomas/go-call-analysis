@@ -548,11 +548,11 @@ func blockId(block *ssa.BasicBlock) string {
 }
 
 func instrTypeAsString(instr ssa.Instruction) string {
-	switch instr.(type) {
+	switch instr := instr.(type) {
 	case *ssa.Alloc:
 		return "Alloc"
 	case *ssa.BinOp:
-		return "BinOp"
+		return fmt.Sprintf("BinOp(%s)", instr.Op.String())
 	case *ssa.Call:
 		return "Call"
 	case *AnnotatedCall:
@@ -626,7 +626,7 @@ func instrTypeAsString(instr ssa.Instruction) string {
 	case *ssa.TypeAssert:
 		return "TypeAssert"
 	case *ssa.UnOp:
-		return "UnOp"
+		return fmt.Sprintf("UnOp(%s)", instr.Op.String())
 	}
 	return "unknown"
 }
