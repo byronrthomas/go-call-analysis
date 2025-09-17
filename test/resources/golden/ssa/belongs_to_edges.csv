@@ -4,3 +4,4 @@ from_id,to_id,type
 github.com/throwin5tone7/go-call-analysis/test-project.check,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.init,,Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.main,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,/Users/byron/repos/personal/go-call-analysis/test-project/main.go,Belongs_To

@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+var AFixedWidthArray = []byte{0x02}
+
 func main() {
 	struct1 := &Struct1{field: 1}
 	struct2 := &Struct2{fieldX: 2, fieldY: 3}
@@ -20,6 +22,8 @@ func main() {
 	}
 	fmt.Println("Result:", result)
 	check(struct2) // Unused error result
+
+	someOtherFunction() // Just to make sure that it isn't held to be unreachable
 }
 
 type Getter interface {
@@ -49,4 +53,9 @@ func check(getter Getter) (int, error) {
 		return 0, errors.New("negative result")
 	}
 	return res, nil
+}
+
+func someOtherFunction() {
+	AFixedWidthArray = append(AFixedWidthArray, 0x03)
+	AFixedWidthArray = []byte{0x04, 0x05, 0x6}
 }
