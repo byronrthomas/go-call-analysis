@@ -19,6 +19,7 @@ type EdgeMappable interface {
 type FileVersionNode struct {
 	Id              string
 	LastGitRevision string
+	Package         string
 }
 
 type PositionInfo struct {
@@ -29,7 +30,6 @@ type PositionInfo struct {
 type NodeCommon struct {
 	ID           string
 	Name         string
-	Package      string
 	PositionInfo PositionInfo
 }
 
@@ -38,15 +38,15 @@ func (node FileVersionNode) ToMap() map[string]any {
 		"id":                node.Id,
 		"name":              filepath.Base(node.Id),
 		"last_git_revision": node.LastGitRevision,
+		"package":           node.Package,
 		"label":             "FileVersion",
 	}
 }
 
 func NodeCommonAsMap(nodeCommon NodeCommon) map[string]any {
 	return map[string]any{
-		"id":   nodeCommon.ID,
-		"name": nodeCommon.Name,
-		// "package": nodeCommon.Package,
+		"id":     nodeCommon.ID,
+		"name":   nodeCommon.Name,
 		"line":   nodeCommon.PositionInfo.Line,
 		"column": nodeCommon.PositionInfo.Column,
 	}

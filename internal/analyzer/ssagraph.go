@@ -193,9 +193,14 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		return
 	}
 	if _, ok := v.fileVersionNodes[pos.Filename]; !ok {
+		packageName := "unknown-package"
+		if pkg != nil {
+			packageName = pkg.Pkg.Path()
+		}
 		v.fileVersionNodes[pos.Filename] = graphcommon.FileVersionNode{
 			Id:              pos.Filename,
 			LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
+			Package:         packageName,
 		}
 	}
 	if _, ok := v.functionEntries[funcId]; !ok {
@@ -241,9 +246,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			instrPosition := v.fileSet.Position(instr.Pos())
 			v.instructionNodes = append(v.instructionNodes, InstructionNode{
 				NodeCommon: graphcommon.NodeCommon{
-					ID:      instrId,
-					Name:    instr.String(),
-					Package: pkg.Pkg.Path(),
+					ID:   instrId,
+					Name: instr.String(),
 					PositionInfo: graphcommon.PositionInfo{
 						Line:   instrPosition.Line,
 						Column: instrPosition.Column,
@@ -336,9 +340,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position) {
 	v.instructionNodes = append(v.instructionNodes, InstructionNode{
 		NodeCommon: graphcommon.NodeCommon{
-			ID:      funcId,
-			Name:    f.Name(),
-			Package: pkg.Pkg.Path(),
+			ID:   funcId,
+			Name: f.Name(),
 			PositionInfo: graphcommon.PositionInfo{
 				Line:   pos.Line,
 				Column: pos.Column,
@@ -418,9 +421,8 @@ func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) 
 func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, gitCache *GitRevisionCache) []ValueNode {
 	valueNodes = append(valueNodes, ValueNode{
 		NodeCommon: graphcommon.NodeCommon{
-			ID:      vId,
-			Name:    v.Name(),
-			Package: pkg.Pkg.Path(),
+			ID:   vId,
+			Name: v.Name(),
 			PositionInfo: graphcommon.PositionInfo{
 				Line:   valuePosition.Line,
 				Column: valuePosition.Column,

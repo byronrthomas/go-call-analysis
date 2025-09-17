@@ -162,13 +162,9 @@ func ExtractCallGraphData(result *CallGraphResult, projectPath string) ([]Functi
 		}
 
 		// Extract node data
-		packageName := "unknown-package"
 		fileName := "unknown-file"
 		sourceLine := 0
 		sourceColumn := 0
-		if node.Func.Pkg != nil {
-			packageName = node.Func.Pkg.Pkg.Path()
-		}
 		if node.Func.Pos() != token.NoPos {
 			pos := node.Func.Pos()
 			position := fileSet.Position(pos)
@@ -179,9 +175,8 @@ func ExtractCallGraphData(result *CallGraphResult, projectPath string) ([]Functi
 
 		nodes = append(nodes, FunctionNode{
 			NodeCommon: graphcommon.NodeCommon{
-				ID:      node.Func.String(),
-				Name:    node.Func.Name(),
-				Package: packageName,
+				ID:   node.Func.String(),
+				Name: node.Func.Name(),
 				PositionInfo: graphcommon.PositionInfo{
 					Line:   sourceLine,
 					Column: sourceColumn,
