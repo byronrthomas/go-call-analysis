@@ -1,5 +1,5 @@
 id,column,is_error_type,label,line,name,type_name,value_type
-github.com/throwin5tone7/go-call-analysis/test-project:AFixedWidthArray,0,false,Value,0,AFixedWidthArray,*[]byte,Global
+github.com/throwin5tone7/go-call-analysis/test-project:AFixedWidthArray,2,false,Value,59,AFixedWidthArray,*[]byte,Global
 github.com/throwin5tone7/go-call-analysis/test-project:init$guard,0,false,Value,0,init$guard,*bool,Global
 parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s,19,false,Value,37,s,*github.com/throwin5tone7/go-call-analysis/test-project.Struct1,Parameter
 parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s,19,false,Value,46,s,*github.com/throwin5tone7/go-call-analysis/test-project.Struct2,Parameter

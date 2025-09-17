@@ -181,6 +181,7 @@ type GraphVisitor struct {
 	valueNodes              []ValueNode
 	belongsToEdges          []BelongsToEdge
 	functionEntries         map[string]bool
+	processedValues         map[string]bool
 }
 
 func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -216,7 +217,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 
 	for paramIndex, param := range f.Params {
 		_, paramId := ValueId(v.fileSet, param, "")
-		v.valueNodes = processValue(v.valueNodes, paramId, param, pkg, pos, v.gitRevisionCache)
+		v.valueNodes = processValue(v.valueNodes, paramId, param, pkg, pos, v.gitRevisionCache, v.processedValues)
 		v.resultEdges = append(v.resultEdges, ResultEdge{
 			EdgeCommon: graphcommon.EdgeCommon{
 				FromID: funcId,
@@ -272,6 +273,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
 				operands = make([]*ssa.Value, len(asAnnotatedCall.Args))
 				copy(operands, asAnnotatedCall.Args)
+			} else if asStore, ok := instr.(*ssa.Store); ok {
+				operands = []*ssa.Value{&asStore.Val}
 			}
 
 			for opIndex, op := range operands {
@@ -297,7 +300,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
 				for returnValueIndex, returnValue := range asAnnotatedCall.ReturnValues {
 					_, returnValueId := ValueId(v.fileSet, returnValue, currentBlockId)
-					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache)
+					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
 					v.resultEdges = append(v.resultEdges, ResultEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: instrId,
@@ -319,10 +322,20 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						},
 						EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
 				}
+			} else if asStore, ok := instr.(*ssa.Store); ok {
+				_, vId := ValueId(v.fileSet, asStore.Addr, currentBlockId)
+				v.valueNodes = processValue(v.valueNodes, vId, asStore.Addr, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
+				v.resultEdges = append(v.resultEdges, ResultEdge{
+					EdgeCommon: graphcommon.EdgeCommon{
+						FromID: instrId,
+						ToID:   vId,
+					},
+					Index: 0,
+				})
 			} else if asValue, ok := instr.(ssa.Value); ok {
 
 				_, vId := ValueId(v.fileSet, asValue, currentBlockId)
-				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache)
+				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
 
 				// If instruction produces a value, add a result edge from the instruction to the value
 				v.resultEdges = append(v.resultEdges, ResultEdge{
@@ -362,7 +375,7 @@ func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Functio
 
 func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
 	valuePosition, vId := ValueId(v.fileSet, valueObj, "")
-	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache)
+	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache, v.processedValues)
 }
 
 func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string, projectPath string) SSAGraphData {
@@ -375,6 +388,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		gitRevisionCache:        NewGitRevisionCache(projectPath),
 		functionEntries:         make(map[string]bool),
 		fileVersionNodes:        make(map[string]graphcommon.FileVersionNode),
+		processedValues:         make(map[string]bool),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(simplificationResult.SSAProgram, visitor)
@@ -418,7 +432,11 @@ func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) 
 	return controlFlowEdges
 }
 
-func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, gitCache *GitRevisionCache) []ValueNode {
+func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, gitCache *GitRevisionCache, processedValues map[string]bool) []ValueNode {
+	if _, ok := processedValues[vId]; ok {
+		return valueNodes
+	}
+	processedValues[vId] = true
 	valueNodes = append(valueNodes, ValueNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:   vId,
