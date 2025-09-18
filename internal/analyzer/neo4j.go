@@ -380,14 +380,22 @@ func importEdgesInBatches[T graphcommon.EdgeMappable](ctx context.Context, sessi
 	return nil
 }
 
-// createNodeIndex creates an index for the specified node type
-func createNodeIndex(ctx context.Context, session neo4j.SessionWithContext, nodeType string) error {
-	log.Printf("Creating index on %s node IDs...", nodeType)
-	_, err := session.Run(ctx, fmt.Sprintf("CREATE INDEX ON :%s(id)", nodeType), nil)
+// createNodeIdIndex creates an index for the specified node type
+func createNodeIdIndex(ctx context.Context, session neo4j.SessionWithContext, nodeType string) error {
+	return createNodeIndex(ctx, fmt.Sprintf(":%s(id)", nodeType), session)
+}
+
+func createNodeIndex(ctx context.Context, indexExpr string, session neo4j.SessionWithContext) error {
+	log.Printf("Creating node index on %s...", indexExpr)
+	_, err := session.Run(ctx, fmt.Sprintf("CREATE INDEX ON %s", indexExpr), nil)
 	if err != nil {
 		return fmt.Errorf("failed to create index: %v", err)
 	}
 	return nil
+}
+
+var additionalNodeIndexes []string = []string{
+	":Instruction(instruction_type)",
 }
 
 func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, graphData SSAGraphData) error {
@@ -398,7 +406,7 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	if err := importNodesInBatches(ctx, session, &graphData.FileVersionNodes, "file version"); err != nil {
 		return err
 	}
-	if err := createNodeIndex(ctx, session, "FileVersion"); err != nil {
+	if err := createNodeIdIndex(ctx, session, "FileVersion"); err != nil {
 		return err
 	}
 
@@ -406,7 +414,7 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	if err := importNodesInBatches(ctx, session, &graphData.InstructionNodes, "instruction"); err != nil {
 		return err
 	}
-	if err := createNodeIndex(ctx, session, "Instruction"); err != nil {
+	if err := createNodeIdIndex(ctx, session, "Instruction"); err != nil {
 		return err
 	}
 
@@ -414,7 +422,7 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	if err := importNodesInBatches(ctx, session, &graphData.ValueNodes, "value"); err != nil {
 		return err
 	}
-	if err := createNodeIndex(ctx, session, "Value"); err != nil {
+	if err := createNodeIdIndex(ctx, session, "Value"); err != nil {
 		return err
 	}
 
@@ -446,6 +454,18 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	// Import belongs to edges
 	if err := importEdgesInBatches(ctx, session, &graphData.BelongsToEdges, "belongs to"); err != nil {
 		return err
+	}
+
+	log.Printf("Creating Edge type index")
+	_, err := session.Run(ctx, "CREATE EDGE INDEX ON :EDGE_TYPE;", nil)
+	if err != nil {
+		return fmt.Errorf("failed to create index: %v", err)
+	}
+
+	for _, index := range additionalNodeIndexes {
+		if err := createNodeIndex(ctx, index, session); err != nil {
+			return err
+		}
 	}
 
 	log.Printf("Total import completed in %v", time.Since(startTime))

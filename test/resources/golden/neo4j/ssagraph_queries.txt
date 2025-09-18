@@ -590,3 +590,9 @@ github.com/throwin5tone7/go-call-analysis/test-project.check	/Users/byron/repos/
 github.com/throwin5tone7/go-call-analysis/test-project.init		Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.main	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
+
+
+Query: CREATE EDGE INDEX ON :EDGE_TYPE;
+
+
+Query: CREATE INDEX ON :Instruction(instruction_type)
