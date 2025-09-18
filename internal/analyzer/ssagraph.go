@@ -307,18 +307,42 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						Index: returnValueIndex,
 					})
 				}
-				for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
-					targetId := resolvedTarget.String()
-					if _, ok := v.functionEntries[targetId]; !ok {
-						addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()))
-						v.functionEntries[targetId] = true
+				if len(asAnnotatedCall.ResolvedTargets) > 0 {
+					for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
+						targetId := resolvedTarget.String()
+						if _, ok := v.functionEntries[targetId]; !ok {
+							addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()))
+							v.functionEntries[targetId] = true
+						}
+						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
+							EdgeCommon: graphcommon.EdgeCommon{
+								FromID: instrId,
+								ToID:   resolvedTarget.String(),
+							},
+							EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
 					}
-					v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
-						EdgeCommon: graphcommon.EdgeCommon{
-							FromID: instrId,
-							ToID:   resolvedTarget.String(),
-						},
-						EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
+				} else if asAnnotatedCall.DynamicCallee != nil {
+					dynamicCallee := asAnnotatedCall.DynamicCallee
+					if asBuiltin, ok := dynamicCallee.(*ssa.Builtin); ok {
+						builtinId := "^builtin^" + asBuiltin.Name()
+						v.instructionNodes = append(v.instructionNodes, InstructionNode{
+							NodeCommon: graphcommon.NodeCommon{
+								ID:           builtinId,
+								Name:         asBuiltin.String(),
+								PositionInfo: graphcommon.PositionInfo{},
+							},
+							InstructionType: "function-entry",
+							Annotation:      "builtin",
+						})
+						v.functionEntries[builtinId] = true
+						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
+							EdgeCommon: graphcommon.EdgeCommon{
+								FromID: instrId,
+								ToID:   builtinId,
+							},
+							EdgeCardinality: len(asAnnotatedCall.ResolvedTargets)})
+					}
+
 				}
 			} else if asValue, ok := instr.(ssa.Value); ok {
 

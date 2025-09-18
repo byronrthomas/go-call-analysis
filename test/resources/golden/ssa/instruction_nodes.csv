@@ -10,6 +10,7 @@ id,annotation,column,instruction_type,label,line,name
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3,,22,UnOp(*),Instruction,47,*t2
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4,,18,BinOp(+),Instruction,47,t1 + t3
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5,,2,Return,Instruction,47,return t4
+^builtin^append,builtin,0,function-entry,Instruction,0,builtin append
 errors.New,,6,function-entry,Instruction,64,New
 errors.init,,0,function-entry,Instruction,0,init
 fmt.Println,,6,function-entry,Instruction,313,Println

@@ -12,3 +12,4 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:4:8,fmt.Println,1,Re
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:10,github.com/throwin5tone7/go-call-analysis/test-project.check,1,Resolved_Call
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:11,github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,1,Resolved_Call
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8,fmt.Println,1,Resolved_Call
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:5,^builtin^append,0,Resolved_Call
