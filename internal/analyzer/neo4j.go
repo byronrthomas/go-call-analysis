@@ -474,6 +474,11 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		return err
 	}
 
+	// Import return point edges
+	if err := importEdgesInBatches(ctx, session, &graphData.ReturnPointEdges, "has return point"); err != nil {
+		return err
+	}
+
 	log.Printf("Creating Edge type index")
 	_, err := session.Run(ctx, "CREATE EDGE INDEX ON :EDGE_TYPE;", nil)
 	if err != nil {

@@ -324,5 +324,12 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["has_parameter_edges"] = hasParameterEdgeMappables
 
+	// Convert return point edges to Mappable interface
+	returnPointEdgeMappables := make([]graphcommon.Mappable, len(ssaData.ReturnPointEdges))
+	for i := range ssaData.ReturnPointEdges {
+		returnPointEdgeMappables[i] = &ssaData.ReturnPointEdges[i]
+	}
+	dataMap["return_point_edges"] = returnPointEdgeMappables
+
 	return ExportToCSV(dataMap, outputPath)
 }

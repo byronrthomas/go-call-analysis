@@ -26,6 +26,7 @@ type SSAGraphData struct {
 	ResolvedCallEdges  []ResolvedCallEdge
 	FunctionEntryEdges []FunctionEntryEdge
 	HasParameterEdges  []HasParameterEdge
+	ReturnPointEdges   []ReturnPointEdge
 }
 
 type ValueNode struct {
@@ -83,6 +84,10 @@ type FunctionEntryEdge struct {
 type HasParameterEdge struct {
 	graphcommon.EdgeCommon
 	Index int
+}
+
+type ReturnPointEdge struct {
+	graphcommon.EdgeCommon
 }
 
 func (n ValueNode) ToMap() map[string]any {
@@ -218,6 +223,19 @@ func (e HasParameterEdge) NodeTypes() graphcommon.NodeTypes {
 	}
 }
 
+func (e ReturnPointEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Has_Return_Point"
+	return edgeCommonMap
+}
+
+func (e ReturnPointEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Function",
+		ToLabel:   "Instruction",
+	}
+}
+
 type GraphVisitor struct {
 	BaseSSAVisitor
 	SSASimplificationResult *SSASimplificationResult
@@ -237,6 +255,7 @@ type GraphVisitor struct {
 	hasParameterEdges       []HasParameterEdge
 	functionEntries         map[string]bool
 	processedValues         map[string]bool
+	returnPointEdges        []ReturnPointEdge
 }
 
 func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -426,6 +445,16 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 				})
 			}
 		}
+
+		lastInstr := b.Instrs[len(b.Instrs)-1]
+		if _, ok := lastInstr.(*ssa.Return); ok {
+			v.returnPointEdges = append(v.returnPointEdges, ReturnPointEdge{
+				EdgeCommon: graphcommon.EdgeCommon{
+					FromID: funcId,
+					ToID:   precInstrId,
+				},
+			})
+		}
 	}
 }
 
@@ -484,6 +513,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		BelongsToEdges:     visitor.belongsToEdges,
 		FunctionEntryEdges: visitor.functionEntryEdges,
 		HasParameterEdges:  visitor.hasParameterEdges,
+		ReturnPointEdges:   visitor.returnPointEdges,
 	}
 }
 

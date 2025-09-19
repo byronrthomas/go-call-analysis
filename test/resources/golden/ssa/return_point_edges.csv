@@ -1,0 +1,8 @@
+from_id,to_id,type
+github.com/throwin5tone7/go-call-analysis/test-project.main,github.com/throwin5tone7/go-call-analysis/test-project.main:5:12,Has_Return_Point
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2,Has_Return_Point
+github.com/throwin5tone7/go-call-analysis/test-project.check,github.com/throwin5tone7/go-call-analysis/test-project.check:1:1,Has_Return_Point
+github.com/throwin5tone7/go-call-analysis/test-project.check,github.com/throwin5tone7/go-call-analysis/test-project.check:2:0,Has_Return_Point
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5,Has_Return_Point
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:16,Has_Return_Point
+github.com/throwin5tone7/go-call-analysis/test-project.init,github.com/throwin5tone7/go-call-analysis/test-project.init:2:0,Has_Return_Point
