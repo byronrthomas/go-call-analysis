@@ -46,7 +46,8 @@ type InstructionNode struct {
 type SSAGraphFunctionNode struct {
 	graphcommon.NodeCommon
 	// Used to store the condition of an annotated if
-	Annotation string
+	Annotation      string
+	NumReturnPoints int
 }
 
 type OrderingEdge struct {
@@ -111,6 +112,7 @@ func (n SSAGraphFunctionNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Function"
 	nodeCommonMap["annotation"] = n.Annotation
+	nodeCommonMap["num_return_points"] = n.NumReturnPoints
 	return nodeCommonMap
 }
 
@@ -239,6 +241,7 @@ func (e ReturnPointEdge) NodeTypes() graphcommon.NodeTypes {
 type GraphVisitor struct {
 	BaseSSAVisitor
 	SSASimplificationResult *SSASimplificationResult
+	PackagePrefixFilter     func(pkgPath string) bool
 	fileSet                 *token.FileSet
 	gitRevisionCache        *GitRevisionCache
 	fileVersionNodes        map[string]graphcommon.FileVersionNode
@@ -279,7 +282,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		}
 	}
 	if _, ok := v.functionEntries[funcId]; !ok {
-		addFunctionEntryNode(v, funcId, f, pkg, pos)
+		addFunctionEntryNode(v, funcId, f, pkg, pos, true)
 	}
 	v.belongsToEdges = append(v.belongsToEdges, BelongsToEdge{
 		EdgeCommon: graphcommon.EdgeCommon{
@@ -396,7 +399,9 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
 						targetId := resolvedTarget.String()
 						if _, ok := v.functionEntries[targetId]; !ok {
-							addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()))
+							// We only do full analysis for functions that match the package prefixes
+							fullAnalysis := v.PackagePrefixFilter(resolvedTarget.Pkg.Pkg.Path())
+							addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()), fullAnalysis)
 							v.functionEntries[targetId] = true
 						}
 						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
@@ -445,20 +450,14 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 				})
 			}
 		}
-
-		lastInstr := b.Instrs[len(b.Instrs)-1]
-		if _, ok := lastInstr.(*ssa.Return); ok {
-			v.returnPointEdges = append(v.returnPointEdges, ReturnPointEdge{
-				EdgeCommon: graphcommon.EdgeCommon{
-					FromID: funcId,
-					ToID:   precInstrId,
-				},
-			})
-		}
 	}
 }
 
-func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position) {
+func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position, fullAnalysis bool) {
+	var returnPoints int
+	if fullAnalysis {
+		v.returnPointEdges, returnPoints = addReturnPointEdges(funcId, f, v.returnPointEdges)
+	}
 	v.functionNodes = append(v.functionNodes, SSAGraphFunctionNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:   funcId,
@@ -468,8 +467,10 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 				Column: pos.Column,
 			},
 		},
-		Annotation: "",
+		Annotation:      "",
+		NumReturnPoints: returnPoints,
 	})
+
 }
 
 func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Function, _namedType *types.Named, _pkg *ssa.Package) {
@@ -496,6 +497,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		functionEntries:         make(map[string]bool),
 		fileVersionNodes:        make(map[string]graphcommon.FileVersionNode),
 		processedValues:         make(map[string]bool),
+		PackagePrefixFilter:     PackageMatcher(packagePrefixes),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(simplificationResult.SSAProgram, visitor)
@@ -541,6 +543,24 @@ func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) 
 		})
 	}
 	return controlFlowEdges
+}
+
+func addReturnPointEdges(funcId string, f *ssa.Function, returnPointEdges []ReturnPointEdge) ([]ReturnPointEdge, int) {
+	numReturnPoints := 0
+	for _, b := range f.Blocks {
+		lastInstr := b.Instrs[len(b.Instrs)-1]
+		if _, ok := lastInstr.(*ssa.Return); ok {
+			instrId := ContextualId(b, len(b.Instrs)-1)
+			returnPointEdges = append(returnPointEdges, ReturnPointEdge{
+				EdgeCommon: graphcommon.EdgeCommon{
+					FromID: funcId,
+					ToID:   instrId,
+				},
+			})
+			numReturnPoints++
+		}
+	}
+	return returnPointEdges, numReturnPoints
 }
 
 func processValue(valueNodes []ValueNode, vId string, v ssa.Value, pkg *ssa.Package, valuePosition token.Position, gitCache *GitRevisionCache, processedValues map[string]bool) []ValueNode {
