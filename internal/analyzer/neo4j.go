@@ -410,6 +410,14 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		return err
 	}
 
+	// Import function nodes
+	if err := importNodesInBatches(ctx, session, &graphData.FunctionNodes, "function"); err != nil {
+		return err
+	}
+	if err := createNodeIdIndex(ctx, session, "Function"); err != nil {
+		return err
+	}
+
 	// Import instruction nodes
 	if err := importNodesInBatches(ctx, session, &graphData.InstructionNodes, "instruction"); err != nil {
 		return err
@@ -423,6 +431,16 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		return err
 	}
 	if err := createNodeIdIndex(ctx, session, "Value"); err != nil {
+		return err
+	}
+
+	// Import function entry edges
+	if err := importEdgesInBatches(ctx, session, &graphData.FunctionEntryEdges, "function entry"); err != nil {
+		return err
+	}
+
+	// Import has parameter edges
+	if err := importEdgesInBatches(ctx, session, &graphData.HasParameterEdges, "has parameter"); err != nil {
 		return err
 	}
 

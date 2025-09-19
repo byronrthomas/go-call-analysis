@@ -261,6 +261,13 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["instruction_nodes"] = instructionNodeMappables
 
+	// Convert function nodes to Mappable interface
+	functionNodeMappables := make([]graphcommon.Mappable, len(ssaData.FunctionNodes))
+	for i := range ssaData.FunctionNodes {
+		functionNodeMappables[i] = &ssaData.FunctionNodes[i]
+	}
+	dataMap["function_nodes"] = functionNodeMappables
+
 	// Convert ordering edges to Mappable interface
 	orderingEdgeMappables := make([]graphcommon.Mappable, len(ssaData.OrderingEdges))
 	for i := range ssaData.OrderingEdges {
@@ -302,6 +309,20 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 		belongsToEdgeMappables[i] = &ssaData.BelongsToEdges[i]
 	}
 	dataMap["belongs_to_edges"] = belongsToEdgeMappables
+
+	// Convert function entry edges to Mappable interface
+	functionEntryEdgeMappables := make([]graphcommon.Mappable, len(ssaData.FunctionEntryEdges))
+	for i := range ssaData.FunctionEntryEdges {
+		functionEntryEdgeMappables[i] = &ssaData.FunctionEntryEdges[i]
+	}
+	dataMap["function_entry_edges"] = functionEntryEdgeMappables
+
+	// Convert has parameter edges to Mappable interface
+	hasParameterEdgeMappables := make([]graphcommon.Mappable, len(ssaData.HasParameterEdges))
+	for i := range ssaData.HasParameterEdges {
+		hasParameterEdgeMappables[i] = &ssaData.HasParameterEdges[i]
+	}
+	dataMap["has_parameter_edges"] = hasParameterEdgeMappables
 
 	return ExportToCSV(dataMap, outputPath)
 }

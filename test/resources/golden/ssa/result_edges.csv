@@ -1,14 +1,11 @@
 from_id,to_id,index,type
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1,0,Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t1,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3,0,Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4,value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4,0,Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check,parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter,0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0,0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1,value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1,0,Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0,value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2,0,Produces_Result

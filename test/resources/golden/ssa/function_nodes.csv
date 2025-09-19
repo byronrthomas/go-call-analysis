@@ -1,0 +1,12 @@
+id,annotation,column,instruction_type,label,line,name
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,,19,function-entry,Function,37,Get
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,,19,function-entry,Function,46,Get
+^builtin^append,builtin,0,function-entry,Function,0,builtin append
+errors.New,,6,function-entry,Function,64,New
+errors.init,,0,function-entry,Function,0,init
+fmt.Println,,6,function-entry,Function,313,Println
+fmt.init,,0,function-entry,Function,0,init
+github.com/throwin5tone7/go-call-analysis/test-project.check,,6,function-entry,Function,50,check
+github.com/throwin5tone7/go-call-analysis/test-project.init,,0,function-entry,Function,0,init
+github.com/throwin5tone7/go-call-analysis/test-project.main,,6,function-entry,Function,10,main
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,,6,function-entry,Function,58,someOtherFunction

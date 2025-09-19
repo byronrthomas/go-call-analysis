@@ -1,0 +1,4 @@
+from_id,to_id,index,type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s,0,Has_Parameter
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s,0,Has_Parameter
+github.com/throwin5tone7/go-call-analysis/test-project.check,parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter,0,Has_Parameter

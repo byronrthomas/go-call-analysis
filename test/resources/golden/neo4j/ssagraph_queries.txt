@@ -11,30 +11,40 @@ Query: CREATE INDEX ON :FileVersion(id)
 Query: UNWIND $nodes AS node CREATE (n:node.label {annotation: node.annotation, column: node.column, id: node.id, instruction_type: node.instruction_type, line: node.line, name: node.name})
 Parameters:
 id	annotation	column	instruction_type	label	line	name
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get		19	function-entry	Instruction	37	Get
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get		19	function-entry	Function	37	Get
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get		19	function-entry	Function	46	Get
+^builtin^append	builtin	0	function-entry	Function	0	builtin append
+errors.New		6	function-entry	Function	64	New
+errors.init		0	function-entry	Function	0	init
+fmt.Println		6	function-entry	Function	313	Println
+fmt.init		0	function-entry	Function	0	init
+github.com/throwin5tone7/go-call-analysis/test-project.check		6	function-entry	Function	50	check
+github.com/throwin5tone7/go-call-analysis/test-project.init		0	function-entry	Function	0	init
+github.com/throwin5tone7/go-call-analysis/test-project.main		6	function-entry	Function	10	main
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction		6	function-entry	Function	58	someOtherFunction
+
+
+Query: CREATE INDEX ON :Function(id)
+
+
+Query: UNWIND $nodes AS node CREATE (n:node.label {annotation: node.annotation, column: node.column, id: node.id, instruction_type: node.instruction_type, line: node.line, name: node.name})
+Parameters:
+id	annotation	column	instruction_type	label	line	name
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0		11	FieldAddr	Instruction	38	&s.field [#0]
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1		11	UnOp(*)	Instruction	38	*t0
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2		2	Return	Instruction	38	return t1
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get		19	function-entry	Instruction	46	Get
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0		11	FieldAddr	Instruction	47	&s.fieldX [#0]
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1		11	UnOp(*)	Instruction	47	*t0
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2		22	FieldAddr	Instruction	47	&s.fieldY [#1]
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3		22	UnOp(*)	Instruction	47	*t2
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4		18	BinOp(+)	Instruction	47	t1 + t3
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5		2	Return	Instruction	47	return t4
-^builtin^append	builtin	0	function-entry	Instruction	0	builtin append
-errors.New		6	function-entry	Instruction	64	New
-errors.init		0	function-entry	Instruction	0	init
-fmt.Println		6	function-entry	Instruction	313	Println
-fmt.init		0	function-entry	Instruction	0	init
-github.com/throwin5tone7/go-call-analysis/test-project.check		6	function-entry	Instruction	50	check
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0		19	AnnotatedCall	Instruction	51	invoke getter.Get()
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1		9	BinOp(<)	Instruction	52	t0 < 0:int
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	< 0	0	AnnotatedIf	Instruction	0	if (t0 < 0) goto 1 else 2
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0		23	AnnotatedCall	Instruction	53	errors.New("negative result":string)
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:1		3	Return	Instruction	53	return 0:int, t2
 github.com/throwin5tone7/go-call-analysis/test-project.check:2:0		2	Return	Instruction	55	return t0, nil:error
-github.com/throwin5tone7/go-call-analysis/test-project.init		0	function-entry	Instruction	0	init
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0		0	UnOp(*)	Instruction	0	*init$guard
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:1		0	If	Instruction	0	if t0 goto 2 else 1
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:0		0	Store	Instruction	0	*init$guard = true:bool
@@ -47,7 +57,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.init:1:6		30	Slice	Instru
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:7		30	Store	Instruction	8	*AFixedWidthArray = t5
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:8		0	Jump	Instruction	0	jump 2
 github.com/throwin5tone7/go-call-analysis/test-project.init:2:0		0	Return	Instruction	0	return
-github.com/throwin5tone7/go-call-analysis/test-project.main		6	function-entry	Instruction	10	main
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0		21	Alloc	Instruction	11	new Struct1 (complit)
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1		27	FieldAddr	Instruction	11	&t0.field [#0]
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:10		9	BinOp(!=)	Instruction	14	t8 != nil:error
@@ -107,7 +116,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:6		25	Store	Instru
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7		0	Slice	Instruction	0	slice t36[:]
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8		13	AnnotatedCall	Instruction	23	fmt.Println(t41...)
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9		0	MakeInterface	Instruction	0	make Getter <- *Struct2 (t2)
-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction		6	function-entry	Instruction	58	someOtherFunction
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0		28	UnOp(*)	Instruction	59	*AFixedWidthArray
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:1		50	Alloc	Instruction	59	new [1]byte (varargs)
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:10		0	IndexAddr	Instruction	0	&t5[1:int]
@@ -217,25 +225,48 @@ Query: CREATE INDEX ON :Value(id)
 
 Query: 
 				UNWIND $edges AS edge
+				MATCH (from:Function {id: edge.from_id}), (to:Instruction {id: edge.to_id})
+				CREATE (from)-[:edge.type]->(to)
+			
+Parameters:
+from_id	to_id	type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	Function_Entry
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.check	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.init	github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0	Function_Entry
+
+
+Query: 
+				UNWIND $edges AS edge
+				MATCH (from:Function {id: edge.from_id}), (to:Value {id: edge.to_id})
+				CREATE (from)-[:edge.type {index: edge.index}]->(to)
+			
+Parameters:
+from_id	to_id	index	type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	0	Has_Parameter
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s	0	Has_Parameter
+github.com/throwin5tone7/go-call-analysis/test-project.check	parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter	0	Has_Parameter
+
+
+Query: 
+				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
 			
 Parameters:
 from_id	to_id	type
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	And_Then
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	And_Then
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:5	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.check	github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	github.com/throwin5tone7/go-call-analysis/test-project.check:1:1	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.init	github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:0:0	github.com/throwin5tone7/go-call-analysis/test-project.init:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:0	github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:1	github.com/throwin5tone7/go-call-analysis/test-project.init:1:2	And_Then
@@ -245,7 +276,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.init:1:4	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:5	github.com/throwin5tone7/go-call-analysis/test-project.init:1:6	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:6	github.com/throwin5tone7/go-call-analysis/test-project.init:1:7	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.init:1:7	github.com/throwin5tone7/go-call-analysis/test-project.init:1:8	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:0	github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:1	github.com/throwin5tone7/go-call-analysis/test-project.main:0:2	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:0:10	github.com/throwin5tone7/go-call-analysis/test-project.main:0:11	And_Then
@@ -299,7 +329,6 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:6	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	And_Then
-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:1	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:1	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:2	And_Then
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:10	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:11	And_Then
@@ -458,16 +487,13 @@ Query:
 			
 Parameters:
 from_id	to_id	index	type
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	0	Produces_Result
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:1	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t1	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:2	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t2	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:3	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t3	0	Produces_Result
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:4	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t4	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.check	parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t0	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.check:0:t1	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	value-github.com/throwin5tone7/go-call-analysis/test-project.check:1:t2	0	Produces_Result
@@ -558,7 +584,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:4:9	github.com/throw
 
 Query: 
 				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
+				MATCH (from:Instruction {id: edge.from_id}), (to:Function {id: edge.to_id})
 				CREATE (from)-[:edge.type {edge_cardinality: edge.edge_cardinality}]->(to)
 			
 Parameters:
@@ -581,7 +607,7 @@ github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:5	^bu
 
 Query: 
 				UNWIND $edges AS edge
-				MATCH (from:Instruction {id: edge.from_id}), (to:FileVersion {id: edge.to_id})
+				MATCH (from:Function {id: edge.from_id}), (to:FileVersion {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
 			
 Parameters:

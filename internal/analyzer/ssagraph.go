@@ -14,15 +14,18 @@ import (
 )
 
 type SSAGraphData struct {
-	FileVersionNodes  []graphcommon.FileVersionNode
-	BelongsToEdges    []BelongsToEdge
-	ValueNodes        []ValueNode
-	InstructionNodes  []InstructionNode
-	OrderingEdges     []OrderingEdge
-	OperandEdges      []OperandEdge
-	ControlFlowEdges  []ControlFlowEdge
-	ResultEdges       []ResultEdge
-	ResolvedCallEdges []ResolvedCallEdge
+	FileVersionNodes   []graphcommon.FileVersionNode
+	BelongsToEdges     []BelongsToEdge
+	ValueNodes         []ValueNode
+	InstructionNodes   []InstructionNode
+	FunctionNodes      []SSAGraphFunctionNode
+	OrderingEdges      []OrderingEdge
+	OperandEdges       []OperandEdge
+	ControlFlowEdges   []ControlFlowEdge
+	ResultEdges        []ResultEdge
+	ResolvedCallEdges  []ResolvedCallEdge
+	FunctionEntryEdges []FunctionEntryEdge
+	HasParameterEdges  []HasParameterEdge
 }
 
 type ValueNode struct {
@@ -33,6 +36,13 @@ type ValueNode struct {
 }
 
 type InstructionNode struct {
+	graphcommon.NodeCommon
+	InstructionType string
+	// Used to store the condition of an annotated if
+	Annotation string
+}
+
+type SSAGraphFunctionNode struct {
 	graphcommon.NodeCommon
 	InstructionType string
 	// Used to store the condition of an annotated if
@@ -67,6 +77,15 @@ type BelongsToEdge struct {
 	graphcommon.EdgeCommon
 }
 
+type FunctionEntryEdge struct {
+	graphcommon.EdgeCommon
+}
+
+type HasParameterEdge struct {
+	graphcommon.EdgeCommon
+	Index int
+}
+
 func (n ValueNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Value"
@@ -79,6 +98,14 @@ func (n ValueNode) ToMap() map[string]any {
 func (n InstructionNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Instruction"
+	nodeCommonMap["instruction_type"] = n.InstructionType
+	nodeCommonMap["annotation"] = n.Annotation
+	return nodeCommonMap
+}
+
+func (n SSAGraphFunctionNode) ToMap() map[string]any {
+	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
+	nodeCommonMap["label"] = "Function"
 	nodeCommonMap["instruction_type"] = n.InstructionType
 	nodeCommonMap["annotation"] = n.Annotation
 	return nodeCommonMap
@@ -149,7 +176,7 @@ func (e ResolvedCallEdge) ToMap() map[string]any {
 func (e ResolvedCallEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Instruction",
-		ToLabel:   "Instruction",
+		ToLabel:   "Function",
 	}
 }
 
@@ -161,8 +188,35 @@ func (e BelongsToEdge) ToMap() map[string]any {
 
 func (e BelongsToEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
-		FromLabel: "Instruction",
+		FromLabel: "Function",
 		ToLabel:   "FileVersion",
+	}
+}
+
+func (e FunctionEntryEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Function_Entry"
+	return edgeCommonMap
+}
+
+func (e FunctionEntryEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Function",
+		ToLabel:   "Instruction",
+	}
+}
+
+func (e HasParameterEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "Has_Parameter"
+	edgeCommonMap["index"] = e.Index
+	return edgeCommonMap
+}
+
+func (e HasParameterEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Function",
+		ToLabel:   "Value",
 	}
 }
 
@@ -173,6 +227,7 @@ type GraphVisitor struct {
 	gitRevisionCache        *GitRevisionCache
 	fileVersionNodes        map[string]graphcommon.FileVersionNode
 	instructionNodes        []InstructionNode
+	functionNodes           []SSAGraphFunctionNode
 	orderingEdges           []OrderingEdge
 	controlFlowEdges        []ControlFlowEdge
 	operandEdges            []OperandEdge
@@ -180,6 +235,8 @@ type GraphVisitor struct {
 	resolvedCallEdges       []ResolvedCallEdge
 	valueNodes              []ValueNode
 	belongsToEdges          []BelongsToEdge
+	functionEntryEdges      []FunctionEntryEdge
+	hasParameterEdges       []HasParameterEdge
 	functionEntries         map[string]bool
 	processedValues         map[string]bool
 }
@@ -218,7 +275,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 	for paramIndex, param := range f.Params {
 		_, paramId := ValueId(v.fileSet, param, "")
 		v.valueNodes = processValue(v.valueNodes, paramId, param, pkg, pos, v.gitRevisionCache, v.processedValues)
-		v.resultEdges = append(v.resultEdges, ResultEdge{
+		v.hasParameterEdges = append(v.hasParameterEdges, HasParameterEdge{
 			EdgeCommon: graphcommon.EdgeCommon{
 				FromID: funcId,
 				ToID:   paramId,
@@ -260,12 +317,23 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 
 			// Add the and-then edge from the previous instruction to the current instruction
 			if precInstrId != "" {
-				v.orderingEdges = append(v.orderingEdges, OrderingEdge{
-					EdgeCommon: graphcommon.EdgeCommon{
-						FromID: precInstrId,
-						ToID:   instrId,
-					},
-				})
+				if precInstrId == funcId {
+					// This is the first instruction in the first block, use FunctionEntryEdge
+					v.functionEntryEdges = append(v.functionEntryEdges, FunctionEntryEdge{
+						EdgeCommon: graphcommon.EdgeCommon{
+							FromID: precInstrId,
+							ToID:   instrId,
+						},
+					})
+				} else {
+					// Regular ordering edge between instructions
+					v.orderingEdges = append(v.orderingEdges, OrderingEdge{
+						EdgeCommon: graphcommon.EdgeCommon{
+							FromID: precInstrId,
+							ToID:   instrId,
+						},
+					})
+				}
 			}
 			precInstrId = instrId
 
@@ -326,7 +394,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					if asBuiltin, ok := dynamicCallee.(*ssa.Builtin); ok {
 						builtinId := "^builtin^" + asBuiltin.Name()
 						if _, ok := v.functionEntries[builtinId]; !ok {
-							v.instructionNodes = append(v.instructionNodes, InstructionNode{
+							v.functionNodes = append(v.functionNodes, SSAGraphFunctionNode{
 								NodeCommon: graphcommon.NodeCommon{
 									ID:           builtinId,
 									Name:         asBuiltin.String(),
@@ -365,7 +433,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 }
 
 func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position) {
-	v.instructionNodes = append(v.instructionNodes, InstructionNode{
+	v.functionNodes = append(v.functionNodes, SSAGraphFunctionNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:   funcId,
 			Name: f.Name(),
@@ -408,15 +476,18 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 	traverser.Traverse(simplificationResult.SSAProgram, visitor)
 
 	return SSAGraphData{
-		FileVersionNodes:  slices.Collect(maps.Values(visitor.fileVersionNodes)),
-		ValueNodes:        visitor.valueNodes,
-		InstructionNodes:  visitor.instructionNodes,
-		OrderingEdges:     visitor.orderingEdges,
-		OperandEdges:      visitor.operandEdges,
-		ControlFlowEdges:  visitor.controlFlowEdges,
-		ResultEdges:       visitor.resultEdges,
-		ResolvedCallEdges: visitor.resolvedCallEdges,
-		BelongsToEdges:    visitor.belongsToEdges,
+		FileVersionNodes:   slices.Collect(maps.Values(visitor.fileVersionNodes)),
+		ValueNodes:         visitor.valueNodes,
+		InstructionNodes:   visitor.instructionNodes,
+		FunctionNodes:      visitor.functionNodes,
+		OrderingEdges:      visitor.orderingEdges,
+		OperandEdges:       visitor.operandEdges,
+		ControlFlowEdges:   visitor.controlFlowEdges,
+		ResultEdges:        visitor.resultEdges,
+		ResolvedCallEdges:  visitor.resolvedCallEdges,
+		BelongsToEdges:     visitor.belongsToEdges,
+		FunctionEntryEdges: visitor.functionEntryEdges,
+		HasParameterEdges:  visitor.hasParameterEdges,
 	}
 }
 

@@ -1,0 +1,7 @@
+from_id,to_id,type
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0,Function_Entry
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:0,Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.check,github.com/throwin5tone7/go-call-analysis/test-project.check:0:0,Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.init,github.com/throwin5tone7/go-call-analysis/test-project.init:0:0,Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.main,github.com/throwin5tone7/go-call-analysis/test-project.main:0:0,Function_Entry
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0,Function_Entry
