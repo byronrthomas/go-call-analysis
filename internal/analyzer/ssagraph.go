@@ -44,7 +44,6 @@ type InstructionNode struct {
 
 type SSAGraphFunctionNode struct {
 	graphcommon.NodeCommon
-	InstructionType string
 	// Used to store the condition of an annotated if
 	Annotation string
 }
@@ -106,7 +105,6 @@ func (n InstructionNode) ToMap() map[string]any {
 func (n SSAGraphFunctionNode) ToMap() map[string]any {
 	nodeCommonMap := graphcommon.NodeCommonAsMap(n.NodeCommon)
 	nodeCommonMap["label"] = "Function"
-	nodeCommonMap["instruction_type"] = n.InstructionType
 	nodeCommonMap["annotation"] = n.Annotation
 	return nodeCommonMap
 }
@@ -400,8 +398,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 									Name:         asBuiltin.String(),
 									PositionInfo: graphcommon.PositionInfo{},
 								},
-								InstructionType: "function-entry",
-								Annotation:      "builtin",
+								Annotation: "builtin",
 							})
 							v.functionEntries[builtinId] = true
 						}
@@ -442,8 +439,7 @@ func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *
 				Column: pos.Column,
 			},
 		},
-		InstructionType: "function-entry",
-		Annotation:      "",
+		Annotation: "",
 	})
 }
 
