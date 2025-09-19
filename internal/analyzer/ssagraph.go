@@ -325,16 +325,18 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					dynamicCallee := asAnnotatedCall.DynamicCallee
 					if asBuiltin, ok := dynamicCallee.(*ssa.Builtin); ok {
 						builtinId := "^builtin^" + asBuiltin.Name()
-						v.instructionNodes = append(v.instructionNodes, InstructionNode{
-							NodeCommon: graphcommon.NodeCommon{
-								ID:           builtinId,
-								Name:         asBuiltin.String(),
-								PositionInfo: graphcommon.PositionInfo{},
-							},
-							InstructionType: "function-entry",
-							Annotation:      "builtin",
-						})
-						v.functionEntries[builtinId] = true
+						if _, ok := v.functionEntries[builtinId]; !ok {
+							v.instructionNodes = append(v.instructionNodes, InstructionNode{
+								NodeCommon: graphcommon.NodeCommon{
+									ID:           builtinId,
+									Name:         asBuiltin.String(),
+									PositionInfo: graphcommon.PositionInfo{},
+								},
+								InstructionType: "function-entry",
+								Annotation:      "builtin",
+							})
+							v.functionEntries[builtinId] = true
+						}
 						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
 							EdgeCommon: graphcommon.EdgeCommon{
 								FromID: instrId,
