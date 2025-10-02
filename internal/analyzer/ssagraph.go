@@ -400,7 +400,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 						targetId := resolvedTarget.String()
 						if _, ok := v.functionEntries[targetId]; !ok {
 							// We only do full analysis for functions that match the package prefixes
-							fullAnalysis := v.PackagePrefixFilter(resolvedTarget.Pkg.Pkg.Path())
+							fullAnalysis := false
+							if resolvedTarget.Pkg != nil && resolvedTarget.Pkg.Pkg != nil {
+								fullAnalysis = v.PackagePrefixFilter(resolvedTarget.Pkg.Pkg.Path())
+							}
 							addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()), fullAnalysis)
 							v.functionEntries[targetId] = true
 						}
