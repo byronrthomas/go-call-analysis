@@ -525,6 +525,8 @@ var derefPropagationQuery = PropagationQuery{
 	CountFieldName: "count(vOut)",
 }
 
+const ITERATION_LIMIT = 100
+
 func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) error {
 
 	count, err := runCountQuery(ctx, session, query)
@@ -532,6 +534,21 @@ func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.Sessio
 		return err
 	}
 	log.Printf("%s propagation count: %d", query.CountFieldName, count)
+	iteration := 0
+	for count > 0 && iteration < ITERATION_LIMIT {
+		_, err := session.Run(ctx, query.UpdateQuery, nil)
+		if err != nil {
+			return fmt.Errorf("failed to run propagation update query: %v", err)
+		}
+		log.Printf("Propagation update completed")
+
+		count, err = runCountQuery(ctx, session, query)
+		if err != nil {
+			return err
+		}
+		log.Printf("%s propagation count: %d", query.CountFieldName, count)
+		iteration++
+	}
 	return nil
 }
 
