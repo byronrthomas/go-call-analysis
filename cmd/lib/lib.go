@@ -181,6 +181,10 @@ func RunPropagationQueries() error {
 	return analyzer.RunPropagationQueries(defaultNeoConfig, fixedWidthPropagationQueries)
 }
 
+func RunTwoVaryingPropagationQueries() error {
+	return analyzer.RunPropagationQueries(defaultNeoConfig, twoVaryingPropagationQueries)
+}
+
 const manualFunctionMarkingQuery = `
 MATCH
 (ftgt:Function {id: "__ID__"})

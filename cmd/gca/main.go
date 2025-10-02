@@ -84,6 +84,17 @@ var runKnownFixedWidthPropagationQueriesCmd = &cobra.Command{
 	RunE:  runKnownFixedWidthPropagationQueriesCmdRunner,
 }
 
+var runKnownTwoVaryingPropagationQueriesCmdRunner = func(cmd *cobra.Command, args []string) error {
+	return lib.RunTwoVaryingPropagationQueries()
+}
+var runKnownTwoVaryingPropagationQueriesCmd = &cobra.Command{
+
+	Use:   "known-two-varying-propagation",
+	Short: "Run known two varying width propagation queries on Neo4j",
+	Long:  `Run known two varying width propagation queries on Neo4j.`,
+	RunE:  runKnownTwoVaryingPropagationQueriesCmdRunner,
+}
+
 var runManualFunctionMarkingQueryCmdRunner = func(cmd *cobra.Command, args []string) error {
 	functionId, _ := cmd.Flags().GetString("function-id")
 	return lib.RunManualFunctionMarkingQuery(functionId)
@@ -125,6 +136,7 @@ func init() {
 	rootCmd.AddCommand(dumpPackagesCmd)
 	rootCmd.AddCommand(outputSSACmd)
 	rootCmd.AddCommand(runKnownFixedWidthPropagationQueriesCmd)
+	rootCmd.AddCommand(runKnownTwoVaryingPropagationQueriesCmd)
 	rootCmd.AddCommand(runManualFunctionMarkingQueryCmd)
 }
 
