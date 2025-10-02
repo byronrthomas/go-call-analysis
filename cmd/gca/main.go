@@ -84,6 +84,18 @@ var runKnownFixedWidthPropagationQueriesCmd = &cobra.Command{
 	RunE:  runKnownFixedWidthPropagationQueriesCmdRunner,
 }
 
+var runManualFunctionMarkingQueryCmdRunner = func(cmd *cobra.Command, args []string) error {
+	functionId, _ := cmd.Flags().GetString("function-id")
+	return lib.RunManualFunctionMarkingQuery(functionId)
+}
+var runManualFunctionMarkingQueryCmd = &cobra.Command{
+
+	Use:   "mark-function-known-fixed",
+	Short: "Mark a function as known to return fixed width",
+	Long:  `Mark a function as known to return fixed width.`,
+	RunE:  runManualFunctionMarkingQueryCmdRunner,
+}
+
 func init() {
 	// Common flags for both commands
 	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
@@ -106,11 +118,14 @@ func init() {
 	outputSSACmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
 	outputSSACmd.Flags().Bool("simplified", false, "Output simplified SSA form (default: false)")
 
+	runManualFunctionMarkingQueryCmd.Flags().StringP("function-id", "f", "", "Function ID to mark as known to return fixed width")
+
 	rootCmd.AddCommand(callGraphCmd)
 	rootCmd.AddCommand(ssaGraphCmd)
 	rootCmd.AddCommand(dumpPackagesCmd)
 	rootCmd.AddCommand(outputSSACmd)
 	rootCmd.AddCommand(runKnownFixedWidthPropagationQueriesCmd)
+	rootCmd.AddCommand(runManualFunctionMarkingQueryCmd)
 }
 
 func main() {

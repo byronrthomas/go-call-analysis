@@ -559,3 +559,14 @@ func RunPropagationQueries(config Neo4jConfig, queries []PropagationQuery) error
 		return runPropagationQueries(ctx, session, queries)
 	})
 }
+
+func RunSingleUpdateQuery(config Neo4jConfig, query string) error {
+	return runInNeoSession(config, func(ctx context.Context, session neo4j.SessionWithContext) error {
+		_, err := session.Run(ctx, query, nil)
+		if err != nil {
+			return fmt.Errorf("failed to run single update query: %v", err)
+		}
+		log.Printf("Single update query completed")
+		return nil
+	})
+}

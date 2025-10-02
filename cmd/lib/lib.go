@@ -279,3 +279,15 @@ var labelFuncToRetValQuery = analyzer.PropagationQuery{
 func RunPropagationQueries() error {
 	return analyzer.RunPropagationQueries(defaultNeoConfig, []analyzer.PropagationQuery{derefPropagationQuery, appendFixedQuery, funcSingleReturnFixedQuery, labelFuncToRetValQuery})
 }
+
+const manualFunctionMarkingQuery = `
+MATCH
+(ftgt:Function {id: "__ID__"})
+WHERE
+NOT coalesce(ftgt.func_returns_fixed_width, false)
+SET ftgt.func_returns_fixed_width = true, ftgt.annotation = "MANUALLY INSPECTED AND KNOWN GOOD"
+`
+
+func RunManualFunctionMarkingQuery(functionId string) error {
+	return analyzer.RunSingleUpdateQuery(defaultNeoConfig, strings.Replace(manualFunctionMarkingQuery, "__ID__", functionId, 1))
+}
