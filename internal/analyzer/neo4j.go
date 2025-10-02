@@ -495,36 +495,56 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	return nil
 }
 
-const derefPropagationQuery = `
+const derefPropagationQueryCount = `
 MATCH 
 (vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
 -[:Produces_Result {index: 0}]->(vOut:Value)
 WHERE vIn.fixed_width_value_kind IS NOT NULL
 AND vOut.fixed_width_value_kind IS NULL
 RETURN count(vOut)
-// SET vOut.fixed_width_value_kind = "deref(" + vIn.fixed_width_value_kind + ")"
 `
 
-func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext) error {
+const derefPropagationQueryUpdate = `
+MATCH 
+(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
+-[:Produces_Result {index: 0}]->(vOut:Value)
+WHERE vIn.fixed_width_value_kind IS NOT NULL
+AND vOut.fixed_width_value_kind IS NULL
+SET vOut.fixed_width_value_kind = "deref(" + vIn.fixed_width_value_kind + ")"
+`
 
-	r1, err := session.Run(ctx, derefPropagationQuery, nil)
+type PropagationQuery struct {
+	CountQuery     string
+	UpdateQuery    string
+	CountFieldName string
+}
+
+var derefPropagationQuery = PropagationQuery{
+	CountQuery:     derefPropagationQueryCount,
+	UpdateQuery:    derefPropagationQueryUpdate,
+	CountFieldName: "count(vOut)",
+}
+
+func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) error {
+
+	r1, err := session.Run(ctx, query.CountQuery, nil)
 	if err != nil {
-		return fmt.Errorf("failed to run deref propagation query: %v", err)
+		return fmt.Errorf("failed to run propagation counting query: %v", err)
 	}
 	r1S, err := r1.Single(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get single result of deref propagation query: %v", err)
+		return fmt.Errorf("failed to get single result of propagation counting query: %v", err)
 	}
-	count, ok := r1S.AsMap()["count(vOut)"].(int64)
+	count, ok := r1S.AsMap()[query.CountFieldName].(int64)
 	if !ok {
-		return fmt.Errorf("failed to get count of deref propagation: %v", err)
+		return fmt.Errorf("failed to get count of %s propagation: %v", query.CountFieldName, err)
 	}
-	log.Printf("Deref propagation count: %d", count)
+	log.Printf("%s propagation count: %d", query.CountFieldName, count)
 	return nil
 }
 
 func RunPropagationQueries(config Neo4jConfig) error {
 	return runInNeoSession(config, func(ctx context.Context, session neo4j.SessionWithContext) error {
-		return runPropagationQueriesInNeoSession(ctx, session)
+		return runPropagationQueriesInNeoSession(ctx, session, derefPropagationQuery)
 	})
 }
