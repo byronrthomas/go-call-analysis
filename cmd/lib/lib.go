@@ -289,5 +289,11 @@ SET ftgt.func_returns_fixed_width = true, ftgt.annotation = "MANUALLY INSPECTED 
 `
 
 func RunManualFunctionMarkingQuery(functionId string) error {
-	return analyzer.RunSingleUpdateQuery(defaultNeoConfig, strings.Replace(manualFunctionMarkingQuery, "__ID__", functionId, 1))
+	err := analyzer.RunSingleUpdateQuery(defaultNeoConfig, strings.Replace(manualFunctionMarkingQuery, "__ID__", functionId, 1))
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Function %s marked as known to return fixed width\n", functionId)
+	fmt.Printf("\nIMPORTANT: You should re-run fixed width propagation queries after running this query, and reset any second-phase markings if needed.")
+	return nil
 }
