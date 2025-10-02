@@ -495,36 +495,11 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	return nil
 }
 
-const derefPropagationQueryCount = `
-MATCH 
-(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
--[:Produces_Result {index: 0}]->(vOut:Value)
-WHERE vIn.fixed_width_value_kind IS NOT NULL
-AND vOut.fixed_width_value_kind IS NULL
-RETURN count(vOut)
-`
-
-const derefPropagationQueryUpdate = `
-MATCH 
-(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
--[:Produces_Result {index: 0}]->(vOut:Value)
-WHERE vIn.fixed_width_value_kind IS NOT NULL
-AND vOut.fixed_width_value_kind IS NULL
-SET vOut.fixed_width_value_kind = "deref(" + vIn.fixed_width_value_kind + ")"
-`
-
 type PropagationQuery struct {
 	CountQuery     string
 	UpdateQuery    string
 	CountFieldName string
 	QueryName      string
-}
-
-var derefPropagationQuery = PropagationQuery{
-	CountQuery:     derefPropagationQueryCount,
-	UpdateQuery:    derefPropagationQueryUpdate,
-	CountFieldName: "count(vOut)",
-	QueryName:      "Deref",
 }
 
 const ITERATION_LIMIT = 100
@@ -579,8 +554,8 @@ func runPropagationQueries(ctx context.Context, session neo4j.SessionWithContext
 	return nil
 }
 
-func RunPropagationQueries(config Neo4jConfig) error {
+func RunPropagationQueries(config Neo4jConfig, queries []PropagationQuery) error {
 	return runInNeoSession(config, func(ctx context.Context, session neo4j.SessionWithContext) error {
-		return runPropagationQueries(ctx, session, []PropagationQuery{derefPropagationQuery})
+		return runPropagationQueries(ctx, session, queries)
 	})
 }

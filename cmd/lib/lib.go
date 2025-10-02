@@ -177,6 +177,31 @@ func RunOutputSSA(packagePrefixes []string, projectPath string, outputPath strin
 	return nil
 }
 
+const derefPropagationQueryCount = `
+MATCH 
+(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
+-[:Produces_Result {index: 0}]->(vOut:Value)
+WHERE vIn.fixed_width_value_kind IS NOT NULL
+AND vOut.fixed_width_value_kind IS NULL
+RETURN count(vOut)
+`
+
+const derefPropagationQueryUpdate = `
+MATCH 
+(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
+-[:Produces_Result {index: 0}]->(vOut:Value)
+WHERE vIn.fixed_width_value_kind IS NOT NULL
+AND vOut.fixed_width_value_kind IS NULL
+SET vOut.fixed_width_value_kind = "deref(" + vIn.fixed_width_value_kind + ")"
+`
+
+var derefPropagationQuery = analyzer.PropagationQuery{
+	CountQuery:     derefPropagationQueryCount,
+	UpdateQuery:    derefPropagationQueryUpdate,
+	CountFieldName: "count(vOut)",
+	QueryName:      "Deref",
+}
+
 func RunPropagationQueries() error {
-	return analyzer.RunPropagationQueries(defaultNeoConfig)
+	return analyzer.RunPropagationQueries(defaultNeoConfig, []analyzer.PropagationQuery{derefPropagationQuery})
 }
