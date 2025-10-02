@@ -74,6 +74,16 @@ var outputSSACmd = &cobra.Command{
 	RunE:  outputSSACmdRunner,
 }
 
+var runKnownFixedWidthPropagationQueriesCmdRunner = func(cmd *cobra.Command, args []string) error {
+	return lib.RunPropagationQueries()
+}
+var runKnownFixedWidthPropagationQueriesCmd = &cobra.Command{
+	Use:   "known-fixed-propagation",
+	Short: "Run known fixed width propagation queries on Neo4j",
+	Long:  `Run known fixed width propagation queries on Neo4j.`,
+	RunE:  runKnownFixedWidthPropagationQueriesCmdRunner,
+}
+
 func init() {
 	// Common flags for both commands
 	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
@@ -100,6 +110,7 @@ func init() {
 	rootCmd.AddCommand(ssaGraphCmd)
 	rootCmd.AddCommand(dumpPackagesCmd)
 	rootCmd.AddCommand(outputSSACmd)
+	rootCmd.AddCommand(runKnownFixedWidthPropagationQueriesCmd)
 }
 
 func main() {

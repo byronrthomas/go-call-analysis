@@ -55,6 +55,13 @@ func RunCallGraph(rootFunction string, projectPath string, outputPath string, us
 	}
 }
 
+var defaultNeoConfig = analyzer.Neo4jConfig{
+	URI:      "bolt://localhost:7687",
+	Username: "",
+	Password: "",
+	Database: "",
+}
+
 func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, useNeo4j bool) error {
 	packagePrefixes, simplificationResult, err := RunSSASimplification(rootFunction, projectPath, outputPath, packagePrefixes)
 	if err != nil {
@@ -64,13 +71,7 @@ func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string
 
 	if useNeo4j {
 
-		config := analyzer.Neo4jConfig{
-			URI:      "bolt://localhost:7687",
-			Username: "",
-			Password: "",
-			Database: "",
-		}
-		return analyzer.ExportSSAGraphToNeo4j(ssaResult, config)
+		return analyzer.ExportSSAGraphToNeo4j(ssaResult, defaultNeoConfig)
 	} else {
 
 		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
@@ -174,4 +175,8 @@ func RunOutputSSA(packagePrefixes []string, projectPath string, outputPath strin
 	}
 
 	return nil
+}
+
+func RunPropagationQueries() error {
+	return analyzer.RunPropagationQueries(defaultNeoConfig)
 }

@@ -494,3 +494,37 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	log.Printf("Total import completed in %v", time.Since(startTime))
 	return nil
 }
+
+const derefPropagationQuery = `
+MATCH 
+(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
+-[:Produces_Result {index: 0}]->(vOut:Value)
+WHERE vIn.fixed_width_value_kind IS NOT NULL
+AND vOut.fixed_width_value_kind IS NULL
+RETURN count(vOut)
+// SET vOut.fixed_width_value_kind = "deref(" + vIn.fixed_width_value_kind + ")"
+`
+
+func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext) error {
+
+	r1, err := session.Run(ctx, derefPropagationQuery, nil)
+	if err != nil {
+		return fmt.Errorf("failed to run deref propagation query: %v", err)
+	}
+	r1S, err := r1.Single(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get single result of deref propagation query: %v", err)
+	}
+	count, ok := r1S.AsMap()["count(vOut)"].(int64)
+	if !ok {
+		return fmt.Errorf("failed to get count of deref propagation: %v", err)
+	}
+	log.Printf("Deref propagation count: %d", count)
+	return nil
+}
+
+func RunPropagationQueries(config Neo4jConfig) error {
+	return runInNeoSession(config, func(ctx context.Context, session neo4j.SessionWithContext) error {
+		return runPropagationQueriesInNeoSession(ctx, session)
+	})
+}
