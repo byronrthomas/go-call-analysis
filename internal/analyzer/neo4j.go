@@ -527,20 +527,28 @@ var derefPropagationQuery = PropagationQuery{
 
 func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) error {
 
-	r1, err := session.Run(ctx, query.CountQuery, nil)
+	count, err := runCountQuery(ctx, session, query)
 	if err != nil {
-		return fmt.Errorf("failed to run propagation counting query: %v", err)
-	}
-	r1S, err := r1.Single(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to get single result of propagation counting query: %v", err)
-	}
-	count, ok := r1S.AsMap()[query.CountFieldName].(int64)
-	if !ok {
-		return fmt.Errorf("failed to get count of %s propagation: %v", query.CountFieldName, err)
+		return err
 	}
 	log.Printf("%s propagation count: %d", query.CountFieldName, count)
 	return nil
+}
+
+func runCountQuery(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) (int64, error) {
+	r1, err := session.Run(ctx, query.CountQuery, nil)
+	if err != nil {
+		return 0, fmt.Errorf("failed to run propagation counting query: %v", err)
+	}
+	r1S, err := r1.Single(ctx)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get single result of propagation counting query: %v", err)
+	}
+	count, ok := r1S.AsMap()[query.CountFieldName].(int64)
+	if !ok {
+		return 0, fmt.Errorf("failed to get count of %s propagation: %v", query.CountFieldName, err)
+	}
+	return count, nil
 }
 
 func RunPropagationQueries(config Neo4jConfig) error {
