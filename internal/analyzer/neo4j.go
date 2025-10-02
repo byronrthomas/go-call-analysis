@@ -517,23 +517,25 @@ type PropagationQuery struct {
 	CountQuery     string
 	UpdateQuery    string
 	CountFieldName string
+	QueryName      string
 }
 
 var derefPropagationQuery = PropagationQuery{
 	CountQuery:     derefPropagationQueryCount,
 	UpdateQuery:    derefPropagationQueryUpdate,
 	CountFieldName: "count(vOut)",
+	QueryName:      "Deref",
 }
 
 const ITERATION_LIMIT = 100
 
-func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) error {
+func runPropagationQueryInNeoSession(ctx context.Context, session neo4j.SessionWithContext, query PropagationQuery) error {
 
 	count, err := runCountQuery(ctx, session, query)
 	if err != nil {
 		return err
 	}
-	log.Printf("%s propagation count: %d", query.CountFieldName, count)
+	log.Printf("%s propagation count: %d", query.QueryName, count)
 	iteration := 0
 	for count > 0 && iteration < ITERATION_LIMIT {
 		_, err := session.Run(ctx, query.UpdateQuery, nil)
@@ -546,7 +548,7 @@ func runPropagationQueriesInNeoSession(ctx context.Context, session neo4j.Sessio
 		if err != nil {
 			return err
 		}
-		log.Printf("%s propagation count: %d", query.CountFieldName, count)
+		log.Printf("%s propagation count: %d", query.QueryName, count)
 		iteration++
 	}
 	return nil
@@ -563,13 +565,22 @@ func runCountQuery(ctx context.Context, session neo4j.SessionWithContext, query 
 	}
 	count, ok := r1S.AsMap()[query.CountFieldName].(int64)
 	if !ok {
-		return 0, fmt.Errorf("failed to get count of %s propagation: %v", query.CountFieldName, err)
+		return 0, fmt.Errorf("failed to get count of %s propagation: %v", query.QueryName, err)
 	}
 	return count, nil
 }
 
+func runPropagationQueries(ctx context.Context, session neo4j.SessionWithContext, queries []PropagationQuery) error {
+	for _, query := range queries {
+		if err := runPropagationQueryInNeoSession(ctx, session, query); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func RunPropagationQueries(config Neo4jConfig) error {
 	return runInNeoSession(config, func(ctx context.Context, session neo4j.SessionWithContext) error {
-		return runPropagationQueriesInNeoSession(ctx, session, derefPropagationQuery)
+		return runPropagationQueries(ctx, session, []PropagationQuery{derefPropagationQuery})
 	})
 }
