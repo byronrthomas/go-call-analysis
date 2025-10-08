@@ -7,6 +7,7 @@ MATCH (vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_ty
 -[:Produces_Result {index: 0}]->(vOut:Value)
 WHERE vIn.fixed_width_value_kind IS NOT NULL
 AND vOut.fixed_width_value_kind IS NULL
+AND vOut.type_name = "[]byte"
 `
 
 const derefPropagationQueryCount = derefPropagationQueryPrefix + `
