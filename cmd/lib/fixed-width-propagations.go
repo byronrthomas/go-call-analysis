@@ -85,6 +85,7 @@ MATCH
 (v:Value)<-[:Produces_Result {index: 0}]-
 (cs:Instruction)-[:Resolved_Call]->(ftgt {func_returns_fixed_width: true})
 WHERE v.fixed_width_value_kind IS NULL
+AND v.type_name = "[]byte"
 `
 
 const labelFuncToRetValQueryCount = labelFuncToRetValPrefix + `
