@@ -26,6 +26,57 @@ var derefPropagationQuery = analyzer.PropagationQuery{
 	QueryName:      "Deref",
 }
 
+const derefPropagationQueryPrefix_STRING = `
+MATCH 
+(vIn:Value)<-[:Uses_Operand {index: 0}]-(deref:Instruction {instruction_type: "UnOp(*)"})
+-[:Produces_Result {index: 0}]->(vOut:Value)
+WHERE vIn.fixed_width_string_kind IS NOT NULL
+AND vOut.fixed_width_string_kind IS NULL
+AND vOut.type_name = "string"
+`
+
+const derefPropagationQueryCount_STRING = derefPropagationQueryPrefix_STRING + `
+RETURN count(vOut)
+`
+
+const derefPropagationQueryUpdate_STRING = `
+` + derefPropagationQueryPrefix_STRING + `
+SET vOut.fixed_width_string_kind = "deref(" + vIn.fixed_width_string_kind + ")"
+`
+
+var derefPropagationQuery_STRING = analyzer.PropagationQuery{
+	CountQuery:     derefPropagationQueryCount_STRING,
+	UpdateQuery:    derefPropagationQueryUpdate_STRING,
+	CountFieldName: "count(vOut)",
+	QueryName:      "Deref(string)",
+}
+
+const stringToBytesPropagationQueryPrefix = `
+MATCH 
+(vIn:Value {type_name: "string"})<-[:Uses_Operand {index: 0}]-
+(cv:Instruction {instruction_type: "Convert"})
+-[:Produces_Result]->(vOut {type_name: "[]byte"})
+WHERE vIn.fixed_width_string_kind IS NOT NULL
+AND vOut.fixed_width_value_kind IS NULL
+// RETURN cv.id, cv.line
+`
+
+const stringToBytesPropagationQueryCount = stringToBytesPropagationQueryPrefix + `
+RETURN count(DISTINCT vOut)
+`
+
+const stringToBytesPropagationQueryUpdate = `
+` + stringToBytesPropagationQueryPrefix + `
+SET vOut.fixed_width_value_kind = "[]byte(fixedString)"
+`
+
+var stringToBytesPropagationQuery = analyzer.PropagationQuery{
+	CountQuery:     stringToBytesPropagationQueryCount,
+	UpdateQuery:    stringToBytesPropagationQueryUpdate,
+	CountFieldName: "count(DISTINCT vOut)",
+	QueryName:      "string-to-bytes",
+}
+
 const appendFixedQueryPrefix = `
 MATCH 
 (i:Function {id: "^builtin^append"})
@@ -103,4 +154,4 @@ var labelFuncToRetValQuery = analyzer.PropagationQuery{
 	QueryName:      "label func to ret val",
 }
 
-var fixedWidthPropagationQueries = []analyzer.PropagationQuery{derefPropagationQuery, appendFixedQuery, funcSingleReturnFixedQuery, labelFuncToRetValQuery}
+var fixedWidthPropagationQueries = []analyzer.PropagationQuery{derefPropagationQuery, derefPropagationQuery_STRING, stringToBytesPropagationQuery, appendFixedQuery, funcSingleReturnFixedQuery, labelFuncToRetValQuery}
