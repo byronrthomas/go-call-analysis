@@ -53,10 +53,11 @@ var derefPropagationQuery_STRING = analyzer.PropagationQuery{
 
 const stringToBytesPropagationQueryPrefix = `
 MATCH 
-(vIn:Value {type_name: "string"})<-[:Uses_Operand {index: 0}]-
+(vIn:Value)<-[:Uses_Operand {index: 0}]-
 (cv:Instruction {instruction_type: "Convert"})
 -[:Produces_Result]->(vOut {type_name: "[]byte"})
-WHERE vIn.fixed_width_string_kind IS NOT NULL
+WHERE vIn.type_name IN ["string", "untyped string"]
+AND vIn.fixed_width_string_kind IS NOT NULL
 AND vOut.fixed_width_value_kind IS NULL
 // RETURN cv.id, cv.line
 `
