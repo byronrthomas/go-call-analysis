@@ -1,171 +1,260 @@
-# Go Call Analysis
+# go-call-analysis
 
-A command-line tool for analyzing Go projects and generating analysis reports.
+A static analysis toolkit for Go code that builds SSA (Static Single Assignment) graphs and loads them into a Neo4j-compatible graph database for interactive exploration and annotation-driven analysis.
 
-## Features
+The primary workflow is: analyze a Go project → load the graph into Memgraph → explore with Cypher queries → annotate nodes → propagate annotations across the graph.
 
-- Analyze Go project structure
-- Generate call graphs
-- Static analysis of Go code
-- (More features to be added)
+## Use cases
 
-## Installation
+The SSA graph is general-purpose and can support many types of analysis. The current built-in annotation propagation is specialized for **Cosmos blockchain key collision analysis** — tracking whether `[]byte` values (store keys, prefixes, etc.) are of fixed width or composed of two varying-width components, which is the prerequisite for detecting key collision vulnerabilities.
+
+The underlying graph structure is not specific to this use case; you can build your own Cypher-based analyses on top of it.
+
+## Prerequisites
+
+- Go 1.21+
+- [Memgraph](https://memgraph.com/) (recommended) or any Neo4j-compatible graph database running locally
+
+### Starting Memgraph
+
+The quickest way is with Docker or Podman:
 
 ```bash
-go install github.com/throwin5tone7/go-call-analysis@latest
+docker run -p 7687:7687 -p 7444:7444 memgraph/memgraph-mage
 ```
 
-## Development Setup
+Memgraph Lab (browser UI) is available at `http://localhost:3000` if you use the `memgraph-platform` image instead.
 
-1. Clone the repository:
+## Build
+
 ```bash
 git clone https://github.com/throwin5tone7/go-call-analysis.git
 cd go-call-analysis
+make build        # builds bin/gca
+make build-all    # also builds bin/transform-json-nodes
 ```
 
-2. Install dependencies:
-```bash
-go mod download
-```
+## Workflow
 
-3. Run tests:
-```bash
-go test ./...
-```
+### 1. Load a Go project into the graph database
 
-## Project Structure
-
-```
-go-call-analysis/
-├── cmd/                    # Command-line interface
-│   └── gca/               # Main application
-├── internal/              # Private application code
-│   ├── analyzer/         # Analysis logic
-│   └── parser/           # Code parsing utilities
-├── pkg/                   # Public library code
-├── test/                 # Test files
-└── tools/                # Development tools
-```
-
-## License
-
-MIT License 
-
-## Running examples
+Use `ssa-graph` with `--neo4j` to analyze a project and write the results directly to the database:
 
 ```bash
-export GCA_PROJECT_PATH=/Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain
-export CSV_OUTPUT_PATH=/Users/byron/projects/bugging/sei-protocol/sei-chain-call-graph
-make clear-old-csvs folder=$CSV_OUTPUT_PATH; \
-make build && bin/gca call-graph -p $GCA_PROJECT_PATH -o $CSV_OUTPUT_PATH
+bin/gca ssa-graph \
+  -p /path/to/your/go/project \
+  -r 'github.com/your/module/cmd/app:main' \
+  --package-prefixes='github.com/your/module' \
+  --neo4j
 ```
+
+- `-r` sets the root function (entry point) for call graph traversal — format is `package/path:FunctionName`
+- `--package-prefixes` filters which packages are included in the SSA graph; use your module path to exclude stdlib and third-party noise
+- Without `-r`, the entire program is analyzed
+
+### 2. Explore the graph
+
+Connect to your database's query interface (e.g. Memgraph Lab, `mgconsole`, or `cypher-shell`) and start exploring with Cypher.
+
+**Graph schema overview:**
+
+| Node label | Key properties |
+|---|---|
+| `Function` | `id`, `name`, `package`, `file`, `line`, `func_returns_fixed_width`, `func_returns_two_comp_varying` |
+| `Instruction` | `id`, `instruction_type`, `file`, `line` |
+| `Value` | `id`, `type_name`, `fixed_width_value_kind`, `fixed_width_string_kind`, `known_two_component_varying` |
+| `FileVersion` | `id`, `file`, `last_file_revision` |
+
+| Relationship type | Meaning |
+|---|---|
+| `CALLS` | function calls another function |
+| `Resolved_Call` | call site instruction resolves to a function |
+| `Uses_Operand` | instruction uses a value as operand (indexed) |
+| `Produces_Result` | instruction produces a value as result (indexed) |
+| `Has_Parameter` | function has a parameter value |
+| `Has_Return_Point` | function has a return instruction |
+| `Ordering` | sequential ordering between instructions |
+| `Belongs_To` | instruction/value belongs to a function |
+
+**Example queries:**
+
+```cypher
+// Find all functions in a package
+MATCH (f:Function)
+WHERE f.package STARTS WITH 'github.com/your/module/store'
+RETURN f.name, f.file, f.line
+ORDER BY f.name;
+
+// Inspect how a value flows through instructions
+MATCH (v:Value {id: 'some-value-id'})<-[:Produces_Result]-(i:Instruction)
+RETURN i.instruction_type, i.file, i.line;
+
+// Find all []byte values not yet annotated
+MATCH (v:Value)
+WHERE v.type_name = '[]byte'
+AND v.fixed_width_value_kind IS NULL
+RETURN v.id, v.file, v.line
+LIMIT 50;
+```
+
+### 3. Seed initial annotations
+
+Once you identify values or functions of interest through exploration, seed the initial annotations. The propagation commands (step 4) extend these through the graph automatically, but they need a starting point.
+
+**Manually mark a function as returning fixed-width bytes:**
 
 ```bash
-make copy-csvs-to-memgraph folder=$CSV_OUTPUT_PATH
+bin/gca mark-function-known-fixed -f 'github.com/your/module/types:GetPrefix'
 ```
 
-### Without outputting to CSV:
+You can also set properties directly in Cypher if you want to annotate individual `Value` nodes:
 
+```cypher
+MATCH (v:Value {id: 'your-value-id'})
+SET v.fixed_width_value_kind = 'KNOWN_CONSTANT';
+```
 
-`make build && bin/gca call-graph --neo4j -p /Users/byron/repos/third-party/sei-protocol/sei-chain-outer/sei-chain`
+### 4. Propagate annotations
 
+Once seed annotations are in place, run the propagation commands to extend them transitively through the graph.
 
-### SSA first example
+**Phase 1 — fixed-width propagation** (marks values and functions that provably produce fixed-width `[]byte`):
 
-`make build && bin/gca ssa-graph -p $GCA_PROJECT_PATH --neo4j -r 'github.com/sei-protocol/sei-chain/cmd/seid:main' --package-prefixes='github.com/sei-protocol/sei-chain/oracle/price-feeder/oracle/client'`
-
-
-### Test project SSA
-
-`make build && bin/gca ssa-graph -p ./test-project -o ./test-output -r 'github.com/throwin5tone7/go-call-analysis/test-project:main'`
-
-## Command Reference
-
-The `gca` tool provides several subcommands for different types of analysis:
-
-### 1. call-graph
-Analyze a Go project and generate call graph reports.
-
-**Basic usage:**
 ```bash
-# Analyze project and output to CSV files
-bin/gca call-graph -p /path/to/go/project -o /path/to/output
-
-# Analyze with specific root function
-bin/gca call-graph -p /path/to/go/project -r 'package:function' -o /path/to/output
-
-# Export directly to Neo4j (no CSV output)
-bin/gca call-graph -p /path/to/go/project --neo4j
+bin/gca known-fixed-propagation
 ```
 
-**Options:**
-- `-p, --path`: Path to the Go project to analyze (required)
-- `-o, --output`: Path to write analysis results (for CSV output)
-- `-r, --root-function`: Root function to analyze (format: 'package:function')
-- `--neo4j`: Export results to Neo4j instead of CSV
+This propagates through pointer dereferences, type conversions from fixed-width strings, `append` of two fixed-width values, and function return values. It runs iteratively until no new nodes can be marked.
 
-### 2. ssa-graph
-Analyze a Go project using SSA (Static Single Assignment) and generate SSA-based call graph reports.
+**Phase 2 — two-varying propagation** (marks values that are `append` of two varying-width components):
 
-**Basic usage:**
 ```bash
-# Analyze with SSA and output to CSV
-bin/gca ssa-graph -p /path/to/go/project -o /path/to/output
-
-# Analyze specific packages with SSA
-bin/gca ssa-graph -p /path/to/go/project --package-prefixes='github.com/user/pkg1,github.com/user/pkg2' -o /path/to/output
-
-# Export SSA analysis to Neo4j
-bin/gca ssa-graph -p /path/to/go/project --neo4j -r 'package:function' --package-prefixes='github.com/user/pkg'
+bin/gca known-two-varying-propagation
 ```
 
-**Options:**
-- `-p, --path`: Path to the Go project to analyze (required)
-- `-o, --output`: Path to write analysis results (for CSV output)
-- `-r, --root-function`: Root function to analyze (format: 'package:function')
-- `--neo4j`: Export results to Neo4j instead of CSV
-- `--package-prefixes`: Comma-separated list of package prefixes to include
+Run phase 1 before phase 2. If you manually mark additional functions with `mark-function-known-fixed`, re-run phase 1 (and reset any phase 2 results if needed).
 
-### 3. dump-packages
-Build SSA program and dump package information to stdout.
+### 5. Query results
 
-**Basic usage:**
+After propagation, query the annotated graph to find your points of interest:
+
+```cypher
+// Functions that return fixed-width bytes
+MATCH (f:Function {func_returns_fixed_width: true})
+RETURN f.id, f.file, f.line;
+
+// Call sites where two-component varying bytes are produced
+MATCH (v:Value)
+WHERE v.known_two_component_varying IS NOT NULL
+RETURN v.id, v.file, v.line;
+```
+
+Export query results to JSONL using Memgraph's export functionality for further processing.
+
+## Configuration
+
+By default, `gca` connects to `bolt://localhost:7687` with no credentials (Memgraph's default). Override with environment variables:
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEO4J_URI` | `bolt://localhost:7687` | Bolt URI of your database |
+| `NEO4J_USERNAME` | _(empty)_ | Database username |
+| `NEO4J_PASSWORD` | _(empty)_ | Database password |
+| `NEO4J_DATABASE` | _(empty)_ | Database name (leave empty for default) |
+
 ```bash
-# Dump all packages in the project
-bin/gca dump-packages -p /path/to/go/project
-
-# Dump packages with verbose output
-bin/gca dump-packages -p /path/to/go/project --verbose
+export NEO4J_URI=bolt://myhost:7687
+export NEO4J_USERNAME=neo4j
+export NEO4J_PASSWORD=secret
+bin/gca ssa-graph --neo4j -p /path/to/project ...
 ```
 
-**Options:**
-- `-p, --path`: Path to the Go project to analyze (required)
-- `--verbose`: Enable verbose output
+## Command reference
 
-### 4. output-SSA
-Output SSA program text for matching packages.
+### `gca ssa-graph` — recommended analysis command
 
-**Basic usage:**
+Builds an SSA call graph and loads it into the database. This is the primary command for loading analysis data.
+
+```
+-p, --path              Path to the Go project (required)
+-r, --root-function     Entry point — format: 'package/path:FunctionName'
+    --package-prefixes  Comma-separated package prefixes to include
+    --neo4j             Write to database (omit to write CSV files for debugging)
+-o, --output            Output directory (CSV mode only)
+```
+
+### `gca known-fixed-propagation`
+
+Runs fixed-width annotation propagation queries against the database. Iterates until convergence.
+
+### `gca known-two-varying-propagation`
+
+Runs two-component-varying annotation propagation queries. Run after `known-fixed-propagation`.
+
+### `gca mark-function-known-fixed`
+
+Manually marks a function node as known to return fixed-width `[]byte`. Use when automatic propagation can't reach a function (e.g. it has multiple return points, or the seed value isn't in the graph).
+
+```
+-f, --function-id   Function ID to mark (use the id property from the graph)
+```
+
+After running this, re-run `known-fixed-propagation`.
+
+### `gca call-graph` — lightweight call graph
+
+A simpler call graph analysis (no SSA). Useful for quick exploration of call structure without loading the full SSA graph.
+
+```
+-p, --path            Path to the Go project (required)
+-r, --root-function   Entry point
+    --neo4j           Write to database
+-o, --output          Output directory (CSV mode)
+```
+
+### `gca dump-packages`
+
+Lists all packages found in the project. Useful for discovering the right values for `--package-prefixes`.
+
+```
+-p, --path      Path to the Go project (required)
+-v, --verbose   Detailed package information
+```
+
+### `gca output-SSA`
+
+Outputs the SSA representation of matching packages as text. Useful for understanding what the SSA graph will contain before loading it.
+
+```
+-p, --path              Path to the Go project (required)
+-r, --root-function     Entry point
+    --package-prefixes  Comma-separated package prefixes to include
+    --simplified        Output simplified SSA form
+-o, --output            Output file (defaults to stdout)
+```
+
+## Development
+
 ```bash
-# Output SSA text to stdout
-bin/gca output-SSA -p /path/to/go/project
-
-# Output SSA text to file
-bin/gca output-SSA -p /path/to/go/project -o /path/to/output.txt
-
-# Output simplified SSA form
-bin/gca output-SSA -p /path/to/go/project --simplified
-
-# Output SSA for specific packages
-bin/gca output-SSA -p /path/to/go/project --package-prefixes='github.com/user/pkg' -o /path/to/output.txt
-
-# Output simplified SSA with root function
-bin/gca output-SSA -p /path/to/go/project -r 'package:function' --simplified -o /path/to/output.txt
+make test           # run all tests
+make test-ssa       # run SSA graph tests only
+make check          # lint + test
 ```
 
-**Options:**
-- `-p, --path`: Path to the Go project to analyze (required)
-- `-o, --output`: Path to write SSA output file (outputs to stdout if not specified)
-- `-r, --root-function`: Root function to analyze (format: 'package:function')
-- `--package-prefixes`: Comma-separated list of package prefixes to include
-- `--simplified`: Output simplified SSA form (default: false)
+Golden files for tests live in `test/resources/golden/`. To regenerate after intentional changes:
+
+```bash
+make regenerate-golden-ssa
+```
+
+## Extra tool: transform-json-nodes
+
+`bin/transform-json-nodes` is a helper that converts JSONL output from Memgraph queries into [code-notator](https://github.com/byronrthomas/code-notator) annotation files. Most users won't need this — it's a bridge to a specific annotation workflow built on top of the graph query results.
+
+```bash
+bin/transform-json-nodes \
+  -input  query_results.jsonl \
+  -root   /path/to/your/go/project \
+  -output ./annotations \
+  -annotation 'to check'
+```
