@@ -2,7 +2,7 @@ Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, last_git_revisio
 Parameters:
 id	label	last_git_revision	name	package
 	FileVersion		.	github.com/throwin5tone7/go-call-analysis/test-project
-/Users/byron/repos/personal/go-call-analysis/test-project/main.go	FileVersion	e4b3c4b5f5cad964e287f20a451d5aea16086559	main.go	github.com/throwin5tone7/go-call-analysis/test-project
+test-project/main.go	FileVersion	e4b3c4b5f5cad964e287f20a451d5aea16086559	main.go	github.com/throwin5tone7/go-call-analysis/test-project
 
 
 Query: CREATE INDEX ON :FileVersion(id)
@@ -146,16 +146,16 @@ github.com/throwin5tone7/go-call-analysis/test-project:init$guard	0	false	Value	
 parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	19	false	Value	37	s	*github.com/throwin5tone7/go-call-analysis/test-project.Struct1	Parameter
 parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get.s	19	false	Value	46	s	*github.com/throwin5tone7/go-call-analysis/test-project.Struct2	Parameter
 parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter	6	false	Value	50	getter	github.com/throwin5tone7/go-call-analysis/test-project.Getter	Parameter
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	14	false	Value	15	func_return_placeholder_0_t16	int	FuncReturnPlaceholder
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:14	14	false	Value	17	func_return_placeholder_0_t28	int	FuncReturnPlaceholder
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:14	14	false	Value	21	func_return_placeholder_0_t35	int	FuncReturnPlaceholder
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:23:13	13	false	Value	23	func_return_placeholder_0_t42	int	FuncReturnPlaceholder
-return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:24:7	7	false	Value	24	func_return_placeholder_0_t44	int	FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	14	true	Value	15	func_return_placeholder_1_t16	error	FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:14	14	true	Value	17	func_return_placeholder_1_t28	error	FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:14	14	true	Value	21	func_return_placeholder_1_t35	error	FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:23:13	13	true	Value	23	func_return_placeholder_1_t42	error	FuncReturnPlaceholder
-return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:24:7	7	true	Value	24	func_return_placeholder_1_t44	error	FuncReturnPlaceholder
+return-placeholder-0-test-project/main.go:15:14	14	false	Value	15	func_return_placeholder_0_t16	int	FuncReturnPlaceholder
+return-placeholder-0-test-project/main.go:17:14	14	false	Value	17	func_return_placeholder_0_t28	int	FuncReturnPlaceholder
+return-placeholder-0-test-project/main.go:21:14	14	false	Value	21	func_return_placeholder_0_t35	int	FuncReturnPlaceholder
+return-placeholder-0-test-project/main.go:23:13	13	false	Value	23	func_return_placeholder_0_t42	int	FuncReturnPlaceholder
+return-placeholder-0-test-project/main.go:24:7	7	false	Value	24	func_return_placeholder_0_t44	int	FuncReturnPlaceholder
+return-placeholder-1-test-project/main.go:15:14	14	true	Value	15	func_return_placeholder_1_t16	error	FuncReturnPlaceholder
+return-placeholder-1-test-project/main.go:17:14	14	true	Value	17	func_return_placeholder_1_t28	error	FuncReturnPlaceholder
+return-placeholder-1-test-project/main.go:21:14	14	true	Value	21	func_return_placeholder_1_t35	error	FuncReturnPlaceholder
+return-placeholder-1-test-project/main.go:23:13	13	true	Value	23	func_return_placeholder_1_t42	error	FuncReturnPlaceholder
+return-placeholder-1-test-project/main.go:24:7	7	true	Value	24	func_return_placeholder_1_t44	error	FuncReturnPlaceholder
 value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	11	false	Value	38	t0	*int	FieldAddr
 value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t1	11	false	Value	38	t1	int	UnOp
 value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get:0:t0	11	false	Value	47	t0	*int	FieldAddr
@@ -223,11 +223,11 @@ value-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0
 Query: CREATE INDEX ON :Value(id)
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:Instruction {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
-			
+
 Parameters:
 from_id	to_id	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	Function_Entry
@@ -238,11 +238,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5t
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0	Function_Entry
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:Value {id: edge.to_id})
 				CREATE (from)-[:edge.type {index: edge.index}]->(to)
-			
+
 Parameters:
 from_id	to_id	index	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	0	Has_Parameter
@@ -250,11 +250,11 @@ from_id	to_id	index	type
 github.com/throwin5tone7/go-call-analysis/test-project.check	parameter-github.com/throwin5tone7/go-call-analysis/test-project.check.getter	0	Has_Parameter
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
-			
+
 Parameters:
 from_id	to_id	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:1	And_Then
@@ -347,11 +347,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:8	git
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:9	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:10	And_Then
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Value {id: edge.to_id})
 				CREATE (from)-[:edge.type {index: edge.index}]->(to)
-			
+
 Parameters:
 from_id	to_id	index	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	parameter-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get.s	0	Uses_Operand
@@ -480,11 +480,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:9	4	1
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:9	value-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:t6	0	Uses_Operand
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Value {id: edge.to_id})
 				CREATE (from)-[:edge.type {index: edge.index}]->(to)
-			
+
 Parameters:
 from_id	to_id	index	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:0	value-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:t0	0	Produces_Result
@@ -516,8 +516,8 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:1:2	value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t13	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t14	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:1:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:1:t15	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:15:14	1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	return-placeholder-0-test-project/main.go:15:14	0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:1:8	return-placeholder-1-test-project/main.go:15:14	1	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t17	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t19	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:2:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:2:t20	1	Produces_Result
@@ -528,26 +528,26 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:3:2	value-github.com
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t25	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t26	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:3:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:3:t27	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:14	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:17:14	1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	return-placeholder-0-test-project/main.go:17:14	0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:3:8	return-placeholder-1-test-project/main.go:17:14	1	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t29	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t30	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t31	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t32	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t33	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:4:t34	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:14	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:21:14	1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placeholder-0-test-project/main.go:21:14	0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:4:8	return-placeholder-1-test-project/main.go:21:14	1	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:0	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t36	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:1	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t37	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:24:7	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:24:7	1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-0-test-project/main.go:24:7	0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:10	return-placeholder-1-test-project/main.go:24:7	1	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:2	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t38	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:4	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t39	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:5	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t40	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:7	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t41	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-0-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:23:13	0	Produces_Result
-github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-1-/Users/byron/repos/personal/go-call-analysis/test-project/main.go:23:13	1	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-0-test-project/main.go:23:13	0	Produces_Result
+github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	return-placeholder-1-test-project/main.go:23:13	1	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.main:5:9	value-github.com/throwin5tone7/go-call-analysis/test-project.main:5:t43	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:0	value-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:t0	0	Produces_Result
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:1	value-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:t1	0	Produces_Result
@@ -561,11 +561,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:7	val
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:8	value-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:t6	0	Produces_Result
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Instruction {id: edge.to_id})
 				CREATE (from)-[:edge.type {condition: edge.condition}]->(to)
-			
+
 Parameters:
 from_id	to_id	condition	type
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:2	github.com/throwin5tone7/go-call-analysis/test-project.check:1:0	true	Control_Flow
@@ -582,11 +582,11 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:3:9	github.com/throw
 github.com/throwin5tone7/go-call-analysis/test-project.main:4:9	github.com/throwin5tone7/go-call-analysis/test-project.main:5:0		Control_Flow
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Instruction {id: edge.from_id}), (to:Function {id: edge.to_id})
 				CREATE (from)-[:edge.type {edge_cardinality: edge.edge_cardinality}]->(to)
-			
+
 Parameters:
 from_id	to_id	edge_cardinality	type
 github.com/throwin5tone7/go-call-analysis/test-project.check:0:0	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	2	Resolved_Call
@@ -605,26 +605,26 @@ github.com/throwin5tone7/go-call-analysis/test-project.main:5:8	fmt.Println	1	Re
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:5	^builtin^append	0	Resolved_Call
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:FileVersion {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
-			
+
 Parameters:
 from_id	to_id	type
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
-(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
-github.com/throwin5tone7/go-call-analysis/test-project.check	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	test-project/main.go	Belongs_To
+(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	test-project/main.go	Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.check	test-project/main.go	Belongs_To
 github.com/throwin5tone7/go-call-analysis/test-project.init		Belongs_To
-github.com/throwin5tone7/go-call-analysis/test-project.main	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
-github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	/Users/byron/repos/personal/go-call-analysis/test-project/main.go	Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.main	test-project/main.go	Belongs_To
+github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	test-project/main.go	Belongs_To
 
 
-Query: 
+Query:
 				UNWIND $edges AS edge
 				MATCH (from:Function {id: edge.from_id}), (to:Instruction {id: edge.to_id})
 				CREATE (from)-[:edge.type]->(to)
-			
+
 Parameters:
 from_id	to_id	type
 (*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get:0:2	Has_Return_Point

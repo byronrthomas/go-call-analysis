@@ -16,6 +16,45 @@ import (
 	"github.com/throwin5tone7/go-call-analysis/internal/analyzer/mock"
 )
 
+// updateGolden returns true when the UPDATE_GOLDEN env var is set to "1".
+// In that mode comparison functions write normalised output to the golden
+// directory instead of comparing against it.
+func updateGolden() bool {
+	return os.Getenv("UPDATE_GOLDEN") == "1"
+}
+
+// absPath resolves a path relative to the test directory to an absolute path.
+func absPath(t *testing.T, rel string) string {
+	t.Helper()
+	abs, err := filepath.Abs(rel)
+	if err != nil {
+		t.Fatalf("failed to resolve path %s: %v", rel, err)
+	}
+	return abs
+}
+
+// stripPrefix removes every occurrence of absPrefix from s so that
+// machine-specific absolute path roots are stripped while the remainder
+// (e.g. "test-project/main.go") is preserved for readability.
+func stripPrefix(s, absPrefix string) string {
+	if absPrefix == "" {
+		return s
+	}
+	return strings.ReplaceAll(s, absPrefix, "")
+}
+
+// normaliseCSVData applies stripPrefix to every cell in a CSV data slice.
+func normaliseCSVData(data [][]string, absPrefix string) [][]string {
+	result := make([][]string, len(data))
+	for i, row := range data {
+		result[i] = make([]string, len(row))
+		for j, cell := range row {
+			result[i][j] = stripPrefix(cell, absPrefix)
+		}
+	}
+	return result
+}
+
 func TestSSAGraphAnalysis(t *testing.T) {
 	// Test configuration
 	projectPath := "../test-project"
@@ -23,6 +62,9 @@ func TestSSAGraphAnalysis(t *testing.T) {
 	goldenPath := "resources/golden/ssa"
 	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
 	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
+	// Strip everything up to (but not including) "test-project/" so that
+	// golden files contain portable paths like "test-project/main.go".
+	absPathPrefix := filepath.Dir(absPath(t, projectPath)) + string(filepath.Separator)
 
 	// Clean up previous test output
 	if err := os.RemoveAll(outputPath); err != nil {
@@ -78,7 +120,7 @@ func TestSSAGraphAnalysis(t *testing.T) {
 	// Compare each file with golden files
 	for _, filename := range expectedFiles {
 		t.Run(fmt.Sprintf("Compare_%s", filename), func(t *testing.T) {
-			compareCSVFiles(t, goldenPath, outputPath, filename)
+			compareCSVFiles(t, goldenPath, outputPath, filename, absPathPrefix)
 		})
 	}
 }
@@ -117,7 +159,7 @@ func TestSimplifySSA(t *testing.T) {
 
 	// Compare with golden file
 	goldenFile := filepath.Join(goldenPath, "simplified_ssa.txt")
-	compareTextFiles(t, goldenFile, outputFile, "simplified_ssa.txt")
+	compareTextFiles(t, goldenFile, outputFile, "simplified_ssa.txt", "")
 
 	// Also compare text files for the unreachable functions - just a simple list of function names that need sorting
 	unreachableFunctionsFile := filepath.Join(outputPath, "unreachable_functions.txt")
@@ -125,18 +167,13 @@ func TestSimplifySSA(t *testing.T) {
 		t.Fatalf("Failed to write unreachable functions output: %v", err)
 	}
 	unreachableGoldenFile := filepath.Join(goldenPath, "unreachable_functions.txt")
-	compareTextFiles(t, unreachableGoldenFile, unreachableFunctionsFile, "unreachable_functions.txt")
+	compareTextFiles(t, unreachableGoldenFile, unreachableFunctionsFile, "unreachable_functions.txt", "")
 }
 
-func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename string) {
+func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename, absProjectPath string) {
+	t.Helper()
 	goldenFile := filepath.Join(goldenPath, filename)
 	outputFile := filepath.Join(outputPath, filename)
-
-	// Check if golden file exists
-	if _, err := os.Stat(goldenFile); os.IsNotExist(err) {
-		t.Errorf("Golden file %s does not exist", goldenFile)
-		return
-	}
 
 	// Check if output file exists
 	if _, err := os.Stat(outputFile); os.IsNotExist(err) {
@@ -144,45 +181,60 @@ func compareCSVFiles(t *testing.T, goldenPath, outputPath, filename string) {
 		return
 	}
 
-	// Read golden file
-	goldenData, err := readCSVFile(goldenFile)
-	if err != nil {
-		t.Errorf("Failed to read golden file %s: %v", goldenFile, err)
-		return
-	}
-
-	// Read output file
+	// Read and normalise output
 	outputData, err := readCSVFile(outputFile)
 	if err != nil {
 		t.Errorf("Failed to read output file %s: %v", outputFile, err)
 		return
 	}
+	normalisedOutput := normaliseCSVData(outputData, absProjectPath)
+	sortedOutput := sortCSVRows(normalisedOutput)
 
-	// Compare data (sort rows first to handle non-deterministic order)
-	sortedGoldenData := sortCSVRows(goldenData)
-	sortedOutputData := sortCSVRows(outputData)
-	// Output the sorted data to the output file to make updating goldens easier
-	if err := writeCSVFile(outputFile, sortedOutputData); err != nil {
+	if updateGolden() {
+		if err := os.MkdirAll(goldenPath, 0755); err != nil {
+			t.Fatalf("Failed to create golden directory: %v", err)
+		}
+		if err := writeCSVFile(goldenFile, sortedOutput); err != nil {
+			t.Errorf("Failed to write golden file %s: %v", goldenFile, err)
+		}
+		return
+	}
+
+	// Check if golden file exists
+	if _, err := os.Stat(goldenFile); os.IsNotExist(err) {
+		t.Errorf("Golden file %s does not exist (run with UPDATE_GOLDEN=1 to create it)", goldenFile)
+		return
+	}
+
+	// Read golden (already normalised)
+	goldenData, err := readCSVFile(goldenFile)
+	if err != nil {
+		t.Errorf("Failed to read golden file %s: %v", goldenFile, err)
+		return
+	}
+	sortedGolden := sortCSVRows(goldenData)
+
+	// Write sorted output back for easier golden updates
+	if err := writeCSVFile(outputFile, sortedOutput); err != nil {
 		t.Errorf("Failed to write sorted output data to %s: %v", outputFile, err)
 		return
 	}
 
-	if !reflect.DeepEqual(sortedGoldenData, sortedOutputData) {
+	if !reflect.DeepEqual(sortedGolden, sortedOutput) {
 		t.Errorf("Files %s and %s differ", goldenFile, outputFile)
 		t.Logf("Golden file has %d rows", len(goldenData))
 		t.Logf("Output file has %d rows", len(outputData))
 
-		// Show first few differences for debugging
-		maxRows := len(sortedGoldenData)
-		if len(sortedOutputData) < maxRows {
-			maxRows = len(sortedOutputData)
+		maxRows := len(sortedGolden)
+		if len(sortedOutput) < maxRows {
+			maxRows = len(sortedOutput)
 		}
 
 		for i := 0; i < maxRows && i < 5; i++ {
-			if !reflect.DeepEqual(sortedGoldenData[i], sortedOutputData[i]) {
+			if !reflect.DeepEqual(sortedGolden[i], sortedOutput[i]) {
 				t.Logf("Row %d differs:", i)
-				t.Logf("  Golden: %v", sortedGoldenData[i])
-				t.Logf("  Output: %v", sortedOutputData[i])
+				t.Logf("  Golden: %v", sortedGolden[i])
+				t.Logf("  Output: %v", sortedOutput[i])
 			}
 		}
 	}
@@ -257,13 +309,10 @@ func sortCSVRows(rows [][]string) [][]string {
 	return sorted
 }
 
-// compareTextFiles compares two text files, handling potential differences in line endings
-func compareTextFiles(t *testing.T, goldenFile, outputFile, filename string) {
-	// Check if golden file exists
-	if _, err := os.Stat(goldenFile); os.IsNotExist(err) {
-		t.Errorf("Golden file %s does not exist", goldenFile)
-		return
-	}
+// compareTextFiles compares two text files, handling potential differences in line endings.
+// absProjectPath is stripped from both files before comparison; pass "" to skip stripping.
+func compareTextFiles(t *testing.T, goldenFile, outputFile, filename, absProjectPath string) {
+	t.Helper()
 
 	// Check if output file exists
 	if _, err := os.Stat(outputFile); os.IsNotExist(err) {
@@ -271,32 +320,44 @@ func compareTextFiles(t *testing.T, goldenFile, outputFile, filename string) {
 		return
 	}
 
-	// Read golden file
-	goldenData, err := os.ReadFile(goldenFile)
-	if err != nil {
-		t.Errorf("Failed to read golden file %s: %v", goldenFile, err)
-		return
-	}
-
-	// Read output file
+	// Read and normalise output
 	outputData, err := os.ReadFile(outputFile)
 	if err != nil {
 		t.Errorf("Failed to read output file %s: %v", outputFile, err)
 		return
 	}
+	outputText := normalizeText(stripPrefix(string(outputData), absProjectPath))
 
-	// Normalize line endings and compare
+	if updateGolden() {
+		if err := os.MkdirAll(filepath.Dir(goldenFile), 0755); err != nil {
+			t.Fatalf("Failed to create golden directory: %v", err)
+		}
+		if err := os.WriteFile(goldenFile, []byte(outputText), 0644); err != nil {
+			t.Errorf("Failed to write golden file %s: %v", goldenFile, err)
+		}
+		return
+	}
+
+	// Check if golden file exists
+	if _, err := os.Stat(goldenFile); os.IsNotExist(err) {
+		t.Errorf("Golden file %s does not exist (run with UPDATE_GOLDEN=1 to create it)", goldenFile)
+		return
+	}
+
+	// Read golden (already normalised)
+	goldenData, err := os.ReadFile(goldenFile)
+	if err != nil {
+		t.Errorf("Failed to read golden file %s: %v", goldenFile, err)
+		return
+	}
 	goldenText := normalizeText(string(goldenData))
-	outputText := normalizeText(string(outputData))
 
 	if goldenText != outputText {
 		t.Errorf("Files %s and %s differ", goldenFile, outputFile)
 
-		// Show differences for debugging
 		t.Logf("Golden file length: %d characters", len(goldenText))
 		t.Logf("Output file length: %d characters", len(outputText))
 
-		// Show first few lines for comparison
 		goldenLines := strings.Split(goldenText, "\n")
 		outputLines := strings.Split(outputText, "\n")
 
@@ -352,6 +413,7 @@ func TestNeo4jSSAGraphExport(t *testing.T) {
 	goldenPath := "resources/golden/neo4j"
 	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
 	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
+	absPathPrefix := filepath.Dir(absPath(t, projectPath)) + string(filepath.Separator)
 
 	// Clean up previous test output
 	if err := os.RemoveAll(outputPath); err != nil {
@@ -385,5 +447,5 @@ func TestNeo4jSSAGraphExport(t *testing.T) {
 
 	// Compare with golden file
 	goldenFile := filepath.Join(goldenPath, "ssagraph_queries.txt")
-	compareTextFiles(t, goldenFile, outputFile, "ssagraph_queries.txt")
+	compareTextFiles(t, goldenFile, outputFile, "ssagraph_queries.txt", absPathPrefix)
 }

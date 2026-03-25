@@ -23,9 +23,13 @@ test-ssa:
 test-transform:
 	go test -v ./test -run TestTransformJSONNodes
 
-# Regenerate golden files for SSA graph tests
+# Regenerate golden files for SSA graph tests (strips machine-specific absolute paths)
 regenerate-golden-ssa:
-	bin/gca ssa-graph -p ./test-project -o ./test/resources/golden/ssa -r 'github.com/throwin5tone7/go-call-analysis/test-project:main' --package-prefixes='github.com/throwin5tone7/go-call-analysis'
+	UPDATE_GOLDEN=1 go test ./test -run TestSSAGraphAnalysis -v
+
+# Regenerate golden files for Neo4j SSA graph export tests
+regenerate-golden-neo4j:
+	UPDATE_GOLDEN=1 go test ./test -run TestNeo4jSSAGraphExport -v
 
 # Regenerate golden files for transform-json-nodes tests
 regenerate-golden-transform:
