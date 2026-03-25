@@ -44,8 +44,7 @@ Use `ssa-graph` with `--neo4j` to analyze a project and write the results direct
 bin/gca ssa-graph \
   -p /path/to/your/go/project \
   -r 'github.com/your/module/cmd/app:main' \
-  --package-prefixes='github.com/your/module' \
-  --neo4j
+  --package-prefixes='github.com/your/module'
 ```
 
 - `-r` sets the root function (entry point) for call graph traversal — format is `package/path:FunctionName`
@@ -179,8 +178,7 @@ Builds an SSA call graph and loads it into the database. This is the primary com
 -p, --path              Path to the Go project (required)
 -r, --root-function     Entry point — format: 'package/path:FunctionName'
     --package-prefixes  Comma-separated package prefixes to include
-    --neo4j             Write to database (omit to write CSV files for debugging)
--o, --output            Output directory (CSV mode only)
+-o, --output            Write CSV files to this directory instead of writing to the database
 ```
 
 ### `gca known-fixed-propagation`
@@ -208,8 +206,7 @@ A simpler call graph analysis (no SSA). Useful for quick exploration of call str
 ```
 -p, --path            Path to the Go project (required)
 -r, --root-function   Entry point
-    --neo4j           Write to database
--o, --output          Output directory (CSV mode)
+-o, --output          Write CSV files to this directory instead of writing to the database
 ```
 
 ### `gca dump-packages`

@@ -18,8 +18,7 @@ var callGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	projectPath, _ := cmd.Flags().GetString("path")
 	outputPath, _ := cmd.Flags().GetString("output")
 	rootFunction, _ := cmd.Flags().GetString("root-function")
-	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
-	return lib.RunCallGraph(rootFunction, projectPath, outputPath, useNeo4j)
+	return lib.RunCallGraph(rootFunction, projectPath, outputPath, outputPath == "")
 }
 
 var callGraphCmd = &cobra.Command{
@@ -34,9 +33,8 @@ var ssaGraphCmdRunner = func(cmd *cobra.Command, args []string) error {
 	projectPath, _ := cmd.Flags().GetString("path")
 	outputPath, _ := cmd.Flags().GetString("output")
 	rootFunction, _ := cmd.Flags().GetString("root-function")
-	useNeo4j, _ := cmd.Flags().GetBool("neo4j")
 
-	return lib.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, useNeo4j)
+	return lib.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, outputPath == "")
 }
 var ssaGraphCmd = &cobra.Command{
 	Use:   "ssa-graph",
@@ -110,14 +108,12 @@ var runManualFunctionMarkingQueryCmd = &cobra.Command{
 func init() {
 	// Common flags for both commands
 	callGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
-	callGraphCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
+	callGraphCmd.Flags().StringP("output", "o", "", "Path to write CSV output (skip writing to the database - only recommended for testing or trial runs)")
 	callGraphCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
-	callGraphCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
 
 	ssaGraphCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
-	ssaGraphCmd.Flags().StringP("output", "o", "", "Path to write analysis results (for CSV output)")
+	ssaGraphCmd.Flags().StringP("output", "o", "", "Path to write CSV output (skip writing to the database - only recommended for testing or trial runs)")
 	ssaGraphCmd.Flags().StringP("root-function", "r", "", "Root function to analyze")
-	ssaGraphCmd.Flags().Bool("neo4j", false, "Export results to Neo4j instead of CSV")
 	ssaGraphCmd.Flags().StringSlice("package-prefixes", []string{}, "Comma-separated list of package prefixes to include (e.g., 'github.com/user,example.com/project')")
 
 	dumpPackagesCmd.Flags().StringP("path", "p", "", "Path to the Go project to analyze")
