@@ -38,7 +38,7 @@ make build-all    # also builds bin/transform-json-nodes
 
 ### 1. Load a Go project into the graph database
 
-Use `ssa-graph` with `--neo4j` to analyze a project and write the results directly to the database:
+Use `ssa-graph` to analyze a project and write the results directly to the database:
 
 ```bash
 bin/gca ssa-graph \
@@ -165,7 +165,7 @@ By default, `gca` connects to `bolt://localhost:7687` with no credentials (Memgr
 export NEO4J_URI=bolt://myhost:7687
 export NEO4J_USERNAME=neo4j
 export NEO4J_PASSWORD=secret
-bin/gca ssa-graph --neo4j -p /path/to/project ...
+bin/gca ssa-graph -p /path/to/project ...
 ```
 
 ## Command reference
