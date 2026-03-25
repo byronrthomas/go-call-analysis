@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod5/handler1.go",
+    "id": 10078,
+    "text": "to check",
+    "line": 233,
+    "character": 0,
+    "relativePath": "chain/modules/mod5/handler1.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod7/types/msgs.go",
+    "id": 10079,
+    "text": "to check",
+    "line": 135,
+    "character": 0,
+    "relativePath": "chain/modules/mod7/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "37bd1996f7a9dd2e129dc3f09cdf544c1df8afa1"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod7/types/msgs.go",
+    "id": 10080,
+    "text": "to check",
+    "line": 317,
+    "character": 0,
+    "relativePath": "chain/modules/mod7/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "37bd1996f7a9dd2e129dc3f09cdf544c1df8afa1"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod7/types/msgs.go",
+    "id": 10081,
+    "text": "to check",
+    "line": 50,
+    "character": 0,
+    "relativePath": "chain/modules/mod7/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "37bd1996f7a9dd2e129dc3f09cdf544c1df8afa1"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod7/types/msgs.go",
+    "id": 10082,
+    "text": "to check",
+    "line": 91,
+    "character": 0,
+    "relativePath": "chain/modules/mod7/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "37bd1996f7a9dd2e129dc3f09cdf544c1df8afa1"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server4.go",
+    "id": 10043,
+    "text": "to check",
+    "line": 41,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server4.go",
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server4.go",
+    "id": 10044,
+    "text": "to check",
+    "line": 118,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server4.go",
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server4.go",
+    "id": 10045,
+    "text": "to check",
+    "line": 171,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server4.go",
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server5.go",
+    "id": 10037,
+    "text": "to check",
+    "line": 67,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server5.go",
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server5.go",
+    "id": 10038,
+    "text": "to check",
+    "line": 124,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server5.go",
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server5.go",
+    "id": 10039,
+    "text": "to check",
+    "line": 299,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server5.go",
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/server5.go",
+    "id": 10040,
+    "text": "to check",
+    "line": 451,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/server5.go",
+    "priority": "P0",
+    "annotationCommit": "daf90f474206da1ed7525e10e66de6f704586a32"
+  }
+]

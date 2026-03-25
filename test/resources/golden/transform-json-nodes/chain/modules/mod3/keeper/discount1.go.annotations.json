@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/discount1.go",
+    "id": 10050,
+    "text": "to check",
+    "line": 67,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/discount1.go",
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
+  }
+]

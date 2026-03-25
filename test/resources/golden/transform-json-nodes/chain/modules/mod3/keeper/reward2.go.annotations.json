@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/reward2.go",
+    "id": 10057,
+    "text": "to check",
+    "line": 268,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/reward2.go",
+    "priority": "P0",
+    "annotationCommit": "7f821a4f429c69bc19869b0aee9b2c37f7306c7b"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/reward2.go",
+    "id": 10058,
+    "text": "to check",
+    "line": 293,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/reward2.go",
+    "priority": "P0",
+    "annotationCommit": "7f821a4f429c69bc19869b0aee9b2c37f7306c7b"
+  }
+]

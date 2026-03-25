@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod4/handler1.go",
+    "id": 10076,
+    "text": "to check",
+    "line": 85,
+    "character": 0,
+    "relativePath": "chain/modules/mod4/handler1.go",
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod4/handler1.go",
+    "id": 10077,
+    "text": "to check",
+    "line": 42,
+    "character": 0,
+    "relativePath": "chain/modules/mod4/handler1.go",
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
+  }
+]

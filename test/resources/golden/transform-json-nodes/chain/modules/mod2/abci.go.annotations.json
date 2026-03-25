@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod2/abci.go",
+    "id": 10018,
+    "text": "to check",
+    "line": 354,
+    "character": 0,
+    "relativePath": "chain/modules/mod2/abci.go",
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
+  }
+]

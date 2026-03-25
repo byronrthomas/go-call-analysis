@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod5/keeper/server1.go",
+    "id": 10088,
+    "text": "to check",
+    "line": 39,
+    "character": 0,
+    "relativePath": "chain/modules/mod5/keeper/server1.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod1/keeper/registry.go",
+    "id": 10000,
+    "text": "to check",
+    "line": 22,
+    "character": 0,
+    "relativePath": "chain/modules/mod1/keeper/registry.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod1/keeper/registry.go",
+    "id": 10001,
+    "text": "to check",
+    "line": 66,
+    "character": 0,
+    "relativePath": "chain/modules/mod1/keeper/registry.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  }
+]

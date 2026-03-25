@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/market1.go",
+    "id": 10046,
+    "text": "to check",
+    "line": 69,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/market1.go",
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod3/keeper/market1.go",
+    "id": 10047,
+    "text": "to check",
+    "line": 776,
+    "character": 0,
+    "relativePath": "chain/modules/mod3/keeper/market1.go",
+    "priority": "P0",
+    "annotationCommit": "8138aa0583819e2a52f3212fddb05e2721bc3daa"
+  }
+]

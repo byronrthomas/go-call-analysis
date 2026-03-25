@@ -32,10 +32,10 @@ regenerate-golden-neo4j:
 	UPDATE_GOLDEN=1 go test ./test -run TestNeo4jSSAGraphExport -v
 
 # Regenerate golden files for transform-json-nodes tests
-regenerate-golden-transform:
+regenerate-golden-transform: build-transform
 	@echo "Regenerating golden files for transform-json-nodes..."
 	rm -rf ./test/resources/golden/transform-json-nodes
-	bin/transform-json-nodes -input ./test/resources/transform-json-nodes/sample_input.jsonl -root '/Users/byron/repos/third-party/injective/injective-core' -output ./test/resources/golden/transform-json-nodes -annotation 'to check'
+	UPDATE_GOLDEN=1 go test ./test -run TestTransformJSONNodes -v
 
 # Clean build artifacts
 clean:

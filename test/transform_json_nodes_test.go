@@ -17,7 +17,8 @@ func TestTransformJSONNodes(t *testing.T) {
 	inputFile := "resources/transform-json-nodes/sample_input.jsonl"
 	outputPath := "../test-output/transform-json-nodes"
 	goldenPath := "resources/golden/transform-json-nodes"
-	relativeRoot := "/Users/byron/repos/third-party/injective/injective-core"
+	// relativeRoot matches the fake-but-consistent paths committed in sample_input.jsonl
+	relativeRoot := "/home/user/projects/example-chain-repo"
 	annotationText := "to check"
 
 	// Build the transform tool if it doesn't exist
@@ -51,15 +52,34 @@ func TestTransformJSONNodes(t *testing.T) {
 		t.Fatalf("Failed to run transform-json-nodes tool: %v\nOutput: %s", err, output)
 	}
 
+	if updateGolden() {
+		copyDirToGolden(t, outputPath, goldenPath)
+		return
+	}
+
 	// Compare output with golden files
 	compareDirectories(t, goldenPath, outputPath)
+}
+
+// copyDirToGolden replaces the golden directory with the contents of srcDir.
+func copyDirToGolden(t *testing.T, srcDir, dstDir string) {
+	t.Helper()
+	if err := os.RemoveAll(dstDir); err != nil {
+		t.Fatalf("Failed to clear golden directory %s: %v", dstDir, err)
+	}
+	if err := os.MkdirAll(filepath.Dir(dstDir), 0755); err != nil {
+		t.Fatalf("Failed to create parent of golden directory: %v", err)
+	}
+	if err := os.CopyFS(dstDir, os.DirFS(srcDir)); err != nil {
+		t.Fatalf("Failed to copy %s to golden directory %s: %v", srcDir, dstDir, err)
+	}
 }
 
 // compareDirectories recursively compares two directory structures and their contents
 func compareDirectories(t *testing.T, goldenPath, outputPath string) {
 	// Check if golden directory exists
 	if _, err := os.Stat(goldenPath); os.IsNotExist(err) {
-		t.Errorf("Golden directory %s does not exist", goldenPath)
+		t.Errorf("Golden directory %s does not exist (run with UPDATE_GOLDEN=1 to create it)", goldenPath)
 		return
 	}
 

@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod4/types/types.go",
+    "id": 10083,
+    "text": "to check",
+    "line": 59,
+    "character": 0,
+    "relativePath": "chain/modules/mod4/types/types.go",
+    "priority": "P0",
+    "annotationCommit": "1f4196353717e487c2dfd5490aecdc70b52c4c9b"
+  }
+]

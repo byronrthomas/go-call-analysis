@@ -1,0 +1,12 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod5/types/msgs.go",
+    "id": 10075,
+    "text": "to check",
+    "line": 62,
+    "character": 0,
+    "relativePath": "chain/modules/mod5/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  }
+]

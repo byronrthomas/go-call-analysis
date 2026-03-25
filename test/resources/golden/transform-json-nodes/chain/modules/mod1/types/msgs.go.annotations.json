@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod1/types/msgs.go",
+    "id": 10090,
+    "text": "to check",
+    "line": 47,
+    "character": 0,
+    "relativePath": "chain/modules/mod1/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod1/types/msgs.go",
+    "id": 10091,
+    "text": "to check",
+    "line": 224,
+    "character": 0,
+    "relativePath": "chain/modules/mod1/types/msgs.go",
+    "priority": "P0",
+    "annotationCommit": "151e3f02fdc303efcf2890902ba9fae4a8728709"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod2/keeper/genesis.go",
+    "id": 10062,
+    "text": "to check",
+    "line": 131,
+    "character": 0,
+    "relativePath": "chain/modules/mod2/keeper/genesis.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  },
+  {
+    "filename": "/home/user/projects/example-chain-repo/chain/modules/mod2/keeper/genesis.go",
+    "id": 10063,
+    "text": "to check",
+    "line": 133,
+    "character": 0,
+    "relativePath": "chain/modules/mod2/keeper/genesis.go",
+    "priority": "P0",
+    "annotationCommit": "8cf3d2299bef9c2b545be13619c276bcb6e720fa"
+  }
+]
