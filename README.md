@@ -1,14 +1,17 @@
 # go-call-analysis
 
+[![CI](https://github.com/throwin5tone7/go-call-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/throwin5tone7/go-call-analysis/actions/workflows/ci.yml)
+[![Go 1.24](https://img.shields.io/badge/go-1.24-blue.svg)](https://golang.org/dl/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 A static analysis toolkit for Go code that builds SSA (Static Single Assignment) graphs and loads them into a Neo4j-compatible graph database for interactive exploration and annotation-driven analysis.
 
 The primary workflow is: analyze a Go project → load the graph into Memgraph → explore with Cypher queries → annotate nodes → propagate annotations across the graph.
 
 ## Motivation
 
-The secret sauce of this tool is to slightly simplify the SSA graph output by go's analysis tools,
-and to extract as much information out of it into a graph schema to enable effective value tracing
-in a code analysis project. The resulting analysis graph contains information such as:
+This tool simplifies the SSA graph produced by Go's analysis packages and maps it into a rich graph
+schema that enables effective value tracing across a codebase. The resulting analysis graph captures:
 
 * What variables are set to the return value of functionX, at every call site
 * Which variables are read to provide the arguments of functionX, from every call site
@@ -30,11 +33,11 @@ AND NOT EXISTS ((verr)<-[:Uses_Operand]-(:Instruction))
 RETURN fv.id as call_site_filename, cs.line as call_site_line, func.id as called_function limit 20
 ```
 
-Also, because neo4j/memgraph-like databases tend to be schema-less, you can tag additional 
-attributes onto nodes and edges (using update queries) in order to annotate the, and then use annotations in later queries. For example:
+Because Memgraph and Neo4j are schema-less, you can tag additional properties onto nodes and edges
+using update queries to annotate them, then reference those annotations in later queries. For example:
 
-```
-MATCH 
+```cypher
+MATCH
 (i1:Instruction {instruction_type: "Store"})-[:Uses_Operand {index: 0}]->
 (v:Value)<-[:Uses_Operand {index: 0}]-(i2:Instruction {instruction_type: "Store"})
 WHERE i1.id != i2.id
@@ -157,7 +160,7 @@ LIMIT 50;
 
 ### 4. Seed initial annotations
 
-Once you identify values or functions of interest through exploration, seed the initial annotations. The propagation commands (step 4) extend these through the graph automatically, but they need a starting point.
+Once you identify values or functions of interest through exploration, seed the initial annotations. The propagation commands (step 5) extend these through the graph automatically, but they need a starting point.
 
 **Manually mark a function as returning fixed-width bytes:**
 
@@ -303,7 +306,7 @@ Golden files for tests live in `test/resources/golden/`. To regenerate after int
 make regenerate-golden-ssa
 ```
 
-## Extra tool: transform-json-nodes
+## Integration: transform-json-nodes
 
 `bin/transform-json-nodes` is a helper that converts JSONL output from Memgraph queries into [code-notator](https://github.com/byronrthomas/code-notator) annotation files. Most users won't need this — it's a bridge to a specific annotation workflow built on top of the graph query results.
 
