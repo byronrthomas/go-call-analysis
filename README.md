@@ -1,6 +1,6 @@
 # go-call-analysis
 
-[![CI](https://github.com/throwin5tone7/go-call-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/throwin5tone7/go-call-analysis/actions/workflows/ci.yml)
+[![CI](https://github.com/byronrthomas/go-call-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/byronrthomas/go-call-analysis/actions/workflows/ci.yml)
 [![Go 1.24](https://img.shields.io/badge/go-1.24-blue.svg)](https://golang.org/dl/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -74,7 +74,7 @@ Memgraph Lab (browser UI) is available at `http://localhost:3000` if you use the
 ## Build
 
 ```bash
-git clone https://github.com/throwin5tone7/go-call-analysis.git
+git clone https://github.com/byronrthomas/go-call-analysis.git
 cd go-call-analysis
 make build        # builds bin/gca
 make build-all    # also builds bin/transform-json-nodes
