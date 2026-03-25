@@ -41,25 +41,24 @@ func RunCallGraph(rootFunction string, projectPath string, outputPath string, us
 
 	nodes, edges := analyzer.ExtractCallGraphData(callGraph, projectPath)
 	if useNeo4j {
-
-		config := analyzer.Neo4jConfig{
-			URI:      "bolt://localhost:7687",
-			Username: "",
-			Password: "",
-			Database: "",
-		}
-		return analyzer.ExportCallGraphToNeo4j(nodes, edges, config)
+		return analyzer.ExportCallGraphToNeo4j(nodes, edges, getNeoConfig())
 	} else {
 
 		return analyzer.ExportCallGraphToCSV(nodes, edges, outputPath)
 	}
 }
 
-var defaultNeoConfig = analyzer.Neo4jConfig{
-	URI:      "bolt://localhost:7687",
-	Username: "",
-	Password: "",
-	Database: "",
+func getNeoConfig() analyzer.Neo4jConfig {
+	uri := os.Getenv("NEO4J_URI")
+	if uri == "" {
+		uri = "bolt://localhost:7687"
+	}
+	return analyzer.Neo4jConfig{
+		URI:      uri,
+		Username: os.Getenv("NEO4J_USERNAME"),
+		Password: os.Getenv("NEO4J_PASSWORD"),
+		Database: os.Getenv("NEO4J_DATABASE"),
+	}
 }
 
 func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string, rootFunction string, useNeo4j bool) error {
@@ -71,7 +70,7 @@ func RunSSAGraph(packagePrefixes []string, projectPath string, outputPath string
 
 	if useNeo4j {
 
-		return analyzer.ExportSSAGraphToNeo4j(ssaResult, defaultNeoConfig)
+		return analyzer.ExportSSAGraphToNeo4j(ssaResult, getNeoConfig())
 	} else {
 
 		return analyzer.ExportSSAGraphToCSV(ssaResult, outputPath)
@@ -178,11 +177,11 @@ func RunOutputSSA(packagePrefixes []string, projectPath string, outputPath strin
 }
 
 func RunPropagationQueries() error {
-	return analyzer.RunPropagationQueries(defaultNeoConfig, fixedWidthPropagationQueries)
+	return analyzer.RunPropagationQueries(getNeoConfig(), fixedWidthPropagationQueries)
 }
 
 func RunTwoVaryingPropagationQueries() error {
-	return analyzer.RunPropagationQueries(defaultNeoConfig, twoVaryingPropagationQueries)
+	return analyzer.RunPropagationQueries(getNeoConfig(), twoVaryingPropagationQueries)
 }
 
 const manualFunctionMarkingQuery = `
@@ -194,7 +193,7 @@ SET ftgt.func_returns_fixed_width = true, ftgt.annotation = "MANUALLY INSPECTED 
 `
 
 func RunManualFunctionMarkingQuery(functionId string) error {
-	err := analyzer.RunSingleUpdateQuery(defaultNeoConfig, strings.Replace(manualFunctionMarkingQuery, "__ID__", functionId, 1))
+	err := analyzer.RunSingleUpdateQuery(getNeoConfig(), strings.Replace(manualFunctionMarkingQuery, "__ID__", functionId, 1))
 	if err != nil {
 		return err
 	}
