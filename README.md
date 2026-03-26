@@ -63,13 +63,12 @@ The underlying graph structure is not specific to this use case; you can build y
 
 ### Starting Memgraph
 
-The quickest way is with Docker or Podman:
+The quickest way is with Docker or Podman - I recommend getting the docker compose file that the script
+in the [Memgraph start guide](https://memgraph.com/docs/getting-started) downloads.
 
-```bash
-docker run -p 7687:7687 -p 7444:7444 memgraph/memgraph-mage
-```
+Then you can just put that in a convenient directory, cd to it and run `docker compose up`
 
-Memgraph Lab (browser UI) is available at `http://localhost:3000` if you use the `memgraph-platform` image instead.
+Memgraph Lab (browser UI) is available at `http://localhost:3000` after startup.
 
 ## Build
 
