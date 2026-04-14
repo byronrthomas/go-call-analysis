@@ -6,6 +6,7 @@ import (
 	"go/types"
 	"log"
 	"maps"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -15,6 +16,7 @@ import (
 
 type SSAGraphData struct {
 	FileVersionNodes   []graphcommon.FileVersionNode
+	PackageNodes       []graphcommon.PackageNode
 	BelongsToEdges     []BelongsToEdge
 	ValueNodes         []ValueNode
 	InstructionNodes   []InstructionNode
@@ -245,6 +247,7 @@ type GraphVisitor struct {
 	fileSet                 *token.FileSet
 	gitRevisionCache        *GitRevisionCache
 	fileVersionNodes        map[string]graphcommon.FileVersionNode
+	packageNodes            map[string]graphcommon.PackageNode
 	instructionNodes        []InstructionNode
 	functionNodes           []SSAGraphFunctionNode
 	orderingEdges           []OrderingEdge
@@ -271,14 +274,19 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		return
 	}
 	if _, ok := v.fileVersionNodes[pos.Filename]; !ok {
-		packageName := "unknown-package"
+		packagePath := "unknown-package"
 		if pkg != nil {
-			packageName = pkg.Pkg.Path()
+			packagePath = pkg.Pkg.Path()
 		}
 		v.fileVersionNodes[pos.Filename] = graphcommon.FileVersionNode{
 			Id:              pos.Filename,
 			LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
-			Package:         packageName,
+		}
+		if _, ok := v.packageNodes[packagePath]; !ok {
+			v.packageNodes[packagePath] = graphcommon.PackageNode{
+				PackagePath:  packagePath,
+				RelativePath: filepath.Dir(pos.Filename),
+			}
 		}
 	}
 	if _, ok := v.functionEntries[funcId]; !ok {
@@ -499,6 +507,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		gitRevisionCache:        NewGitRevisionCache(projectPath),
 		functionEntries:         make(map[string]bool),
 		fileVersionNodes:        make(map[string]graphcommon.FileVersionNode),
+		packageNodes:            make(map[string]graphcommon.PackageNode),
 		processedValues:         make(map[string]bool),
 		PackagePrefixFilter:     PackageMatcher(packagePrefixes),
 	}
@@ -507,6 +516,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 
 	return SSAGraphData{
 		FileVersionNodes:   slices.Collect(maps.Values(visitor.fileVersionNodes)),
+		PackageNodes:       slices.Collect(maps.Values(visitor.packageNodes)),
 		ValueNodes:         visitor.valueNodes,
 		InstructionNodes:   visitor.instructionNodes,
 		FunctionNodes:      visitor.functionNodes,

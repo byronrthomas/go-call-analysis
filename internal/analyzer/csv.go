@@ -247,6 +247,13 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["file_version_nodes"] = fileVersionNodeMappables
 
+	// Convert package nodes
+	packageNodeMappables := make([]graphcommon.Mappable, len(ssaData.PackageNodes))
+	for i := range ssaData.PackageNodes {
+		packageNodeMappables[i] = &ssaData.PackageNodes[i]
+	}
+	dataMap["package_nodes"] = packageNodeMappables
+
 	// Convert value nodes to Mappable interface
 	valueNodeMappables := make([]graphcommon.Mappable, len(ssaData.ValueNodes))
 	for i := range ssaData.ValueNodes {

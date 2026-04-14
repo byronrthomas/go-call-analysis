@@ -1,8 +1,17 @@
-Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, last_git_revision: node.last_git_revision, name: node.name, package: node.package})
+Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, package_path: node.package_path, relative_path: node.relative_path})
 Parameters:
-id	label	last_git_revision	name	package
-	FileVersion		.	github.com/throwin5tone7/go-call-analysis/test-project
-test-project/main.go	FileVersion	e4b3c4b5f5cad964e287f20a451d5aea16086559	main.go	github.com/throwin5tone7/go-call-analysis/test-project
+id	label	package_path	relative_path
+github.com/throwin5tone7/go-call-analysis/test-project	Package	github.com/throwin5tone7/go-call-analysis/test-project	test-project
+
+
+Query: CREATE INDEX ON :Package(id)
+
+
+Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, last_git_revision: node.last_git_revision, name: node.name})
+Parameters:
+id	label	last_git_revision	name
+	FileVersion		.
+test-project/main.go	FileVersion	e4b3c4b5f5cad964e287f20a451d5aea16086559	main.go
 
 
 Query: CREATE INDEX ON :FileVersion(id)

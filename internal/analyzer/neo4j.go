@@ -402,6 +402,14 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 	// Start timing
 	startTime := time.Now()
 
+	// Import package nodes
+	if err := importNodesInBatches(ctx, session, &graphData.PackageNodes, "package"); err != nil {
+		return err
+	}
+	if err := createNodeIdIndex(ctx, session, "Package"); err != nil {
+		return err
+	}
+
 	// Import file version nodes
 	if err := importNodesInBatches(ctx, session, &graphData.FileVersionNodes, "file version"); err != nil {
 		return err
