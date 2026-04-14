@@ -254,6 +254,13 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["package_nodes"] = packageNodeMappables
 
+	// Convert in-package edges
+	inPackageEdgeMappables := make([]graphcommon.Mappable, len(ssaData.InPackageEdges))
+	for i := range ssaData.InPackageEdges {
+		inPackageEdgeMappables[i] = &ssaData.InPackageEdges[i]
+	}
+	dataMap["in_package_edges"] = inPackageEdgeMappables
+
 	// Convert value nodes to Mappable interface
 	valueNodeMappables := make([]graphcommon.Mappable, len(ssaData.ValueNodes))
 	for i := range ssaData.ValueNodes {

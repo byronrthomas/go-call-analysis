@@ -17,6 +17,7 @@ import (
 type SSAGraphData struct {
 	FileVersionNodes   []graphcommon.FileVersionNode
 	PackageNodes       []graphcommon.PackageNode
+	InPackageEdges     []InPackageEdge
 	BelongsToEdges     []BelongsToEdge
 	ValueNodes         []ValueNode
 	InstructionNodes   []InstructionNode
@@ -74,6 +75,10 @@ type ResolvedCallEdge struct {
 type ResultEdge struct {
 	graphcommon.EdgeCommon
 	Index int
+}
+
+type InPackageEdge struct {
+	graphcommon.EdgeCommon
 }
 
 type BelongsToEdge struct {
@@ -187,6 +192,19 @@ func (e ResolvedCallEdge) NodeTypes() graphcommon.NodeTypes {
 	}
 }
 
+func (e InPackageEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "In_Package"
+	return edgeCommonMap
+}
+
+func (e InPackageEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "FileVersion",
+		ToLabel:   "Package",
+	}
+}
+
 func (e BelongsToEdge) ToMap() map[string]any {
 	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
 	edgeCommonMap["type"] = "Belongs_To"
@@ -248,6 +266,7 @@ type GraphVisitor struct {
 	gitRevisionCache        *GitRevisionCache
 	fileVersionNodes        map[string]graphcommon.FileVersionNode
 	packageNodes            map[string]graphcommon.PackageNode
+	inPackageEdges          []InPackageEdge
 	instructionNodes        []InstructionNode
 	functionNodes           []SSAGraphFunctionNode
 	orderingEdges           []OrderingEdge
@@ -282,12 +301,22 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			Id:              pos.Filename,
 			LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
 		}
-		if _, ok := v.packageNodes[packagePath]; !ok {
+		relPath := filepath.Dir(pos.Filename)
+		if existing, exists := v.packageNodes[packagePath]; !exists {
 			v.packageNodes[packagePath] = graphcommon.PackageNode{
 				PackagePath:  packagePath,
-				RelativePath: filepath.Dir(pos.Filename),
+				RelativePath: relPath,
 			}
+		} else if (existing.RelativePath == "" || existing.RelativePath == ".") && relPath != "" && relPath != "." {
+			existing.RelativePath = relPath
+			v.packageNodes[packagePath] = existing
 		}
+		v.inPackageEdges = append(v.inPackageEdges, InPackageEdge{
+			EdgeCommon: graphcommon.EdgeCommon{
+				FromID: pos.Filename,
+				ToID:   packagePath,
+			},
+		})
 	}
 	if _, ok := v.functionEntries[funcId]; !ok {
 		addFunctionEntryNode(v, funcId, f, pkg, pos, true)
@@ -517,6 +546,7 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 	return SSAGraphData{
 		FileVersionNodes:   slices.Collect(maps.Values(visitor.fileVersionNodes)),
 		PackageNodes:       slices.Collect(maps.Values(visitor.packageNodes)),
+		InPackageEdges:     visitor.inPackageEdges,
 		ValueNodes:         visitor.valueNodes,
 		InstructionNodes:   visitor.instructionNodes,
 		FunctionNodes:      visitor.functionNodes,

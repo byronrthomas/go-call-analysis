@@ -418,6 +418,11 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		return err
 	}
 
+	// Import in-package edges
+	if err := importEdgesInBatches(ctx, session, &graphData.InPackageEdges, "in package"); err != nil {
+		return err
+	}
+
 	// Import function nodes
 	if err := importNodesInBatches(ctx, session, &graphData.FunctionNodes, "function"); err != nil {
 		return err
