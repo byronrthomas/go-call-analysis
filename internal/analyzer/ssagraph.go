@@ -264,23 +264,12 @@ type GraphVisitor struct {
 	PackagePrefixFilter     func(pkgPath string) bool
 	fileSet                 *token.FileSet
 	gitRevisionCache        *GitRevisionCache
-	fileVersionNodes        map[string]graphcommon.FileVersionNode
-	packageNodes            map[string]graphcommon.PackageNode
-	inPackageEdges          []InPackageEdge
-	instructionNodes        []InstructionNode
-	functionNodes           []SSAGraphFunctionNode
-	orderingEdges           []OrderingEdge
-	controlFlowEdges        []ControlFlowEdge
-	operandEdges            []OperandEdge
-	resultEdges             []ResultEdge
-	resolvedCallEdges       []ResolvedCallEdge
-	valueNodes              []ValueNode
-	belongsToEdges          []BelongsToEdge
-	functionEntryEdges      []FunctionEntryEdge
-	hasParameterEdges       []HasParameterEdge
-	functionEntries         map[string]bool
-	processedValues         map[string]bool
-	returnPointEdges        []ReturnPointEdge
+	// maps needed for O(1) dedup during construction; converted to slices in SSAGraphData at the end
+	fileVersionNodeMap map[string]graphcommon.FileVersionNode
+	packageNodeMap     map[string]graphcommon.PackageNode
+	functionEntries    map[string]bool
+	processedValues    map[string]bool
+	SSAGraphData
 }
 
 func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
@@ -292,26 +281,26 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		log.Printf("INFO: Skipping function %s because it is marked as unreachable", funcId)
 		return
 	}
-	if _, ok := v.fileVersionNodes[pos.Filename]; !ok {
+	if _, ok := v.fileVersionNodeMap[pos.Filename]; !ok {
 		packagePath := "unknown-package"
 		if pkg != nil {
 			packagePath = pkg.Pkg.Path()
 		}
-		v.fileVersionNodes[pos.Filename] = graphcommon.FileVersionNode{
+		v.fileVersionNodeMap[pos.Filename] = graphcommon.FileVersionNode{
 			Id:              pos.Filename,
 			LastGitRevision: v.gitRevisionCache.GetFileRevision(pos.Filename),
 		}
 		relPath := filepath.Dir(pos.Filename)
-		if existing, exists := v.packageNodes[packagePath]; !exists {
-			v.packageNodes[packagePath] = graphcommon.PackageNode{
+		if existing, exists := v.packageNodeMap[packagePath]; !exists {
+			v.packageNodeMap[packagePath] = graphcommon.PackageNode{
 				PackagePath:  packagePath,
 				RelativePath: relPath,
 			}
 		} else if (existing.RelativePath == "" || existing.RelativePath == ".") && relPath != "" && relPath != "." {
 			existing.RelativePath = relPath
-			v.packageNodes[packagePath] = existing
+			v.packageNodeMap[packagePath] = existing
 		}
-		v.inPackageEdges = append(v.inPackageEdges, InPackageEdge{
+		v.SSAGraphData.InPackageEdges = append(v.SSAGraphData.InPackageEdges, InPackageEdge{
 			EdgeCommon: graphcommon.EdgeCommon{
 				FromID: pos.Filename,
 				ToID:   packagePath,
@@ -321,7 +310,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 	if _, ok := v.functionEntries[funcId]; !ok {
 		addFunctionEntryNode(v, funcId, f, pkg, pos, true)
 	}
-	v.belongsToEdges = append(v.belongsToEdges, BelongsToEdge{
+	v.SSAGraphData.BelongsToEdges = append(v.SSAGraphData.BelongsToEdges, BelongsToEdge{
 		EdgeCommon: graphcommon.EdgeCommon{
 			FromID: funcId,
 			ToID:   pos.Filename,
@@ -331,8 +320,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 
 	for paramIndex, param := range f.Params {
 		_, paramId := ValueId(v.fileSet, param, "")
-		v.valueNodes = processValue(v.valueNodes, paramId, param, pkg, pos, v.gitRevisionCache, v.processedValues)
-		v.hasParameterEdges = append(v.hasParameterEdges, HasParameterEdge{
+		v.SSAGraphData.ValueNodes = processValue(v.SSAGraphData.ValueNodes, paramId, param, pkg, pos, v.gitRevisionCache, v.processedValues)
+		v.SSAGraphData.HasParameterEdges = append(v.SSAGraphData.HasParameterEdges, HasParameterEdge{
 			EdgeCommon: graphcommon.EdgeCommon{
 				FromID: funcId,
 				ToID:   paramId,
@@ -348,7 +337,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 		if blockInd == 0 {
 			precInstrId = funcId
 		}
-		v.controlFlowEdges = addControlFlowEdges(b, v.controlFlowEdges)
+		v.SSAGraphData.ControlFlowEdges = addControlFlowEdges(b, v.SSAGraphData.ControlFlowEdges)
 		currentBlockId := blockId(b)
 
 		for instrInd, instr := range b.Instrs {
@@ -359,7 +348,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			}
 
 			instrPosition := v.fileSet.Position(instr.Pos())
-			v.instructionNodes = append(v.instructionNodes, InstructionNode{
+			v.SSAGraphData.InstructionNodes = append(v.SSAGraphData.InstructionNodes, InstructionNode{
 				NodeCommon: graphcommon.NodeCommon{
 					ID:   instrId,
 					Name: instr.String(),
@@ -376,7 +365,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			if precInstrId != "" {
 				if precInstrId == funcId {
 					// This is the first instruction in the first block, use FunctionEntryEdge
-					v.functionEntryEdges = append(v.functionEntryEdges, FunctionEntryEdge{
+					v.SSAGraphData.FunctionEntryEdges = append(v.SSAGraphData.FunctionEntryEdges, FunctionEntryEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: precInstrId,
 							ToID:   instrId,
@@ -384,7 +373,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					})
 				} else {
 					// Regular ordering edge between instructions
-					v.orderingEdges = append(v.orderingEdges, OrderingEdge{
+					v.SSAGraphData.OrderingEdges = append(v.SSAGraphData.OrderingEdges, OrderingEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: precInstrId,
 							ToID:   instrId,
@@ -411,7 +400,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 				}
 
 				_, opId := ValueId(v.fileSet, *op, producingBlockId)
-				v.operandEdges = append(v.operandEdges, OperandEdge{
+				v.SSAGraphData.OperandEdges = append(v.SSAGraphData.OperandEdges, OperandEdge{
 					EdgeCommon: graphcommon.EdgeCommon{
 						FromID: instrId,
 						ToID:   opId,
@@ -423,8 +412,8 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			if asAnnotatedCall, ok := instr.(*AnnotatedCall); ok {
 				for returnValueIndex, returnValue := range asAnnotatedCall.ReturnValues {
 					_, returnValueId := ValueId(v.fileSet, returnValue, currentBlockId)
-					v.valueNodes = processValue(v.valueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
-					v.resultEdges = append(v.resultEdges, ResultEdge{
+					v.SSAGraphData.ValueNodes = processValue(v.SSAGraphData.ValueNodes, returnValueId, returnValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
+					v.SSAGraphData.ResultEdges = append(v.SSAGraphData.ResultEdges, ResultEdge{
 						EdgeCommon: graphcommon.EdgeCommon{
 							FromID: instrId,
 							ToID:   returnValueId,
@@ -444,7 +433,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 							addFunctionEntryNode(v, targetId, resolvedTarget, pkg, v.fileSet.Position(resolvedTarget.Pos()), fullAnalysis)
 							v.functionEntries[targetId] = true
 						}
-						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
+						v.SSAGraphData.ResolvedCallEdges = append(v.SSAGraphData.ResolvedCallEdges, ResolvedCallEdge{
 							EdgeCommon: graphcommon.EdgeCommon{
 								FromID: instrId,
 								ToID:   resolvedTarget.String(),
@@ -456,7 +445,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 					if asBuiltin, ok := dynamicCallee.(*ssa.Builtin); ok {
 						builtinId := "^builtin^" + asBuiltin.Name()
 						if _, ok := v.functionEntries[builtinId]; !ok {
-							v.functionNodes = append(v.functionNodes, SSAGraphFunctionNode{
+							v.SSAGraphData.FunctionNodes = append(v.SSAGraphData.FunctionNodes, SSAGraphFunctionNode{
 								NodeCommon: graphcommon.NodeCommon{
 									ID:           builtinId,
 									Name:         asBuiltin.String(),
@@ -466,7 +455,7 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 							})
 							v.functionEntries[builtinId] = true
 						}
-						v.resolvedCallEdges = append(v.resolvedCallEdges, ResolvedCallEdge{
+						v.SSAGraphData.ResolvedCallEdges = append(v.SSAGraphData.ResolvedCallEdges, ResolvedCallEdge{
 							EdgeCommon: graphcommon.EdgeCommon{
 								FromID: instrId,
 								ToID:   builtinId,
@@ -478,10 +467,10 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 			} else if asValue, ok := instr.(ssa.Value); ok {
 
 				_, vId := ValueId(v.fileSet, asValue, currentBlockId)
-				v.valueNodes = processValue(v.valueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
+				v.SSAGraphData.ValueNodes = processValue(v.SSAGraphData.ValueNodes, vId, asValue, pkg, instrPosition, v.gitRevisionCache, v.processedValues)
 
 				// If instruction produces a value, add a result edge from the instruction to the value
-				v.resultEdges = append(v.resultEdges, ResultEdge{
+				v.SSAGraphData.ResultEdges = append(v.SSAGraphData.ResultEdges, ResultEdge{
 					EdgeCommon: graphcommon.EdgeCommon{
 						FromID: instrId,
 						ToID:   vId,
@@ -496,9 +485,9 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 func addFunctionEntryNode(v *GraphVisitor, funcId string, f *ssa.Function, pkg *ssa.Package, pos token.Position, fullAnalysis bool) {
 	var returnPoints int
 	if fullAnalysis {
-		v.returnPointEdges, returnPoints = addReturnPointEdges(funcId, f, v.returnPointEdges)
+		v.SSAGraphData.ReturnPointEdges, returnPoints = addReturnPointEdges(funcId, f, v.SSAGraphData.ReturnPointEdges)
 	}
-	v.functionNodes = append(v.functionNodes, SSAGraphFunctionNode{
+	v.SSAGraphData.FunctionNodes = append(v.SSAGraphData.FunctionNodes, SSAGraphFunctionNode{
 		NodeCommon: graphcommon.NodeCommon{
 			ID:   funcId,
 			Name: f.Name(),
@@ -523,7 +512,7 @@ func (v *GraphVisitor) VisitTypeMethod(_method *types.Func, ssaFunc *ssa.Functio
 
 func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
 	valuePosition, vId := ValueId(v.fileSet, valueObj, "")
-	v.valueNodes = processValue(v.valueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache, v.processedValues)
+	v.SSAGraphData.ValueNodes = processValue(v.SSAGraphData.ValueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache, v.processedValues)
 }
 
 func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string, projectPath string) SSAGraphData {
@@ -535,31 +524,17 @@ func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packageP
 		fileSet:                 fileSet,
 		gitRevisionCache:        NewGitRevisionCache(projectPath),
 		functionEntries:         make(map[string]bool),
-		fileVersionNodes:        make(map[string]graphcommon.FileVersionNode),
-		packageNodes:            make(map[string]graphcommon.PackageNode),
+		fileVersionNodeMap:      make(map[string]graphcommon.FileVersionNode),
+		packageNodeMap:          make(map[string]graphcommon.PackageNode),
 		processedValues:         make(map[string]bool),
 		PackagePrefixFilter:     PackageMatcher(packagePrefixes),
 	}
 	traverser := NewSSATraverser(packagePrefixes)
 	traverser.Traverse(simplificationResult.SSAProgram, visitor)
 
-	return SSAGraphData{
-		FileVersionNodes:   slices.Collect(maps.Values(visitor.fileVersionNodes)),
-		PackageNodes:       slices.Collect(maps.Values(visitor.packageNodes)),
-		InPackageEdges:     visitor.inPackageEdges,
-		ValueNodes:         visitor.valueNodes,
-		InstructionNodes:   visitor.instructionNodes,
-		FunctionNodes:      visitor.functionNodes,
-		OrderingEdges:      visitor.orderingEdges,
-		OperandEdges:       visitor.operandEdges,
-		ControlFlowEdges:   visitor.controlFlowEdges,
-		ResultEdges:        visitor.resultEdges,
-		ResolvedCallEdges:  visitor.resolvedCallEdges,
-		BelongsToEdges:     visitor.belongsToEdges,
-		FunctionEntryEdges: visitor.functionEntryEdges,
-		HasParameterEdges:  visitor.hasParameterEdges,
-		ReturnPointEdges:   visitor.returnPointEdges,
-	}
+	visitor.SSAGraphData.FileVersionNodes = slices.Collect(maps.Values(visitor.fileVersionNodeMap))
+	visitor.SSAGraphData.PackageNodes = slices.Collect(maps.Values(visitor.packageNodeMap))
+	return visitor.SSAGraphData
 }
 
 func addControlFlowEdges(b *ssa.BasicBlock, controlFlowEdges []ControlFlowEdge) []ControlFlowEdge {
