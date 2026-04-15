@@ -515,6 +515,26 @@ func (v *GraphVisitor) VisitValue(valueObj ssa.Value, pkg *ssa.Package) {
 	v.SSAGraphData.ValueNodes = processValue(v.SSAGraphData.ValueNodes, vId, valueObj, pkg, valuePosition, v.gitRevisionCache, v.processedValues)
 }
 
+// NewGraphVisitor creates a GraphVisitor with all functions considered reachable.
+// Production code should prefer ExtractSSAGraphData, which derives reachability
+// from the call graph. NewGraphVisitor is primarily useful in tests.
+func NewGraphVisitor(program *ssa.Program, packagePrefixFilter func(string) bool, projectPath string) *GraphVisitor {
+	return &GraphVisitor{
+		BaseSSAVisitor: BaseSSAVisitor{},
+		SSASimplificationResult: &SSASimplificationResult{
+			SSAProgram:           program,
+			unreachableFunctions: make(map[string]bool),
+		},
+		fileSet:            program.Fset,
+		gitRevisionCache:   NewGitRevisionCache(projectPath),
+		functionEntries:    make(map[string]bool),
+		fileVersionNodeMap: make(map[string]graphcommon.FileVersionNode),
+		packageNodeMap:     make(map[string]graphcommon.PackageNode),
+		processedValues:    make(map[string]bool),
+		PackagePrefixFilter: packagePrefixFilter,
+	}
+}
+
 func ExtractSSAGraphData(simplificationResult *SSASimplificationResult, packagePrefixes []string, projectPath string) SSAGraphData {
 	fileSet := simplificationResult.SSAProgram.Fset
 
