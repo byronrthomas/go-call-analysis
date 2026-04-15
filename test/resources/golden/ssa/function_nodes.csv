@@ -4,7 +4,7 @@ id,annotation,column,label,line,name,num_return_points
 ^builtin^append,builtin,0,Function,0,builtin append,0
 errors.New,,6,Function,64,New,0
 errors.init,,0,Function,0,init,0
-fmt.Println,,6,Function,313,Println,0
+fmt.Println,,6,Function,314,Println,0
 fmt.init,,0,Function,0,init,0
 github.com/throwin5tone7/go-call-analysis/test-project.check,,6,Function,50,check,2
 github.com/throwin5tone7/go-call-analysis/test-project.init,,0,Function,0,init,1
