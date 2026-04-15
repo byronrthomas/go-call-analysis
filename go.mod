@@ -1,8 +1,6 @@
 module github.com/throwin5tone7/go-call-analysis
 
-go 1.24.0
-
-toolchain go1.24.2
+go 1.26.0
 
 require (
 	github.com/neo4j/neo4j-go-driver/v5 v5.28.1
