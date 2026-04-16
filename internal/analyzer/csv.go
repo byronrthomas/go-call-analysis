@@ -345,5 +345,24 @@ func ExportSSAGraphToCSV(ssaData SSAGraphData, outputPath string) error {
 	}
 	dataMap["return_point_edges"] = returnPointEdgeMappables
 
-	return ExportToCSV(dataMap, outputPath)
+	// Convert call graph calls edges to Mappable interface
+	callGraphCallsEdgeMappables := make([]graphcommon.Mappable, len(ssaData.CallGraphCallsEdges))
+	for i := range ssaData.CallGraphCallsEdges {
+		callGraphCallsEdgeMappables[i] = &ssaData.CallGraphCallsEdges[i]
+	}
+	dataMap["call_graph_calls_edges"] = callGraphCallsEdgeMappables
+
+	if err := ExportToCSV(dataMap, outputPath); err != nil {
+		return err
+	}
+
+	// Always write call_graph_calls_edges.csv even when empty so the file
+	// is consistently present for downstream consumers.
+	if outputPath != "" && len(ssaData.CallGraphCallsEdges) == 0 {
+		filePath := filepath.Join(outputPath, "call_graph_calls_edges.csv")
+		if err := writeCSVToFiles(nil, filePath, []string{"from_id", "to_id"}); err != nil {
+			return fmt.Errorf("failed to write call_graph_calls_edges: %v", err)
+		}
+	}
+	return nil
 }

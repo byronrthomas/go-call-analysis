@@ -29,7 +29,8 @@ type SSAGraphData struct {
 	ResolvedCallEdges  []ResolvedCallEdge
 	FunctionEntryEdges []FunctionEntryEdge
 	HasParameterEdges  []HasParameterEdge
-	ReturnPointEdges   []ReturnPointEdge
+	ReturnPointEdges      []ReturnPointEdge
+	CallGraphCallsEdges   []CallGraphCallsEdge
 }
 
 type ValueNode struct {
@@ -95,6 +96,10 @@ type HasParameterEdge struct {
 }
 
 type ReturnPointEdge struct {
+	graphcommon.EdgeCommon
+}
+
+type CallGraphCallsEdge struct {
 	graphcommon.EdgeCommon
 }
 
@@ -255,6 +260,19 @@ func (e ReturnPointEdge) NodeTypes() graphcommon.NodeTypes {
 	return graphcommon.NodeTypes{
 		FromLabel: "Function",
 		ToLabel:   "Instruction",
+	}
+}
+
+func (e CallGraphCallsEdge) ToMap() map[string]any {
+	edgeCommonMap := graphcommon.EdgeCommonAsMap(e.EdgeCommon)
+	edgeCommonMap["type"] = "CallGraph_Calls"
+	return edgeCommonMap
+}
+
+func (e CallGraphCallsEdge) NodeTypes() graphcommon.NodeTypes {
+	return graphcommon.NodeTypes{
+		FromLabel: "Function",
+		ToLabel:   "Function",
 	}
 }
 
