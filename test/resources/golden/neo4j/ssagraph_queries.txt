@@ -656,6 +656,23 @@ github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5t
 github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction:0:16	Has_Return_Point
 
 
+Query:
+				UNWIND $edges AS edge
+				MATCH (from:Function {id: edge.from_id}), (to:Function {id: edge.to_id})
+				CREATE (from)-[:edge.type]->(to)
+
+Parameters:
+from_id	to_id	type
+github.com/throwin5tone7/go-call-analysis/test-project.check	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.check	(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.check	errors.New	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.init	errors.init	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.init	fmt.init	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main	fmt.Println	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5tone7/go-call-analysis/test-project.check	CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main	github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction	CallGraph_Calls
+
+
 Query: CREATE EDGE INDEX ON :EDGE_TYPE;
 
 

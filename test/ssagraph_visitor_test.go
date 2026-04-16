@@ -124,7 +124,7 @@ func TestVisitFunction_CallGraph_Calls_Edges(t *testing.T) {
 		formatEdgeCommon(&graphcommon.EdgeCommon{FromID: "p.f2", ToID: "p.add"}),
 		formatEdgeCommon(&graphcommon.EdgeCommon{FromID: "p.f2", ToID: "p.f1"}),
 	}
-	actualEdges := make([]string, len(visitor.SSAGraphData.CallGraphCallsEdges))
+	actualEdges := make([]string, 0, len(visitor.SSAGraphData.CallGraphCallsEdges))
 	for _, edge := range visitor.SSAGraphData.CallGraphCallsEdges {
 		actualEdges = append(actualEdges, formatEdgeCommon(&edge.EdgeCommon))
 	}

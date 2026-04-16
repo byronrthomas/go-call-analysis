@@ -1,1 +1,9 @@
-from_id,to_id
+from_id,to_id,type
+github.com/throwin5tone7/go-call-analysis/test-project.check,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct1).Get,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.check,(*github.com/throwin5tone7/go-call-analysis/test-project.Struct2).Get,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.check,errors.New,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.init,errors.init,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.init,fmt.init,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main,fmt.Println,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main,github.com/throwin5tone7/go-call-analysis/test-project.check,CallGraph_Calls
+github.com/throwin5tone7/go-call-analysis/test-project.main,github.com/throwin5tone7/go-call-analysis/test-project.someOtherFunction,CallGraph_Calls

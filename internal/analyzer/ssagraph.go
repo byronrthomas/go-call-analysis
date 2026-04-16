@@ -283,10 +283,11 @@ type GraphVisitor struct {
 	fileSet                 *token.FileSet
 	gitRevisionCache        *GitRevisionCache
 	// maps needed for O(1) dedup during construction; converted to slices in SSAGraphData at the end
-	fileVersionNodeMap map[string]graphcommon.FileVersionNode
-	packageNodeMap     map[string]graphcommon.PackageNode
-	functionEntries    map[string]bool
-	processedValues    map[string]bool
+	fileVersionNodeMap      map[string]graphcommon.FileVersionNode
+	packageNodeMap          map[string]graphcommon.PackageNode
+	functionEntries         map[string]bool
+	processedValues         map[string]bool
+	callGraphCallsEdgeSet   map[string]bool
 	SSAGraphData
 }
 
@@ -442,6 +443,16 @@ func (v *GraphVisitor) VisitFunction(f *ssa.Function, pkg *ssa.Package) {
 				if len(asAnnotatedCall.ResolvedTargets) > 0 {
 					for _, resolvedTarget := range asAnnotatedCall.ResolvedTargets {
 						targetId := resolvedTarget.String()
+						callGraphEdgeKey := funcId + "->" + targetId
+						if !v.callGraphCallsEdgeSet[callGraphEdgeKey] {
+							v.callGraphCallsEdgeSet[callGraphEdgeKey] = true
+							v.SSAGraphData.CallGraphCallsEdges = append(v.SSAGraphData.CallGraphCallsEdges, CallGraphCallsEdge{
+								EdgeCommon: graphcommon.EdgeCommon{
+									FromID: funcId,
+									ToID:   targetId,
+								},
+							})
+						}
 						if _, ok := v.functionEntries[targetId]; !ok {
 							// We only do full analysis for functions that match the package prefixes
 							fullAnalysis := false
@@ -545,6 +556,7 @@ func NewGraphVisitor(result *SSASimplificationResult, packagePrefixFilter func(s
 		fileVersionNodeMap:      make(map[string]graphcommon.FileVersionNode),
 		packageNodeMap:          make(map[string]graphcommon.PackageNode),
 		processedValues:         make(map[string]bool),
+		callGraphCallsEdgeSet:   make(map[string]bool),
 		PackagePrefixFilter:     packagePrefixFilter,
 	}
 }
