@@ -4,7 +4,9 @@
       "Bash(go build:*)",
       "Bash(go doc *)",
       "Bash(go vet *)",
-      "Bash(make test *)"
+      "Bash(make test *)",
+      "Bash(go test *)",
+      "Bash(make regenerate-golden-ssa *)"
     ]
   }
 }
