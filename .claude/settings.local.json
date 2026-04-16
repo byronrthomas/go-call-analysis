@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(go build:*)",
-      "Bash(go doc *)"
+      "Bash(go doc *)",
+      "Bash(go vet *)",
+      "Bash(make test *)"
     ]
   }
 }
