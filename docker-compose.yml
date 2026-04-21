@@ -1,0 +1,12 @@
+services:
+  memgraph:
+    image: memgraph/memgraph:latest
+    ports:
+      - "7687:7687"   # Bolt protocol (CLI + frontend)
+      - "7444:7444"   # HTTP status endpoint
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+    command: ["--also-log-to-stderr"]
+
+volumes:
+  memgraph-data:

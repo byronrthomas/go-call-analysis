@@ -1,4 +1,5 @@
-.PHONY: build test clean lint build-transform build-all test-ssa test-transform regenerate-golden-ssa regenerate-golden-transform
+.PHONY: build test clean lint build-transform build-all test-ssa test-transform regenerate-golden-ssa regenerate-golden-transform \
+        frontend-install frontend-dev frontend-build frontend-lint db-up db-down dev
 
 # Build the application
 build:
@@ -56,4 +57,30 @@ tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Run all checks
-check: lint test 
+check: lint test
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+
+frontend-install:
+	cd frontend && npm install
+
+frontend-dev:
+	cd frontend && npm run dev
+
+frontend-build:
+	cd frontend && npm run build
+
+frontend-lint:
+	cd frontend && npm run lint
+
+# ── Graph DB (Memgraph via Docker) ────────────────────────────────────────────
+
+db-up:
+	docker compose up -d
+
+db-down:
+	docker compose down
+
+# ── Full local dev stack ──────────────────────────────────────────────────────
+
+dev: db-up frontend-dev

@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #2d3748;
+  padding-bottom: 1rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #90cdf4;
+}
+
+.query-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.query-editor textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: #1a202c;
+  border: 1px solid #2d3748;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.query-editor textarea:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+.query-editor button {
+  align-self: flex-start;
+  padding: 0.5rem 1.25rem;
+  background: #3182ce;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.query-editor button:hover:not(:disabled) {
+  background: #2b6cb0;
+}
+
+.query-editor button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: #2d1b1b;
+  border: 1px solid #c53030;
+  border-radius: 6px;
+  color: #fc8181;
+  font-size: 0.875rem;
+}
+
+.results-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #2d3748;
+  border-radius: 6px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.results-table th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  background: #1a202c;
+  border-bottom: 1px solid #2d3748;
+  color: #90cdf4;
+  font-weight: 500;
+}
+
+.results-table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #1a202c;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.8rem;
+  word-break: break-all;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table tr:hover td {
+  background: #1a202c;
+}
