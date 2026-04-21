@@ -1,5 +1,5 @@
 .PHONY: build test clean lint build-transform build-all test-ssa test-transform regenerate-golden-ssa regenerate-golden-transform \
-        frontend-install frontend-dev frontend-build frontend-lint db-up db-down dev
+        frontend-install frontend-dev frontend-build frontend-lint frontend-test db-up db-down dev
 
 # Build the application
 build:
@@ -72,6 +72,9 @@ frontend-build: frontend-install
 
 frontend-lint: frontend-install
 	cd frontend && npm run lint
+
+frontend-test: frontend-install
+	cd frontend && npm test
 
 # ── Graph DB (Memgraph via Docker) ────────────────────────────────────────────
 
