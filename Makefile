@@ -64,13 +64,13 @@ check: lint test
 frontend-install:
 	cd frontend && npm install
 
-frontend-dev:
+frontend-dev: frontend-install
 	cd frontend && npm run dev
 
-frontend-build:
+frontend-build: frontend-install
 	cd frontend && npm run build
 
-frontend-lint:
+frontend-lint: frontend-install
 	cd frontend && npm run lint
 
 # ── Graph DB (Memgraph via Docker) ────────────────────────────────────────────
