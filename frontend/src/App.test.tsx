@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 import { runQuery } from './lib/neo4j'
 
@@ -8,13 +9,21 @@ vi.mock('./lib/neo4j')
 
 const mockedRunQuery = vi.mocked(runQuery)
 
+function renderAtExplore() {
+  return render(
+    <MemoryRouter initialEntries={['/explore']}>
+      <App />
+    </MemoryRouter>
+  )
+}
+
 describe('App', () => {
   beforeEach(() => {
     mockedRunQuery.mockReset()
   })
 
   it('renders the heading, default query textarea, and an enabled Run button', () => {
-    render(<App />)
+    renderAtExplore()
 
     expect(screen.getByRole('heading', { name: /go call analysis/i })).toBeInTheDocument()
 
@@ -35,7 +44,7 @@ describe('App', () => {
     } as never)
 
     const user = userEvent.setup()
-    render(<App />)
+    renderAtExplore()
 
     await user.click(screen.getByRole('button', { name: /run/i }))
 
@@ -51,7 +60,7 @@ describe('App', () => {
     mockedRunQuery.mockRejectedValueOnce(new Error('Connection refused'))
 
     const user = userEvent.setup()
-    render(<App />)
+    renderAtExplore()
 
     await user.click(screen.getByRole('button', { name: /run/i }))
 
