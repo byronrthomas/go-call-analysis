@@ -1,5 +1,116 @@
+import { useMemo } from 'react'
+import CytoscapeComponent from 'react-cytoscapejs'
+import Cytoscape from 'cytoscape'
+import dagre from 'cytoscape-dagre'
+import rawData from '../../test_resources/sample-package-deps-paths.jsonl?raw'
+
+Cytoscape.use(dagre)
+
+interface PathNode {
+  id: number
+  properties: { package_path: string }
+}
+
+interface PathRelationship {
+  start: number
+  end: number
+}
+
+interface PathLine {
+  p: {
+    nodes: PathNode[]
+    relationships: PathRelationship[]
+  }
+}
+
+function buildElements(raw: string): Cytoscape.ElementDefinition[] {
+  const nodeIdToPackage = new Map<number, string>()
+  const packages = new Set<string>()
+  const edgeSet = new Set<string>()
+  const edges: Array<{ source: string; target: string; id: string }> = []
+
+  for (const line of raw.trim().split('\n')) {
+    if (!line.trim()) continue
+    const { p }: PathLine = JSON.parse(line)
+
+    for (const node of p.nodes) {
+      nodeIdToPackage.set(node.id, node.properties.package_path)
+      packages.add(node.properties.package_path)
+    }
+
+    for (const rel of p.relationships) {
+      const source = nodeIdToPackage.get(rel.start)
+      const target = nodeIdToPackage.get(rel.end)
+      if (source && target && source !== target) {
+        const key = `${source}::${target}`
+        if (!edgeSet.has(key)) {
+          edgeSet.add(key)
+          edges.push({ source, target, id: `e${edges.length}` })
+        }
+      }
+    }
+  }
+
+  const cytoscapeNodes = Array.from(packages).map(pkg => ({
+    data: { id: pkg, label: pkg.split('/').pop() ?? pkg },
+  }))
+
+  const cytoscapeEdges = edges.map(e => ({
+    data: { id: e.id, source: e.source, target: e.target },
+  }))
+
+  return [...cytoscapeNodes, ...cytoscapeEdges]
+}
+
+const layout = {
+  name: 'dagre',
+  rankDir: 'LR',
+  nodeSep: 40,
+  rankSep: 120,
+  padding: 20,
+  animate: false,
+} as Cytoscape.LayoutOptions
+
+const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = [
+  {
+    selector: 'node',
+    style: {
+      label: 'data(label)',
+      'text-valign': 'center',
+      'text-halign': 'center',
+      'background-color': '#4a90d9',
+      color: '#fff',
+      'font-size': 10,
+      padding: '6px',
+      shape: 'roundrectangle',
+    },
+  },
+  {
+    selector: 'edge',
+    style: {
+      'curve-style': 'bezier',
+      'target-arrow-shape': 'triangle',
+      'line-color': '#aaa',
+      'target-arrow-color': '#aaa',
+      width: 1,
+    },
+  },
+]
+
 export function HomePage() {
+  const elements = useMemo(() => buildElements(rawData), [])
+
   return (
-    <p>Welcome to Go Call Analysis. Use the navigation to explore the call graph.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <h2>Package Dependency Graph</h2>
+      <div data-testid="package-graph-container" style={{ flex: 1, minHeight: '600px' }}>
+        <CytoscapeComponent
+          elements={elements}
+          layout={layout}
+          stylesheet={stylesheet}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    </div>
   )
 }
