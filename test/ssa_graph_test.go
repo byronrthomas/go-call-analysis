@@ -400,6 +400,47 @@ func normalizeText(text string) string {
 	return strings.Join(lines, "\n")
 }
 
+const depGraphDependsQuery = "MATCH p=(p1:Package)<-[:In_Package]-(:FileVersion)<-[:Belongs_To]-(fe1 :Function)-[:CallGraph_Calls]->(fe2 :Function)-[:Belongs_To]->(:FileVersion)-[:In_Package]->(p2:Package)\nMERGE (p1)-[:DepGraph_Depends]->(p2)"
+
+func TestSSAGraphPostProcessingQuery(t *testing.T) {
+	originalMockMode := analyzer.InMockMode
+	analyzer.InMockMode = true
+	defer func() {
+		analyzer.InMockMode = originalMockMode
+		analyzer.MockSession = nil
+	}()
+
+	projectPath := "../test-project"
+	outputPath := "../test-output/neo4j-postprocessing"
+	rootFunction := "github.com/throwin5tone7/go-call-analysis/test-project:main"
+	packagePrefixes := []string{"github.com/throwin5tone7/go-call-analysis"}
+
+	if err := os.RemoveAll(outputPath); err != nil {
+		t.Fatalf("Failed to clean up test output directory: %v", err)
+	}
+	if err := os.MkdirAll(outputPath, 0755); err != nil {
+		t.Fatalf("Failed to create output directory: %v", err)
+	}
+
+	err := main.RunSSAGraph(packagePrefixes, projectPath, outputPath, rootFunction, true)
+	if err != nil {
+		t.Fatalf("Failed to run SSA graph analysis for Neo4j: %v", err)
+	}
+
+	if analyzer.MockSession == nil {
+		t.Fatalf("MockSession was not created")
+	}
+
+	var sb strings.Builder
+	mockSession := analyzer.MockSession.(*mock.MockSession)
+	mockSession.FormatCapturedQueries(&sb)
+	capturedOutput := sb.String()
+
+	if !strings.Contains(capturedOutput, depGraphDependsQuery) {
+		t.Errorf("Expected post-processing query not found in captured queries.\nExpected query:\n%s\n\nCaptured queries:\n%s", depGraphDependsQuery, capturedOutput)
+	}
+}
+
 func TestNeo4jSSAGraphExport(t *testing.T) {
 
 	// Setup mock mode

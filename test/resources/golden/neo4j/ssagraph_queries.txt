@@ -11,7 +11,7 @@ Query: UNWIND $nodes AS node CREATE (n:node.label {id: node.id, last_git_revisio
 Parameters:
 id	label	last_git_revision	name
 	FileVersion		.
-test-project/main.go	FileVersion	e4b3c4b5f5cad964e287f20a451d5aea16086559	main.go
+test-project/main.go	FileVersion	c60317adfdeafe7bef4fc625742b0115db0d5daf	main.go
 
 
 Query: CREATE INDEX ON :FileVersion(id)
@@ -677,3 +677,7 @@ Query: CREATE EDGE INDEX ON :EDGE_TYPE;
 
 
 Query: CREATE INDEX ON :Instruction(instruction_type)
+
+
+Query: MATCH p=(p1:Package)<-[:In_Package]-(:FileVersion)<-[:Belongs_To]-(fe1 :Function)-[:CallGraph_Calls]->(fe2 :Function)-[:Belongs_To]->(:FileVersion)-[:In_Package]->(p2:Package)
+MERGE (p1)-[:DepGraph_Depends]->(p2)
