@@ -9,9 +9,9 @@ Cytoscape.use(dagre)
 
 const layout = {
   name: 'dagre',
-  rankDir: 'LR',
-  nodeSep: 15,
-  rankSep: 100,
+  rankDir: 'TB',
+  nodeSep: 6,
+  rankSep: 60,
   padding: 20,
   animate: false,
   fit: false,
@@ -24,11 +24,22 @@ const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = 
       label: 'data(label)',
       'text-valign': 'center',
       'text-halign': 'center',
-      'background-color': '#4a90d9',
+      'background-color': 'data(color)',
       color: '#fff',
-      'font-size': 10,
-      padding: '6px',
+      'font-size': 12,
+      'min-zoomed-font-size': 7,  // labels vanish below this screen-px size
+      padding: '4px',
       shape: 'roundrectangle',
+    },
+  },
+  {
+    // Group nodes: a package subtree auto-detected by trie and collapsed to one unit.
+    selector: 'node.group-node',
+    style: {
+      'border-width': 2,
+      'border-color': '#fff',
+      'border-opacity': 0.6,
+      'font-weight': 'bold',
     },
   },
   {
@@ -36,9 +47,10 @@ const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = 
     style: {
       'curve-style': 'bezier',
       'target-arrow-shape': 'triangle',
-      'line-color': '#aaa',
-      'target-arrow-color': '#aaa',
+      'line-color': '#555',
+      'target-arrow-color': '#555',
       width: 1,
+      opacity: 0.5,
     },
   },
 ]
@@ -47,29 +59,12 @@ export function HomePage() {
   const elements = useMemo(() => buildElements(rawData), [])
   const cyRef = useRef<Cytoscape.Core | null>(null)
 
-  // cy prop fires after layout has run (animate:false means layout is synchronous).
-  // Position the viewport at the left edge of the graph, vertically centred, at a
-  // readable zoom so the user can see entry-point nodes and pan/zoom from there.
   const handleCy = useCallback((cy: Cytoscape.Core) => {
     if (cyRef.current === cy) return
     cyRef.current = cy
-
-    const positions = cy.nodes().map(n => n.position())
-    if (positions.length === 0) return
-
-    const minX = Math.min(...positions.map(p => p.x))
-    const minY = Math.min(...positions.map(p => p.y))
-    const maxY = Math.max(...positions.map(p => p.y))
-
-    const zoom = 0.7
-    const leftMargin = 60
-    cy.viewport({
-      zoom,
-      pan: {
-        x: leftMargin - minX * zoom,
-        y: cy.height() / 2 - ((minY + maxY) / 2) * zoom,
-      },
-    })
+    // Fit the whole graph; labels appear automatically as the user zooms in
+    // (min-zoomed-font-size controls the threshold).
+    cy.fit(undefined, 30)
   }, [])
 
   return (
