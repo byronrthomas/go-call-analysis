@@ -14,6 +14,7 @@ const layout = {
   rankSep: 120,
   padding: 20,
   animate: false,
+  fit: false,
 } as Cytoscape.LayoutOptions
 
 const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = [
