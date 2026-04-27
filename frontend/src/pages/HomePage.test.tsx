@@ -1,27 +1,48 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
-import { HomePage } from './HomePage'
+import { describe, expect, it } from 'vitest'
+import { buildElements } from './graphData'
+import rawData from '../../test_resources/sample-package-deps-paths.jsonl?raw'
 
-vi.mock('react-cytoscapejs', () => ({
-  default: ({ elements }: { elements: Array<{ data: Record<string, unknown> }> }) => (
-    <div
-      data-testid="cytoscape-graph"
-      data-element-count={String(elements.length)}
-    />
-  ),
-}))
+const elements = buildElements(rawData)
+const nodes = elements.filter(e => !e.data.source)
+const edges = elements.filter(e => e.data.source)
 
-describe('HomePage graph view', () => {
-  it('renders a cytoscape graph', () => {
-    render(<HomePage />)
-    expect(screen.getByTestId('cytoscape-graph')).toBeInTheDocument()
+describe('buildElements', () => {
+  it('produces at least one node and one edge', () => {
+    expect(nodes.length).toBeGreaterThan(0)
+    expect(edges.length).toBeGreaterThan(0)
   })
 
-  it('populates the graph with package nodes and dependency edges from sample data', () => {
-    render(<HomePage />)
-    const graph = screen.getByTestId('cytoscape-graph')
-    const count = Number(graph.dataset.elementCount)
-    // Sample data contains 1595 paths - expect many unique nodes and edges
-    expect(count).toBeGreaterThan(100)
+  it('assigns a unique id to every node', () => {
+    const ids = nodes.map(n => n.data.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('assigns a unique id to every edge', () => {
+    const ids = edges.map(e => e.data.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('excludes self-loop edges', () => {
+    expect(edges.every(e => e.data.source !== e.data.target)).toBe(true)
+  })
+
+  it('produces no duplicate edges', () => {
+    const keys = edges.map(e => `${e.data.source}::${e.data.target}`)
+    expect(new Set(keys).size).toBe(keys.length)
+  })
+
+  it('all edge endpoints reference existing nodes', () => {
+    const nodeIds = new Set(nodes.map(n => n.data.id))
+    for (const edge of edges) {
+      expect(nodeIds.has(edge.data.source)).toBe(true)
+      expect(nodeIds.has(edge.data.target)).toBe(true)
+    }
+  })
+
+  it('sets node label to the last path segment', () => {
+    for (const node of nodes) {
+      const id = node.data.id as string
+      expect(node.data.label).toBe(id.split('/').pop())
+    }
   })
 })
