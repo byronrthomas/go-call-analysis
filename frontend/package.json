@@ -13,8 +13,11 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "cytoscape": "^3.33.2",
+    "cytoscape-dagre": "^2.5.0",
     "neo4j-driver": "^5.27.0",
     "react": "^19.0.0",
+    "react-cytoscapejs": "^2.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.14.2"
   },
@@ -26,6 +29,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/cytoscape": "^3.21.9",
+    "@types/cytoscape-dagre": "^2.3.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
