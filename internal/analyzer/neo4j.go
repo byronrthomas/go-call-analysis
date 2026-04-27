@@ -509,9 +509,18 @@ func runSSAInNeoSession(ctx context.Context, session neo4j.SessionWithContext, g
 		}
 	}
 
+	log.Printf("Running post-processing: building DepGraph_Depends edges between packages...")
+	_, err = session.Run(ctx, depGraphDependsQuery, nil)
+	if err != nil {
+		return fmt.Errorf("failed to run dependency graph post-processing: %v", err)
+	}
+	log.Printf("Post-processing complete")
+
 	log.Printf("Total import completed in %v", time.Since(startTime))
 	return nil
 }
+
+const depGraphDependsQuery = "MATCH p=(p1:Package)<-[:In_Package]-(:FileVersion)<-[:Belongs_To]-(fe1 :Function)-[:CallGraph_Calls]->(fe2 :Function)-[:Belongs_To]->(:FileVersion)-[:In_Package]->(p2:Package)\nMERGE (p1)-[:DepGraph_Depends]->(p2)"
 
 type PropagationQuery struct {
 	CountQuery     string

@@ -677,3 +677,7 @@ Query: CREATE EDGE INDEX ON :EDGE_TYPE;
 
 
 Query: CREATE INDEX ON :Instruction(instruction_type)
+
+
+Query: MATCH p=(p1:Package)<-[:In_Package]-(:FileVersion)<-[:Belongs_To]-(fe1 :Function)-[:CallGraph_Calls]->(fe2 :Function)-[:Belongs_To]->(:FileVersion)-[:In_Package]->(p2:Package)
+MERGE (p1)-[:DepGraph_Depends]->(p2)
