@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import CytoscapeComponent from 'react-cytoscapejs'
 import Cytoscape from 'cytoscape'
 import dagre from 'cytoscape-dagre'
@@ -10,8 +10,8 @@ Cytoscape.use(dagre)
 const layout = {
   name: 'dagre',
   rankDir: 'LR',
-  nodeSep: 40,
-  rankSep: 120,
+  nodeSep: 15,
+  rankSep: 100,
   padding: 20,
   animate: false,
   fit: false,
@@ -45,6 +45,15 @@ const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = 
 
 export function HomePage() {
   const elements = useMemo(() => buildElements(rawData), [])
+  const cyRef = useRef<Cytoscape.Core | null>(null)
+
+  // cy prop fires after layout has run (animate:false means layout is synchronous).
+  // Fit to show all nodes, but enforce a minimum zoom so labels remain readable.
+  const handleCy = useCallback((cy: Cytoscape.Core) => {
+    if (cyRef.current === cy) return
+    cyRef.current = cy
+    cy.fit(undefined, 30)
+  }, [])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -55,6 +64,7 @@ export function HomePage() {
           layout={layout}
           stylesheet={stylesheet}
           style={{ width: '100%', height: '100%' }}
+          cy={handleCy}
         />
       </div>
     </div>
