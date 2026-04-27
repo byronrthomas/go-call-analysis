@@ -48,7 +48,7 @@ export function HomePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <h2>Package Dependency Graph</h2>
-      <div data-testid="package-graph-container" style={{ flex: 1, minHeight: '600px' }}>
+      <div data-testid="package-graph-container" style={{ width: '100%', height: '80vh' }}>
         <CytoscapeComponent
           elements={elements}
           layout={layout}
