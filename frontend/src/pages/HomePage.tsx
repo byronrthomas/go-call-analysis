@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import CytoscapeComponent from 'react-cytoscapejs'
 import Cytoscape from 'cytoscape'
 import dagre from 'cytoscape-dagre'
@@ -7,7 +7,7 @@ import { buildElements } from './graphData'
 
 Cytoscape.use(dagre)
 
-const layout = {
+const dagreOptions = {
   name: 'dagre',
   rankDir: 'TB',
   nodeSep: 6,
@@ -27,13 +27,12 @@ const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = 
       'background-color': 'data(color)',
       color: '#fff',
       'font-size': 12,
-      'min-zoomed-font-size': 7,  // labels vanish below this screen-px size
+      'min-zoomed-font-size': 7,
       padding: '4px',
       shape: 'roundrectangle',
     },
   },
   {
-    // Group nodes: a package subtree auto-detected by trie and collapsed to one unit.
     selector: 'node.group-node',
     style: {
       'border-width': 2,
@@ -56,24 +55,58 @@ const stylesheet: Array<{ selector: string; style: Record<string, unknown> }> = 
 ]
 
 export function HomePage() {
-  const elements = useMemo(() => buildElements(rawData), [])
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set())
+  const elements = useMemo(() => buildElements(rawData, expandedGroups), [expandedGroups])
   const cyRef = useRef<Cytoscape.Core | null>(null)
+  const isInitialMount = useRef(true)
+
+  // Re-run layout whenever elements change (skip the first render — layout prop handles it).
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    const cy = cyRef.current
+    if (!cy) return
+    cy.layout(dagreOptions).run()
+    cy.fit(undefined, 30)
+  }, [elements])
+
+  const handleNodeClick = useCallback((event: Cytoscape.EventObject) => {
+    const node = event.target as Cytoscape.NodeSingular
+    if (!node.data('isGroup')) return
+    const id = node.data('id') as string
+    setExpandedGroups(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        // Collapse this group and all expanded descendants.
+        for (const g of [...next]) {
+          if (g === id || g.startsWith(id + '/')) next.delete(g)
+        }
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }, [])
 
   const handleCy = useCallback((cy: Cytoscape.Core) => {
     if (cyRef.current === cy) return
     cyRef.current = cy
-    // Fit the whole graph; labels appear automatically as the user zooms in
-    // (min-zoomed-font-size controls the threshold).
     cy.fit(undefined, 30)
-  }, [])
+    cy.on('tap', 'node', handleNodeClick)
+  }, [handleNodeClick])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <h2>Package Dependency Graph</h2>
+      <p style={{ margin: '0 0 8px', fontSize: 13, color: '#888' }}>
+        Click a bold group node to expand · click again to collapse
+      </p>
       <div data-testid="package-graph-container" style={{ width: '100%', height: '80vh' }}>
         <CytoscapeComponent
           elements={elements}
-          layout={layout}
+          layout={dagreOptions}
           stylesheet={stylesheet}
           style={{ width: '100%', height: '100%' }}
           cy={handleCy}
